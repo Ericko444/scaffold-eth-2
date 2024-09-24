@@ -1,6 +1,7 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types";
 import { DeployFunction } from "hardhat-deploy/types";
 import { Contract } from "ethers";
+import { ethers } from "hardhat";
 
 /**
  * Deploys a contract named "YourContract" using the deployer account and
@@ -25,7 +26,7 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   await deploy("YourContract", {
     from: deployer,
     // Contract constructor arguments
-    args: [deployer],
+    args: ["0x1a98EbD96CDB77A8Ea6cE8Bc3EcCd3B449712c7B"],
     log: true,
     // autoMine: can be passed to the deploy function to make the deployment process faster on local networks by
     // automatically mining the contract deployment transaction. There is no effect on live networks.
@@ -34,7 +35,29 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
 
   // Get the deployed contract to interact with it after deploying.
   const yourContract = await hre.ethers.getContract<Contract>("YourContract", deployer);
-  console.log("👋 Initial greeting:", await yourContract.greeting());
+  await yourContract.transferOwnership("0x1a98EbD96CDB77A8Ea6cE8Bc3EcCd3B449712c7B");
+  // console.log("👋 Initial greeting:", await yourContract.greeting());
+  const tx = await yourContract.mintLandNFT(
+    "0x744D70747E0337D0C68d63Fc82B1562525cE35fA",
+    "T7260P(2)",   // num
+    "MAHASOAVA",   // nom
+    "0.24245910533199999", // surface as a string
+    "0,2994",       // surf_reel
+    ethers.parseEther("1.0")
+  );
+  await tx.wait();
+  console.log("Minted land NFT");
+
+  const tx2 = await yourContract.mintLandNFT(
+    "0x93D8857DE05987a87549114594030F7812B7826f",
+    "A4563P(5)",   // num
+    "RAHARIJAONA", // nom
+    "0.3121345231234", // surface as a string
+    "0,3512",       // surf_reel
+    ethers.parseEther("1.5")
+  );
+  await tx2.wait();
+  console.log("Minted second land NFT to owner2");
 };
 
 export default deployYourContract;
