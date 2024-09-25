@@ -89,6 +89,35 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 		return lands[tokenId];
 	}
 
+	// Retrieve all lands owned by an account
+	function getLandsOfAccount(
+		address owner
+	) public view returns (Land[] memory) {
+		uint256 totalLands = _tokenIds.current();
+		uint256 count = 0;
+
+		// First pass: count how many lands the owner has
+		for (uint256 i = 1; i <= totalLands; i++) {
+			if (ownerOf(i) == owner) {
+				count++;
+			}
+		}
+
+		// Create an array with the correct size
+		Land[] memory result = new Land[](count);
+		uint256 index = 0;
+
+		// Second pass: add the lands owned by the account
+		for (uint256 i = 1; i <= totalLands; i++) {
+			if (ownerOf(i) == owner) {
+				result[index] = lands[i];
+				index++;
+			}
+		}
+
+		return result;
+	}
+
 	// Allow the owner to set or update the price of the land
 	function setPrice(uint256 tokenId, uint256 newPrice) public {
 		require(
