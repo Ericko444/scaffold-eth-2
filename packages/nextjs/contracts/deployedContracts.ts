@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     YourContract: {
-      address: "0x0B306BF915C4d645ff596e518fAf3F9669b97016",
+      address: "0x2279B7A0a67DB372996a5FaB50D91eAA73d2eBe6",
       abi: [
         {
           inputs: [
@@ -68,6 +68,63 @@ const deployedContracts = {
             },
           ],
           name: "ApprovalForAll",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "divisionId",
+              type: "uint256",
+            },
+          ],
+          name: "DivisionApproved",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "divisionId",
+              type: "uint256",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "executor",
+              type: "address",
+            },
+          ],
+          name: "DivisionExecuted",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "divisionId",
+              type: "uint256",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "requester",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+          ],
+          name: "DivisionRequested",
           type: "event",
         },
         {
@@ -306,6 +363,19 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "uint256",
+              name: "divisionId",
+              type: "uint256",
+            },
+          ],
+          name: "approveDivision",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
               name: "exchangeId",
               type: "uint256",
             },
@@ -332,6 +402,42 @@ const deployedContracts = {
             },
           ],
           stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+            {
+              internalType: "string[]",
+              name: "newGeometries",
+              type: "string[]",
+            },
+            {
+              internalType: "address[]",
+              name: "newOwners",
+              type: "address[]",
+            },
+          ],
+          name: "divideLandNFT",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "divisionId",
+              type: "uint256",
+            },
+          ],
+          name: "executeDivision",
+          outputs: [],
+          stateMutability: "nonpayable",
           type: "function",
         },
         {
@@ -401,6 +507,11 @@ const deployedContracts = {
                 {
                   internalType: "string",
                   name: "surf_reel",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "geometry",
                   type: "string",
                 },
                 {
@@ -538,6 +649,11 @@ const deployedContracts = {
               type: "string",
             },
             {
+              internalType: "string",
+              name: "geometry",
+              type: "string",
+            },
+            {
               internalType: "uint256",
               name: "price",
               type: "uint256",
@@ -571,6 +687,11 @@ const deployedContracts = {
             {
               internalType: "string",
               name: "surf_reel",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "geometry",
               type: "string",
             },
             {
@@ -630,6 +751,30 @@ const deployedContracts = {
               internalType: "address",
               name: "",
               type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "pendingDivisions",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "originalLandId",
+              type: "uint256",
+            },
+            {
+              internalType: "bool",
+              name: "isApproved",
+              type: "bool",
             },
           ],
           stateMutability: "view",
@@ -718,6 +863,29 @@ const deployedContracts = {
             },
           ],
           name: "requestExchange",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+            {
+              internalType: "string[]",
+              name: "newGeometries",
+              type: "string[]",
+            },
+            {
+              internalType: "address[]",
+              name: "newOwners",
+              type: "address[]",
+            },
+          ],
+          name: "requestLandDivision",
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",
