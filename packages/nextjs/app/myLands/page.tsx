@@ -5,7 +5,7 @@ import { useAccount } from "wagmi";
 import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
-import LandsTable from "./_components/LandsTable";
+import LandsTable, { Action } from "./_components/LandsTable";
 
 
 const MyLands: NextPage = () => {
@@ -20,6 +20,17 @@ const MyLands: NextPage = () => {
 
     console.log(getLandsOfAccount);
 
+    const act = () => {
+
+    }
+
+    const actions: Action[] = [
+        {
+            label: "Sell",
+            action: act
+        }
+    ];
+
 
     return (
         <>
@@ -33,7 +44,7 @@ const MyLands: NextPage = () => {
             <div className="flex justify-center">
                 {!isConnected || isConnecting ? (
                     <RainbowKitCustomConnectButton />
-                ) : <LandsTable lands={getLandsOfAccount ?? []} />}
+                ) : <LandsTable lands={getLandsOfAccount ?? []} actions={actions} />}
             </div>
         </>
     );

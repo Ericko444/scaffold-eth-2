@@ -8,11 +8,18 @@ interface Land {
     price: bigint;
 }
 
-interface LandsTableProps {
-    lands: readonly Land[]; // Expecting an array of Land[]
+export interface Action {
+    label: string,
+    action: () => void;
 }
 
-export default function LandsTable({ lands }: LandsTableProps) {
+interface LandsTableProps {
+    lands: readonly Land[]; // Expecting an array of Land[]
+    actions: Action[];
+}
+
+export default function LandsTable({ lands, actions }: LandsTableProps) {
+    console.log(actions);
     return (
         <div className="flex justify-center px-4 md:px-0">
             <div className="overflow-x-auto w-full shadow-2xl rounded-xl">
@@ -24,6 +31,7 @@ export default function LandsTable({ lands }: LandsTableProps) {
                             <th className="bg-primary">Prix</th>
                             <th className="bg-primary">Surface réelle</th>
                             <th className="bg-primary">Surface</th>
+                            <th className="bg-primary">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -34,6 +42,11 @@ export default function LandsTable({ lands }: LandsTableProps) {
                                 <td className="text-right md:py-4">{Number(land.price)}</td>
                                 <td className="text-right md:py-4">{land.surf_reel}</td>
                                 <td className="text-right md:py-4">{land.surface}</td>
+                                <td className="text-right md:py-4">
+                                    {actions.map(action => (
+                                        <button className="btn btn-primary">{action.label}</button>
+                                    ))}
+                                </td>
                             </tr>
                         ))}
                     </tbody>

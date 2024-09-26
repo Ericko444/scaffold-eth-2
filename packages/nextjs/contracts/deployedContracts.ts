@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     YourContract: {
-      address: "0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f",
+      address: "0x0165878A594ca255338adfa4d48449f69242Eb8F",
       abi: [
         {
           inputs: [
@@ -412,6 +412,57 @@ const deployedContracts = {
               internalType: "struct YourContract.Land",
               name: "",
               type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+          ],
+          name: "getLandsNotOwnedByAccount",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "id",
+                  type: "uint256",
+                },
+                {
+                  internalType: "string",
+                  name: "num",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "nom",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "surface",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "surf_reel",
+                  type: "string",
+                },
+                {
+                  internalType: "uint256",
+                  name: "price",
+                  type: "uint256",
+                },
+              ],
+              internalType: "struct YourContract.Land[]",
+              name: "",
+              type: "tuple[]",
             },
           ],
           stateMutability: "view",
