@@ -38,19 +38,21 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 		uint256 price;
 	}
 
-	struct PendingExchange {
+	struct ExchangeRequest {
 		uint256 landId1;
 		uint256 landId2;
 		address owner1;
 		address owner2;
+		uint8 payerIndex; // Index of the payer (1 for owner1, 2 for owner2)
 		uint256 priceDifference;
-		bool isApproved;
+		bool isAcceptedBySecondOwner;
+		bool isApprovedByNotary;
 	}
 
 	mapping(uint256 => Land) public lands;
-	mapping(uint256 => PendingExchange) public pendingExchanges;
+	mapping(uint256 => ExchangeRequest) public exchangeRequests;
 
-	uint256 private exchangeCounter;
+	uint256 private exchangeRequestCounter;
 
 	constructor(address notary) ERC721("LandRegistry", "LAND") {
 		// Grant the notary role to the provided address
@@ -155,113 +157,167 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 		lands[tokenId].price = newPrice;
 	}
 
-	// Request land exchange between two owners (to be approved by the notary)
+	// Request a land exchange between two owners
 	function requestExchange(uint256 landId1, uint256 landId2) public {
 		address owner1 = ownerOf(landId1);
 		address owner2 = ownerOf(landId2);
 
 		require(
-			msg.sender == owner1 || msg.sender == owner2,
-			"You are not authorized to initiate the exchange"
+			msg.sender == owner1,
+			"Only the owner of land 1 can request the exchange"
 		);
 		require(owner1 != owner2, "Both lands are owned by the same person");
 
 		uint256 price1 = lands[landId1].price;
 		uint256 price2 = lands[landId2].price;
 
-		uint256 priceDifference = (price1 > price2)
-			? (price1 - price2)
-			: (price2 - price1);
+		// Determine the price difference and who pays (1 for owner1, 2 for owner2)
+		uint8 payerIndex;
+		uint256 priceDifference;
+		if (price1 > price2) {
+			priceDifference = price1 - price2;
+			payerIndex = 2; // Owner 2 pays the difference
+		} else if (price2 > price1) {
+			priceDifference = price2 - price1;
+			payerIndex = 1; // Owner 1 pays the difference
+		} else {
+			priceDifference = 0;
+			payerIndex = 0; // No payment needed if prices are the same
+		}
 
-		// Create a pending exchange record
-		exchangeCounter++;
-		pendingExchanges[exchangeCounter] = PendingExchange({
+		// Create a new exchange request
+		exchangeRequestCounter++;
+		exchangeRequests[exchangeRequestCounter] = ExchangeRequest({
 			landId1: landId1,
 			landId2: landId2,
 			owner1: owner1,
 			owner2: owner2,
+			payerIndex: payerIndex, // Store payer index (1 or 2)
 			priceDifference: priceDifference,
-			isApproved: false
+			isAcceptedBySecondOwner: false,
+			isApprovedByNotary: false
 		});
 
-		// Emit event for exchange request (optional)
 		emit ExchangeRequested(
-			exchangeCounter,
+			exchangeRequestCounter,
 			owner1,
 			owner2,
-			priceDifference
+			priceDifference,
+			payerIndex
 		);
 	}
 
-	// Notary approves the land exchange
-	function approveExchange(uint256 exchangeId) public onlyRole(NOTARY_ROLE) {
-		PendingExchange storage exchange = pendingExchanges[exchangeId];
-		require(!exchange.isApproved, "Exchange has already been approved");
-
-		// Mark the exchange as approved
-		exchange.isApproved = true;
-
-		// Emit event for approval (optional)
-		emit ExchangeApproved(exchangeId);
-	}
-
-	// Execute the approved exchange (only callable after notary approval)
-	function executeExchange(uint256 exchangeId) public payable nonReentrant {
-		PendingExchange storage exchange = pendingExchanges[exchangeId];
+	// The second owner accepts the exchange request
+	function acceptExchange(uint256 exchangeId) public {
+		ExchangeRequest storage request = exchangeRequests[exchangeId];
 		require(
-			exchange.isApproved,
-			"Exchange has not been approved by the notary"
+			msg.sender == request.owner2,
+			"Only the second owner can accept the exchange"
 		);
 
-		address owner1 = exchange.owner1;
-		address owner2 = exchange.owner2;
+		request.isAcceptedBySecondOwner = true;
 
-		uint256 landId1 = exchange.landId1;
-		uint256 landId2 = exchange.landId2;
+		emit ExchangeAccepted(exchangeId, request.owner1, request.owner2);
+	}
 
-		uint256 price1 = lands[landId1].price;
-		uint256 price2 = lands[landId2].price;
+	// The notary approves the exchange request
+	function approveExchange(uint256 exchangeId) public onlyRole(NOTARY_ROLE) {
+		ExchangeRequest storage request = exchangeRequests[exchangeId];
+		require(
+			request.isAcceptedBySecondOwner,
+			"The second owner must accept the exchange before notary approval"
+		);
 
-		if (price1 > price2) {
-			require(
-				msg.value >= exchange.priceDifference,
-				"Insufficient Ether sent to balance the exchange"
-			);
+		request.isApprovedByNotary = true;
 
-			// Transfer ownership of the land NFTs
-			_transfer(owner1, owner2, landId1);
-			_transfer(owner2, owner1, landId2);
+		emit ExchangeApproved(exchangeId);
 
-			// Pay the price difference to the owner of the more expensive land
-			payable(owner1).transfer(exchange.priceDifference);
-		} else if (price2 > price1) {
-			require(
-				msg.value >= exchange.priceDifference,
-				"Insufficient Ether sent to balance the exchange"
-			);
+		// Execute the exchange
+		executeExchange(exchangeId);
+	}
 
-			// Transfer ownership of the land NFTs
-			_transfer(owner1, owner2, landId1);
-			_transfer(owner2, owner1, landId2);
+	// Execute the approved land exchange
+	function executeExchange(uint256 exchangeId) internal nonReentrant {
+		ExchangeRequest storage request = exchangeRequests[exchangeId];
+		require(
+			request.isApprovedByNotary,
+			"The notary must approve the exchange"
+		);
 
-			// Pay the price difference to the owner of the more expensive land
-			payable(owner2).transfer(exchange.priceDifference);
-		} else {
-			// If prices are equal, just exchange the lands
-			_transfer(owner1, owner2, landId1);
-			_transfer(owner2, owner1, landId2);
+		address owner1 = request.owner1;
+		address owner2 = request.owner2;
+		uint8 payerIndex = request.payerIndex;
+
+		uint256 landId1 = request.landId1;
+		uint256 landId2 = request.landId2;
+
+		// If there is a price difference, the payer must cover it
+		if (request.priceDifference > 0) {
+			if (payerIndex == 1) {
+				// Owner 1 pays the difference
+				require(
+					msg.value >= request.priceDifference,
+					"Insufficient Ether sent to balance the exchange"
+				);
+				payable(owner2).transfer(request.priceDifference);
+			} else if (payerIndex == 2) {
+				// Owner 2 pays the difference
+				require(
+					msg.value >= request.priceDifference,
+					"Insufficient Ether sent to balance the exchange"
+				);
+				payable(owner1).transfer(request.priceDifference);
+			}
 		}
 
-		// Emit event for exchange execution (optional)
+		// Transfer the land NFTs between owners
+		_transfer(owner1, owner2, landId1);
+		_transfer(owner2, owner1, landId2);
+
 		emit ExchangeExecuted(exchangeId, owner1, owner2);
 	}
 
-	// Events (optional)
+	// Get a list of exchange requests where the provided address is the second owner (owner2)
+	function getExchangeRequestsAsOwner2(
+		address owner
+	) public view returns (ExchangeRequest[] memory) {
+		uint256 totalRequests = exchangeRequestCounter;
+		uint256 count = 0;
+
+		// First pass: count how many exchange requests have this address as owner2
+		for (uint256 i = 1; i <= totalRequests; i++) {
+			if (exchangeRequests[i].owner2 == owner) {
+				count++;
+			}
+		}
+
+		// Create an array with the correct size
+		ExchangeRequest[] memory result = new ExchangeRequest[](count);
+		uint256 index = 0;
+
+		// Second pass: collect the exchange requests where this address is owner2
+		for (uint256 i = 1; i <= totalRequests; i++) {
+			if (exchangeRequests[i].owner2 == owner) {
+				result[index] = exchangeRequests[i];
+				index++;
+			}
+		}
+
+		return result;
+	}
+
+	// Events
 	event ExchangeRequested(
 		uint256 exchangeId,
 		address indexed owner1,
 		address indexed owner2,
-		uint256 priceDifference
+		uint256 priceDifference,
+		uint8 payerIndex
+	);
+	event ExchangeAccepted(
+		uint256 exchangeId,
+		address indexed owner1,
+		address indexed owner2
 	);
 	event ExchangeApproved(uint256 exchangeId);
 	event ExchangeExecuted(

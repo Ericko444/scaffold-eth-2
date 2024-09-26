@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     YourContract: {
-      address: "0x0165878A594ca255338adfa4d48449f69242Eb8F",
+      address: "0x9E545E3C0baAB3E08CdfD552C960A1050f373042",
       abi: [
         {
           inputs: [
@@ -79,6 +79,31 @@ const deployedContracts = {
               name: "exchangeId",
               type: "uint256",
             },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "owner1",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "owner2",
+              type: "address",
+            },
+          ],
+          name: "ExchangeAccepted",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "exchangeId",
+              type: "uint256",
+            },
           ],
           name: "ExchangeApproved",
           type: "event",
@@ -134,6 +159,12 @@ const deployedContracts = {
               internalType: "uint256",
               name: "priceDifference",
               type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint8",
+              name: "payerIndex",
+              type: "uint8",
             },
           ],
           name: "ExchangeRequested",
@@ -287,6 +318,19 @@ const deployedContracts = {
         {
           inputs: [
             {
+              internalType: "uint256",
+              name: "exchangeId",
+              type: "uint256",
+            },
+          ],
+          name: "acceptExchange",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
               internalType: "address",
               name: "to",
               type: "address",
@@ -338,13 +382,54 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "uint256",
-              name: "exchangeId",
+              name: "",
               type: "uint256",
             },
           ],
-          name: "executeExchange",
-          outputs: [],
-          stateMutability: "payable",
+          name: "exchangeRequests",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "landId1",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "landId2",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "owner1",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "owner2",
+              type: "address",
+            },
+            {
+              internalType: "uint8",
+              name: "payerIndex",
+              type: "uint8",
+            },
+            {
+              internalType: "uint256",
+              name: "priceDifference",
+              type: "uint256",
+            },
+            {
+              internalType: "bool",
+              name: "isAcceptedBySecondOwner",
+              type: "bool",
+            },
+            {
+              internalType: "bool",
+              name: "isApprovedByNotary",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
           type: "function",
         },
         {
@@ -361,6 +446,67 @@ const deployedContracts = {
               internalType: "address",
               name: "",
               type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+          ],
+          name: "getExchangeRequestsAsOwner2",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "landId1",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "landId2",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "owner1",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "owner2",
+                  type: "address",
+                },
+                {
+                  internalType: "uint8",
+                  name: "payerIndex",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint256",
+                  name: "priceDifference",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bool",
+                  name: "isAcceptedBySecondOwner",
+                  type: "bool",
+                },
+                {
+                  internalType: "bool",
+                  name: "isApprovedByNotary",
+                  type: "bool",
+                },
+              ],
+              internalType: "struct YourContract.ExchangeRequest[]",
+              name: "",
+              type: "tuple[]",
             },
           ],
           stateMutability: "view",
@@ -732,50 +878,6 @@ const deployedContracts = {
               internalType: "address",
               name: "",
               type: "address",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          name: "pendingExchanges",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "landId1",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "landId2",
-              type: "uint256",
-            },
-            {
-              internalType: "address",
-              name: "owner1",
-              type: "address",
-            },
-            {
-              internalType: "address",
-              name: "owner2",
-              type: "address",
-            },
-            {
-              internalType: "uint256",
-              name: "priceDifference",
-              type: "uint256",
-            },
-            {
-              internalType: "bool",
-              name: "isApproved",
-              type: "bool",
             },
           ],
           stateMutability: "view",

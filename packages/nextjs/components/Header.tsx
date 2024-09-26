@@ -32,6 +32,10 @@ export const menuLinks: HeaderMenuLink[] = [
     label: "Marketplace",
     href: "/marketplace",
   },
+  {
+    label: "My requests",
+    href: "/myRequests",
+  },
 ];
 
 export const HeaderMenuLinks = () => {

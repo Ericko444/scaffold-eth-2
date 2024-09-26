@@ -5,7 +5,7 @@ import { useAccount } from "wagmi";
 import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
-import LandsTable from "../myLands/_components/LandsTable";
+import LandsTable, { Action } from "../myLands/_components/LandsTable";
 
 
 const Marketplace: NextPage = () => {
@@ -20,20 +20,51 @@ const Marketplace: NextPage = () => {
 
     console.log(getLandsNotOwnedByAccount);
 
+    const { writeContractAsync, isPending } = useScaffoldWriteContract("YourContract");
+
+    const handleRequestExchange = async () => {
+        try {
+            await writeContractAsync(
+                {
+                    functionName: "requestExchange",
+                    args: [BigInt(1), BigInt(2)],
+                },
+                {
+                    onBlockConfirmation: txnReceipt => {
+                        console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+                    },
+                },
+            );
+        } catch (e) {
+            console.error("Error requesting exchange", e);
+        }
+    };
+
+    const act = () => {
+
+    }
+
+    const actions: Action[] = [
+        {
+            label: "Exchange",
+            action: handleRequestExchange
+        }
+    ];
+
 
     return (
         <>
             <div className="flex items-center flex-col pt-10">
                 <div className="px-5">
                     <h1 className="text-center mb-8">
-                        <span className="block text-4xl font-bold">Lands to sell</span>
+                        <span className="block text-4xl font-bold">Lands on sell</span>
                     </h1>
                 </div>
             </div>
             <div className="flex justify-center">
                 {!isConnected || isConnecting ? (
                     <RainbowKitCustomConnectButton />
-                ) : <LandsTable lands={getLandsNotOwnedByAccount ?? []} />}
+                ) : <LandsTable lands={getLandsNotOwnedByAccount ?? []} actions={actions} />}
             </div>
         </>
     );
