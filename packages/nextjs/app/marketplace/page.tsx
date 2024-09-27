@@ -6,6 +6,7 @@ import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
 import LandsTable, { Action } from "../myLands/_components/LandsTable";
+import { ModalMyLands } from "~~/app/marketplace/_components/ModalMyLands";
 
 
 const Marketplace: NextPage = () => {
@@ -41,13 +42,19 @@ const Marketplace: NextPage = () => {
     };
 
     const act = () => {
+        const modal = document.getElementById('modal_my_lands') as HTMLDialogElement | null;
 
+        if (modal) {
+            modal.showModal();
+        } else {
+            console.error("Modal element not found");
+        }
     }
 
     const actions: Action[] = [
         {
             label: "Exchange",
-            action: handleRequestExchange
+            action: act
         }
     ];
 
@@ -57,7 +64,7 @@ const Marketplace: NextPage = () => {
             <div className="flex items-center flex-col pt-10">
                 <div className="px-5">
                     <h1 className="text-center mb-8">
-                        <span className="block text-4xl font-bold">Lands on sell</span>
+                        <span className="block text-4xl font-bold">Lands on sale</span>
                     </h1>
                 </div>
             </div>
@@ -66,6 +73,7 @@ const Marketplace: NextPage = () => {
                     <RainbowKitCustomConnectButton />
                 ) : <LandsTable lands={getLandsNotOwnedByAccount ?? []} actions={actions} />}
             </div>
+            <ModalMyLands />
         </>
     );
 };
