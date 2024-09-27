@@ -36,6 +36,10 @@ export const menuLinks: HeaderMenuLink[] = [
     label: "My requests",
     href: "/myRequests",
   },
+  {
+    label: "Approvals",
+    href: "/notary/approvals",
+  },
 ];
 
 export const HeaderMenuLinks = () => {

@@ -5,16 +5,16 @@ import { useAccount } from "wagmi";
 import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
-import RequestsTable, { Action } from "./_components/RequestsTable";
+import RequestsTable, { Action } from "~~/app/myRequests/_components/RequestsTable";
+import { parseEther } from "viem";
 
 
-const MyRequests: NextPage = () => {
+const Approvals: NextPage = () => {
     const { address: connectedAddress, isConnected, isConnecting } = useAccount();
 
     const { data: getExchangeRequests } = useScaffoldReadContract({
         contractName: "YourContract",
-        functionName: "getExchangeRequestsAsOwner2",
-        args: [connectedAddress],
+        functionName: "getRequestsWaitingForNotary",
         watch: true,
     });
 
@@ -26,8 +26,9 @@ const MyRequests: NextPage = () => {
         try {
             await writeContractAsync(
                 {
-                    functionName: "acceptExchange",
+                    functionName: "approveExchange",
                     args: [BigInt(1)],
+                    value: parseEther("0.5")
                 },
                 {
                     onBlockConfirmation: txnReceipt => {
@@ -53,7 +54,7 @@ const MyRequests: NextPage = () => {
             <div className="flex items-center flex-col pt-10">
                 <div className="px-5">
                     <h1 className="text-center mb-8">
-                        <span className="block text-4xl font-bold">My Lands</span>
+                        <span className="block text-4xl font-bold">Transactions waiting for approvals</span>
                     </h1>
                 </div>
             </div>
@@ -66,4 +67,4 @@ const MyRequests: NextPage = () => {
     );
 };
 
-export default MyRequests;
+export default Approvals;

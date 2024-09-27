@@ -221,23 +221,30 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 	}
 
 	// The notary approves the exchange request
-	function approveExchange(uint256 exchangeId) public onlyRole(NOTARY_ROLE) {
+	function approveExchange(
+		uint256 exchangeId
+	) public payable onlyRole(NOTARY_ROLE) {
 		ExchangeRequest storage request = exchangeRequests[exchangeId];
 		require(
 			request.isAcceptedBySecondOwner,
 			"The second owner must accept the exchange before notary approval"
 		);
 
+		uint value = msg.value;
+
 		request.isApprovedByNotary = true;
 
 		emit ExchangeApproved(exchangeId);
 
 		// Execute the exchange
-		executeExchange(exchangeId);
+		executeExchange(exchangeId, value);
 	}
 
 	// Execute the approved land exchange
-	function executeExchange(uint256 exchangeId) internal nonReentrant {
+	function executeExchange(
+		uint256 exchangeId,
+		uint value
+	) internal nonReentrant {
 		ExchangeRequest storage request = exchangeRequests[exchangeId];
 		require(
 			request.isApprovedByNotary,
@@ -256,14 +263,14 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 			if (payerIndex == 1) {
 				// Owner 1 pays the difference
 				require(
-					msg.value >= request.priceDifference,
+					value >= request.priceDifference,
 					"Insufficient Ether sent to balance the exchange"
 				);
 				payable(owner2).transfer(request.priceDifference);
 			} else if (payerIndex == 2) {
 				// Owner 2 pays the difference
 				require(
-					msg.value >= request.priceDifference,
+					value >= request.priceDifference,
 					"Insufficient Ether sent to balance the exchange"
 				);
 				payable(owner1).transfer(request.priceDifference);
@@ -298,6 +305,43 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 		// Second pass: collect the exchange requests where this address is owner2
 		for (uint256 i = 1; i <= totalRequests; i++) {
 			if (exchangeRequests[i].owner2 == owner) {
+				result[index] = exchangeRequests[i];
+				index++;
+			}
+		}
+
+		return result;
+	}
+
+	// Get all exchange requests waiting for notary approval
+	function getRequestsWaitingForNotary()
+		public
+		view
+		returns (ExchangeRequest[] memory)
+	{
+		uint256 totalRequests = exchangeRequestCounter;
+		uint256 count = 0;
+
+		// First pass: count how many exchange requests are waiting for notary approval
+		for (uint256 i = 1; i <= totalRequests; i++) {
+			if (
+				exchangeRequests[i].isAcceptedBySecondOwner &&
+				!exchangeRequests[i].isApprovedByNotary
+			) {
+				count++;
+			}
+		}
+
+		// Create an array with the correct size
+		ExchangeRequest[] memory result = new ExchangeRequest[](count);
+		uint256 index = 0;
+
+		// Second pass: collect the requests waiting for notary approval
+		for (uint256 i = 1; i <= totalRequests; i++) {
+			if (
+				exchangeRequests[i].isAcceptedBySecondOwner &&
+				!exchangeRequests[i].isApprovedByNotary
+			) {
 				result[index] = exchangeRequests[i];
 				index++;
 			}

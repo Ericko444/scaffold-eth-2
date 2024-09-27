@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     YourContract: {
-      address: "0x9E545E3C0baAB3E08CdfD552C960A1050f373042",
+      address: "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
       abi: [
         {
           inputs: [
@@ -356,7 +356,7 @@ const deployedContracts = {
           ],
           name: "approveExchange",
           outputs: [],
-          stateMutability: "nonpayable",
+          stateMutability: "payable",
           type: "function",
         },
         {
@@ -658,6 +658,61 @@ const deployedContracts = {
                 },
               ],
               internalType: "struct YourContract.Land[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getRequestsWaitingForNotary",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "landId1",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "landId2",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "owner1",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "owner2",
+                  type: "address",
+                },
+                {
+                  internalType: "uint8",
+                  name: "payerIndex",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint256",
+                  name: "priceDifference",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bool",
+                  name: "isAcceptedBySecondOwner",
+                  type: "bool",
+                },
+                {
+                  internalType: "bool",
+                  name: "isApprovedByNotary",
+                  type: "bool",
+                },
+              ],
+              internalType: "struct YourContract.ExchangeRequest[]",
               name: "",
               type: "tuple[]",
             },
