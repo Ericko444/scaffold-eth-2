@@ -1,5 +1,6 @@
 
-interface Request {
+export interface Request {
+    id: bigint;
     landId1: bigint;
     landId2: bigint;
     owner1: string;
@@ -12,7 +13,7 @@ interface Request {
 
 export interface Action {
     label: string,
-    action: () => void;
+    action: (request: Request) => void;
 }
 
 interface RequestsTableProps {
@@ -44,7 +45,7 @@ export default function RequestsTable({ requests, actions }: RequestsTableProps)
                                 <td className="text-right md:py-4">{Number(request.priceDifference)}</td>
                                 <td className="text-right md:py-4">
                                     {actions.map(action => (
-                                        <button className="btn btn-primary" onClick={action.action}>{action.label}</button>
+                                        <button className="btn btn-primary" onClick={() => { action.action(request) }}>{action.label}</button>
                                     ))}
                                 </td>
                             </tr>

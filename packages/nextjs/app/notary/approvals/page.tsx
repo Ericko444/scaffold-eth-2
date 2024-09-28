@@ -5,7 +5,7 @@ import { useAccount } from "wagmi";
 import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
-import RequestsTable, { Action } from "~~/app/myRequests/_components/RequestsTable";
+import RequestsTable, { Action, Request } from "~~/app/myRequests/_components/RequestsTable";
 import { parseEther } from "viem";
 
 
@@ -22,13 +22,13 @@ const Approvals: NextPage = () => {
 
     const { writeContractAsync, isPending } = useScaffoldWriteContract("YourContract");
 
-    const handleAcceptExchange = async () => {
+    const handleAcceptExchange = async (request: Request) => {
         try {
             await writeContractAsync(
                 {
                     functionName: "approveExchange",
-                    args: [BigInt(1)],
-                    value: parseEther("0.5")
+                    args: [request.id],
+                    value: request.priceDifference
                 },
                 {
                     onBlockConfirmation: txnReceipt => {
@@ -44,7 +44,7 @@ const Approvals: NextPage = () => {
     const actions: Action[] = [
         {
             label: "Approve",
-            action: handleAcceptExchange
+            action: (request: Request) => handleAcceptExchange(request)
         }
     ];
 

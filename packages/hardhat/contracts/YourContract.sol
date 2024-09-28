@@ -39,6 +39,7 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 	}
 
 	struct ExchangeRequest {
+		uint256 id; // The unique ID of the exchange request
 		uint256 landId1;
 		uint256 landId2;
 		address owner1;
@@ -188,6 +189,7 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 		// Create a new exchange request
 		exchangeRequestCounter++;
 		exchangeRequests[exchangeRequestCounter] = ExchangeRequest({
+			id: exchangeRequestCounter,
 			landId1: landId1,
 			landId2: landId2,
 			owner1: owner1,

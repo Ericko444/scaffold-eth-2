@@ -38,7 +38,7 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   await yourContract.transferOwnership("0x1a98EbD96CDB77A8Ea6cE8Bc3EcCd3B449712c7B");
   // console.log("👋 Initial greeting:", await yourContract.greeting());
   const tx = await yourContract.mintLandNFT(
-    "0xa1Ed27d9f07a0c6D0110Ad52920E49a528FD3167",
+    "0x6A647c3c0cC1C267e18A96b68A0D98c48F0Ab3e3",
     "T7260P(2)",   // num
     "MAHASOAVA",   // nom
     "0.24245910533199999", // surface as a string
