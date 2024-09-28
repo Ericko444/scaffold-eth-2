@@ -76,6 +76,63 @@ const deployedContracts = {
             {
               indexed: false,
               internalType: "uint256",
+              name: "divisionId",
+              type: "uint256",
+            },
+          ],
+          name: "DivisionApproved",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "divisionId",
+              type: "uint256",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "executor",
+              type: "address",
+            },
+          ],
+          name: "DivisionExecuted",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "divisionId",
+              type: "uint256",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "requester",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+          ],
+          name: "DivisionRequested",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: false,
+              internalType: "uint256",
               name: "exchangeId",
               type: "uint256",
             },
@@ -350,6 +407,19 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "uint256",
+              name: "divisionId",
+              type: "uint256",
+            },
+          ],
+          name: "approveDivision",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
               name: "exchangeId",
               type: "uint256",
             },
@@ -557,6 +627,11 @@ const deployedContracts = {
                 {
                   internalType: "string",
                   name: "surf_reel",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "geometry",
                   type: "string",
                 },
                 {
@@ -856,6 +931,11 @@ const deployedContracts = {
               type: "string",
             },
             {
+              internalType: "string",
+              name: "geometry",
+              type: "string",
+            },
+            {
               internalType: "uint256",
               name: "price",
               type: "uint256",
@@ -889,6 +969,11 @@ const deployedContracts = {
             {
               internalType: "string",
               name: "surf_reel",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "geometry",
               type: "string",
             },
             {
@@ -954,6 +1039,74 @@ const deployedContracts = {
           type: "function",
         },
         {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "pendingDivisions",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "originalLandId",
+              type: "uint256",
+            },
+            {
+              internalType: "bool",
+              name: "isApproved",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "pendingExchanges",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "landId1",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "landId2",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "owner1",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "owner2",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "priceDifference",
+              type: "uint256",
+            },
+            {
+              internalType: "bool",
+              name: "isApproved",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
           inputs: [],
           name: "renounceOwnership",
           outputs: [],
@@ -992,6 +1145,29 @@ const deployedContracts = {
             },
           ],
           name: "requestExchange",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+            {
+              internalType: "string[]",
+              name: "newGeometries",
+              type: "string[]",
+            },
+            {
+              internalType: "address[]",
+              name: "newOwners",
+              type: "address[]",
+            },
+          ],
+          name: "requestLandDivision",
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",
