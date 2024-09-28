@@ -7,10 +7,13 @@ import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaf
 import { notification } from "~~/utils/scaffold-eth";
 import RequestsTable, { Action, Request } from "~~/app/myRequests/_components/RequestsTable";
 import { parseEther } from "viem";
+import { ModalApprovals } from "../_components/ModalApprovals";
+import { useState } from "react";
 
 
 const Approvals: NextPage = () => {
     const { address: connectedAddress, isConnected, isConnecting } = useAccount();
+    const [requestId, setRequestId] = useState<Request | null>(null);
 
     const { data: getExchangeRequests } = useScaffoldReadContract({
         contractName: "YourContract",
@@ -43,8 +46,17 @@ const Approvals: NextPage = () => {
 
     const actions: Action[] = [
         {
-            label: "Approve",
-            action: (request: Request) => handleAcceptExchange(request)
+            label: "See details",
+            action: (request: Request) => {
+                setRequestId(request);
+                const modal = document.getElementById('modal_approvals') as HTMLDialogElement | null;
+
+                if (modal) {
+                    modal.showModal();
+                } else {
+                    console.error("Modal element not found");
+                }
+            }
         }
     ];
 
@@ -63,6 +75,7 @@ const Approvals: NextPage = () => {
                     <RainbowKitCustomConnectButton />
                 ) : <RequestsTable requests={getExchangeRequests ?? []} actions={actions} />}
             </div>
+            <ModalApprovals request={requestId} />
         </>
     );
 };

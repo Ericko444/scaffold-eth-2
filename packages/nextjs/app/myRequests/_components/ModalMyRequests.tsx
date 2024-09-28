@@ -40,10 +40,9 @@ export const ModalMyRequests = ({ request }: ModalMyRequestsProps) => {
                 <h3 className="font-bold text-lg">Exchange request :</h3>
                 <p>Land 1 : {Number(request.landId1)}</p>
                 <p>Land 2 : {Number(request.landId2)}</p>
-                <button className="btn btn-primary" onClick={handleAcceptExchange}>Accept Exchange</button>
                 <div className="modal-action">
                     <form method="dialog">
-                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                        <button className="btn btn-primary" onClick={handleAcceptExchange}>Accept Exchange</button>
                     </form>
                 </div>
             </div>

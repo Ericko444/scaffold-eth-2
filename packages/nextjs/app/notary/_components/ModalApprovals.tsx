@@ -1,15 +1,14 @@
 import LandsTable, { Action } from "~~/app/myLands/_components/LandsTable";
 import { useAccount } from "wagmi";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
-import RequestsTable from "./RequestsTable";
 import { useState } from "react";
-import { Request } from "./RequestsTable";
+import { Request } from "~~/app/myRequests/_components/RequestsTable";
 
-interface ModalMyRequestsProps {
+interface ModalApprovalsProps {
     request: Request | null,
 }
 
-export const ModalMyRequests = ({ request }: ModalMyRequestsProps) => {
+export const ModalApprovals = ({ request }: ModalApprovalsProps) => {
 
     const { writeContractAsync, isPending } = useScaffoldWriteContract("YourContract");
 
@@ -17,8 +16,9 @@ export const ModalMyRequests = ({ request }: ModalMyRequestsProps) => {
         try {
             await writeContractAsync(
                 {
-                    functionName: "acceptExchange",
+                    functionName: "approveExchange",
                     args: [request?.id],
+                    value: request?.priceDifference
                 },
                 {
                     onBlockConfirmation: txnReceipt => {
@@ -35,15 +35,14 @@ export const ModalMyRequests = ({ request }: ModalMyRequestsProps) => {
         return null;
     }
     return (
-        <dialog id="modal_my_requests" className="modal">
+        <dialog id="modal_approvals" className="modal">
             <div className="modal-box w-11/12 max-w-5xl">
                 <h3 className="font-bold text-lg">Exchange request :</h3>
                 <p>Land 1 : {Number(request.landId1)}</p>
                 <p>Land 2 : {Number(request.landId2)}</p>
-                <button className="btn btn-primary" onClick={handleAcceptExchange}>Accept Exchange</button>
                 <div className="modal-action">
                     <form method="dialog">
-                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                        <button className="btn btn-primary" onClick={handleAcceptExchange}>Approve Exchange</button>
                     </form>
                 </div>
             </div>

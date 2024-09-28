@@ -23,7 +23,7 @@ const MyRequests: NextPage = () => {
 
     const actions: Action[] = [
         {
-            label: "See",
+            label: "See details",
             action: (request: Request) => {
                 setRequestId(request);
                 const modal = document.getElementById('modal_my_requests') as HTMLDialogElement | null;

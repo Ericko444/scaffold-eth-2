@@ -51,10 +51,9 @@ export const ModalMyLands = () => {
                 <div className="mt-5 mb-5">
                     <MyLandsTable lands={getLandsOfAccount ?? []} selectedLandId={selectedLandId} setSelectedLandId={setSelectedLandId} />
                 </div>
-                <button className="btn btn-primary" onClick={handleRequestExchange}>Validate</button>
                 <div className="modal-action">
                     <form method="dialog">
-                        <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                        <button className="btn btn-primary" onClick={handleRequestExchange}>Validate</button>
                     </form>
                 </div>
             </div>
