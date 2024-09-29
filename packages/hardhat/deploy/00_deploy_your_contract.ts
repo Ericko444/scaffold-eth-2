@@ -60,17 +60,6 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   );
   await tx2.wait();
   console.log("Minted second land NFT to owner2");
-
-  const tx3 = await yourContract.mintLandNFT(
-    "0x93D8857DE05987a87549114594030F7812B7826f",
-    "A4563P(5) - 2",   // num
-    "RAHARIJAONA", // nom
-    "0.3121345231234", // surface as a string
-    "0,3512",       // surf_reel
-    ethers.parseEther("1.5")
-  );
-  await tx3.wait();
-  console.log("Minted second land NFT to owner2");
 };
 
 export default deployYourContract;

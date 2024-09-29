@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     YourContract: {
-      address: "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
+      address: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
       abi: [
         {
           inputs: [
@@ -452,6 +452,29 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+            {
+              internalType: "string[]",
+              name: "newGeometries",
+              type: "string[]",
+            },
+            {
+              internalType: "address[]",
+              name: "newOwners",
+              type: "address[]",
+            },
+          ],
+          name: "divideLandNFT",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
               name: "",
               type: "uint256",
             },
@@ -505,6 +528,19 @@ const deployedContracts = {
             },
           ],
           stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "divisionId",
+              type: "uint256",
+            },
+          ],
+          name: "executeDivision",
+          outputs: [],
+          stateMutability: "nonpayable",
           type: "function",
         },
         {
@@ -686,6 +722,11 @@ const deployedContracts = {
                   type: "string",
                 },
                 {
+                  internalType: "string",
+                  name: "geometry",
+                  type: "string",
+                },
+                {
                   internalType: "uint256",
                   name: "price",
                   type: "uint256",
@@ -734,6 +775,11 @@ const deployedContracts = {
                 {
                   internalType: "string",
                   name: "surf_reel",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "geometry",
                   type: "string",
                 },
                 {
@@ -1051,50 +1097,6 @@ const deployedContracts = {
             {
               internalType: "uint256",
               name: "originalLandId",
-              type: "uint256",
-            },
-            {
-              internalType: "bool",
-              name: "isApproved",
-              type: "bool",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          name: "pendingExchanges",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "landId1",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "landId2",
-              type: "uint256",
-            },
-            {
-              internalType: "address",
-              name: "owner1",
-              type: "address",
-            },
-            {
-              internalType: "address",
-              name: "owner2",
-              type: "address",
-            },
-            {
-              internalType: "uint256",
-              name: "priceDifference",
               type: "uint256",
             },
             {

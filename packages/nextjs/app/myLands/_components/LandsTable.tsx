@@ -1,5 +1,5 @@
 
-interface Land {
+export interface Land {
     id: bigint;
     num: string;
     nom: string;
@@ -10,7 +10,7 @@ interface Land {
 
 export interface Action {
     label: string,
-    action: () => void;
+    action: (land: Land) => void;
 }
 
 interface LandsTableProps {
@@ -44,7 +44,7 @@ export default function LandsTable({ lands, actions }: LandsTableProps) {
                                 <td className="text-right md:py-4">{land.surface}</td>
                                 <td className="text-right md:py-4">
                                     {actions.map(action => (
-                                        <button className="btn btn-primary" onClick={action.action}>{action.label}</button>
+                                        <button className="btn btn-primary mr-2" onClick={() => { action.action(land) }}>{action.label}</button>
                                     ))}
                                 </td>
                             </tr>

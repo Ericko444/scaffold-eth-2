@@ -6,10 +6,14 @@ import { RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { notification } from "~~/utils/scaffold-eth";
 import LandsTable, { Action } from "./_components/LandsTable";
+import { useState } from "react";
+import { Land } from "./_components/LandsTable";
+import { ModalDivide } from "./_components/ModalDivide";
 
 
 const MyLands: NextPage = () => {
     const { address: connectedAddress, isConnected, isConnecting } = useAccount();
+    const [land, setLand] = useState<Land | null>(null);
 
     const { data: getLandsOfAccount } = useScaffoldReadContract({
         contractName: "YourContract",
@@ -28,6 +32,19 @@ const MyLands: NextPage = () => {
         {
             label: "Sell",
             action: act
+        },
+        {
+            label: "Divide",
+            action: (land: Land) => {
+                setLand(land);
+                const modal = document.getElementById('modal_divide') as HTMLDialogElement | null;
+
+                if (modal) {
+                    modal.showModal();
+                } else {
+                    console.error("Modal element not found");
+                }
+            }
         }
     ];
 
@@ -46,6 +63,7 @@ const MyLands: NextPage = () => {
                     <RainbowKitCustomConnectButton />
                 ) : <LandsTable lands={getLandsOfAccount ?? []} actions={actions} />}
             </div>
+            <ModalDivide land={land} />
         </>
     );
 };

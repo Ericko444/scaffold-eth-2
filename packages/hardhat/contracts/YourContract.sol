@@ -413,6 +413,8 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 			_tokenIds.increment();
 			uint256 newItemId = _tokenIds.current();
 
+			console.log("%s", newItemId);
+
 			// Mint a new land NFT for each portion
 			_mint(newOwners[i], newItemId);
 
