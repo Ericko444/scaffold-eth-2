@@ -119,7 +119,7 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 
 		// First pass: count how many lands the owner has
 		for (uint256 i = 1; i <= totalLands; i++) {
-			if (ownerOf(i) == owner) {
+			if (_exists(i) && ownerOf(i) == owner) {
 				count++;
 			}
 		}
@@ -130,7 +130,7 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 
 		// Second pass: add the lands owned by the account
 		for (uint256 i = 1; i <= totalLands; i++) {
-			if (ownerOf(i) == owner) {
+			if (_exists(i) && ownerOf(i) == owner) {
 				result[index] = lands[i];
 				index++;
 			}
@@ -147,7 +147,7 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 
 		// First pass: count how many lands are not owned by the account
 		for (uint256 i = 1; i <= totalLands; i++) {
-			if (ownerOf(i) != owner) {
+			if (_exists(i) && ownerOf(i) != owner) {
 				count++;
 			}
 		}
@@ -158,7 +158,7 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 
 		// Second pass: add the lands not owned by the account
 		for (uint256 i = 1; i <= totalLands; i++) {
-			if (ownerOf(i) != owner) {
+			if (_exists(i) && ownerOf(i) != owner) {
 				result[index] = lands[i];
 				index++;
 			}
@@ -405,9 +405,6 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 			"Mismatch between new geometries and owners"
 		);
 
-		// Retire the original NFT (optional: you can burn it or leave it)
-		_burn(landId);
-
 		// Mint new NFTs for each divided portion
 		for (uint256 i = 0; i < newGeometries.length; i++) {
 			_tokenIds.increment();
@@ -417,6 +414,9 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 
 			// Mint a new land NFT for each portion
 			_mint(newOwners[i], newItemId);
+
+			// Ensure the new token has been minted before performing any operations
+			require(_exists(newItemId), "New token does not exist");
 
 			string memory iString = uintToString(i);
 
@@ -431,6 +431,9 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 				lands[landId].price // You can adjust price as needed
 			);
 		}
+
+		// Retire the original NFT (optional: you can burn it or leave it)
+		_burn(landId);
 	}
 
 	// Request division of an existing land NFT

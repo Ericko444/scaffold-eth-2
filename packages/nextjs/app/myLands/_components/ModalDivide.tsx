@@ -25,6 +25,35 @@ interface FeatureCollection {
 export const ModalDivide = ({ land }: ModalDivideProps) => {
     const [jsonData, setJsonData] = useState<any>(null);
     const [geometryStrings, setGeometryStrings] = useState<string[]>([]);
+    const [number, setNumber] = useState<number | undefined>();
+    const [textValues, setTextValues] = useState<string[]>([]);
+
+    const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = event.target.value;
+        const parsedValue = newValue === '' ? undefined : Number(newValue);
+        setNumber(parsedValue);
+        const newCount = parsedValue ?? 0;
+
+        setTextValues((prevValues) => {
+            const values = [...prevValues];
+            if (newCount > values.length) {
+                // Add empty strings to match the new count
+                return values.concat(Array(newCount - values.length).fill(''));
+            } else {
+                // Truncate the array to match the new count
+                return values.slice(0, newCount);
+            }
+        });
+    };
+
+    const handleTextChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = event.target.value;
+        setTextValues((prevValues) => {
+            const newValues = [...prevValues];
+            newValues[index] = newValue;
+            return newValues;
+        });
+    };
 
     const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -58,7 +87,8 @@ export const ModalDivide = ({ land }: ModalDivideProps) => {
             await writeContractAsync(
                 {
                     functionName: "divideLandNFT",
-                    args: [land?.id, geometryStrings, ["0x7622b05c1cD2fC41a1C65D2Cee5C6CECbe0d23A7", "0x93D8857DE05987a87549114594030F7812B7826f"]],
+                    args: [land?.id, geometryStrings, textValues],
+                    // args: [land?.id, geometryStrings, ["0x7622b05c1cD2fC41a1C65D2Cee5C6CECbe0d23A7", "0x6A647c3c0cC1C267e18A96b68A0D98c48F0Ab3e3"]],
                 },
                 {
                     onBlockConfirmation: txnReceipt => {
@@ -70,6 +100,8 @@ export const ModalDivide = ({ land }: ModalDivideProps) => {
             console.error("Error requesting exchange", e);
         }
     };
+
+    console.log(isPending, "...");
 
 
     return (
@@ -84,6 +116,28 @@ export const ModalDivide = ({ land }: ModalDivideProps) => {
                         accept=".geojson"
                         onChange={handleFileUpload}
                         className="file-input file-input-bordered file-input-primary w-full max-w-xs" />
+                </div>
+                <div className="mt-5 mb-5">
+                    <p>Number of divisions :</p>
+                    <input
+                        type="number"
+                        placeholder="Number of divisions"
+                        value={number !== undefined ? number : ''}
+                        onChange={handleNumberChange}
+                        className="input input-bordered input-primary w-full max-w-xs" />
+                </div>
+                <div className="mt-5 mb-5">
+                    <p>Adresses :</p>
+                    {textValues.map((value, index) => (
+                        <input
+                            className="input input-bordered input-primary w-full max-w-xs mr-3"
+                            key={index}
+                            placeholder={`Adress ${index + 1}`}
+                            type="text"
+                            value={value}
+                            onChange={handleTextChange(index)}
+                        />
+                    ))}
                 </div>
                 <div className="modal-action">
                     <form method="dialog">
