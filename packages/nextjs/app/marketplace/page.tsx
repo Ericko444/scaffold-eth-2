@@ -7,6 +7,8 @@ import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaf
 import { notification } from "~~/utils/scaffold-eth";
 import LandsTable, { Action } from "../myLands/_components/LandsTable";
 import { ModalMyLands } from "~~/app/marketplace/_components/ModalMyLands";
+import React from "react";
+import MapView from "./_components/MapView";
 
 
 const Marketplace: NextPage = () => {
@@ -72,6 +74,9 @@ const Marketplace: NextPage = () => {
                 {!isConnected || isConnecting ? (
                     <RainbowKitCustomConnectButton />
                 ) : <LandsTable lands={getLandsNotOwnedByAccount ?? []} actions={actions} />}
+            </div>
+            <div className="flex items-center flex-col pt-10">
+                <MapView />
             </div>
             <ModalMyLands />
         </>
