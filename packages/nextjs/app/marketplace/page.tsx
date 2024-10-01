@@ -7,12 +7,15 @@ import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaf
 import { notification } from "~~/utils/scaffold-eth";
 import LandsTable, { Action } from "../myLands/_components/LandsTable";
 import { ModalMyLands } from "~~/app/marketplace/_components/ModalMyLands";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MapView from "./_components/MapView";
+import { Land } from "~~/types/land";
+import { parsePolygonGeometry } from "~~/utils/lands/lands";
 
 
 const Marketplace: NextPage = () => {
     const { address: connectedAddress, isConnected, isConnecting } = useAccount();
+    const [lands, setLands] = useState<Land[] | undefined>([]);
 
     const { data: getLandsNotOwnedByAccount } = useScaffoldReadContract({
         contractName: "YourContract",
@@ -21,7 +24,16 @@ const Marketplace: NextPage = () => {
         watch: true,
     });
 
-    console.log(getLandsNotOwnedByAccount);
+    useEffect(() => {
+        const landsData: Land[] | undefined = getLandsNotOwnedByAccount?.map(land => {
+            const parsedData = JSON.parse(land.geometry);
+            const geometryObject = parsedData.geometry;
+            return { ...land, id: Number(land.id), price: Number(land.price), geometry: parsePolygonGeometry(geometryObject) }
+        });
+        setLands(landsData)
+    }, [getLandsNotOwnedByAccount])
+
+
 
     const { writeContractAsync, isPending } = useScaffoldWriteContract("YourContract");
 
@@ -76,7 +88,7 @@ const Marketplace: NextPage = () => {
                 ) : <LandsTable lands={getLandsNotOwnedByAccount ?? []} actions={actions} />}
             </div>
             <div className="flex items-center flex-col pt-10">
-                <MapView />
+                <MapView lands={lands} />
             </div>
             <ModalMyLands />
         </>
