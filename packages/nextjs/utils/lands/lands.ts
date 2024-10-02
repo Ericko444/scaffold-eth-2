@@ -1,7 +1,7 @@
 import { Land, PolygonCoordinates, PolygonGeometry } from "~~/types/land";
 import { Feature, FeatureCollection, Polygon } from 'geojson';
 
-interface LandProperties {
+export interface LandProperties {
     id: number;
     num: string;
     nom: string;

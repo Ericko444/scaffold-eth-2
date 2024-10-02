@@ -8,7 +8,7 @@ import { notification } from "~~/utils/scaffold-eth";
 import LandsTable, { Action } from "../myLands/_components/LandsTable";
 import { ModalMyLands } from "~~/app/marketplace/_components/ModalMyLands";
 import React, { useEffect, useState } from "react";
-import MapView from "./_components/MapView";
+import MapView from "~~/components/land-maps/MapView";
 import { Land } from "~~/types/land";
 import { parsePolygonGeometry } from "~~/utils/lands/lands";
 
@@ -88,7 +88,12 @@ const Marketplace: NextPage = () => {
                 ) : <LandsTable lands={getLandsNotOwnedByAccount ?? []} actions={actions} />}
             </div>
             <div className="flex items-center flex-col pt-10">
-                <MapView lands={lands} />
+                {!!lands && lands.length > 0 ? (
+                    <MapView lands={lands} />
+                ) : (
+                    <p>Loading map data...</p>
+                )}
+
             </div>
             <ModalMyLands />
         </>

@@ -1,12 +1,12 @@
 // src/MapView.js
-import React from 'react';
+import React, { useState } from 'react';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import { geojsonData } from './data'; // Import your GeoJSON data
-import { GeoJsonObject } from 'geojson';
+import { FeatureCollection, GeoJsonObject, Polygon } from 'geojson';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Land } from '~~/types/land';
-import { convertIntoFeatureCollection } from '~~/utils/lands/lands';
+import { convertIntoFeatureCollection, LandProperties } from '~~/utils/lands/lands';
 import { useEffect } from 'react';
 
 // Fix Leaflet's default icon paths (necessary when using webpack and TypeScript)
@@ -23,10 +23,17 @@ interface MapViewProp {
 }
 
 const MapView = ({ lands }: MapViewProp) => {
+    const [data, setData] = useState<FeatureCollection<Polygon, LandProperties>>();
     useEffect(() => {
         if (!lands) {
             // No lands to display, perhaps show a message or skip rendering the map
             return;
+        }
+
+        if (!!lands && lands?.length > 0) {
+            const data = convertIntoFeatureCollection(lands);
+            console.log(data);
+            setData(data);
         }
 
         // Logic to render the map with the provided lands
@@ -34,6 +41,7 @@ const MapView = ({ lands }: MapViewProp) => {
     // Set the map center to the first coordinate in your GeoJSON data
     const position: [number, number] = [-19.887306227883506, 47.05264176331643];
     console.log(lands);
+
     return (
         <MapContainer
             center={position}
@@ -46,7 +54,7 @@ const MapView = ({ lands }: MapViewProp) => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             {/* GeoJSON layer */}
-            <GeoJSON data={geojsonData as GeoJsonObject} />
+            <GeoJSON data={data as unknown as GeoJsonObject} />
         </MapContainer>
     );
 };
