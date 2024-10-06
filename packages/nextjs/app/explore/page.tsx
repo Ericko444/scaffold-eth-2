@@ -3,7 +3,7 @@
 import type { NextPage } from "next";
 import React, { } from "react";
 import MapViewGSON from "~~/components/land-maps/MapViewGSON";
-import { geoData } from "./data/data";
+import { geoData } from "./data/data2";
 import { SearchDTO, SearchResponse } from "~~/types/search";
 import { useState } from "react";
 import axios, { AxiosError, AxiosResponse } from 'axios';
