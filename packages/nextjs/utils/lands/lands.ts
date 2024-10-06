@@ -10,6 +10,14 @@ export interface LandProperties {
     price: number;
 }
 
+export interface LandPropertiesSurf {
+    Id: number;
+    num: string;
+    nom: string;
+    surface: number;
+    surf_reel: string | null;
+}
+
 export function parsePolygonGeometry(input: any): PolygonGeometry {
     if (
         input &&
@@ -60,4 +68,17 @@ export function convertIntoFeatureCollection(data: Land[]): FeatureCollection<Po
     };
 
     return featureCollection;
+}
+
+export function filterGeoJSONByIds(
+    data: FeatureCollection<Polygon, LandPropertiesSurf>,
+    ids: string[]
+): FeatureCollection<Polygon, LandPropertiesSurf> {
+    const filteredFeatures = data.features.filter((feature) => {
+        return feature.properties && ids.includes(feature.properties.num);
+    });
+    return {
+        type: 'FeatureCollection',
+        features: filteredFeatures,
+    };
 }

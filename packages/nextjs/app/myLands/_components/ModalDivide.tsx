@@ -143,6 +143,9 @@ export const ModalDivide = ({ land }: ModalDivideProps) => {
                     <form method="dialog">
                         <button className="btn btn-primary" onClick={handleDivision}>Validate</button>
                     </form>
+                    <form method="dialog" className="modal-backdrop">
+                        <button>close</button>
+                    </form>
                 </div>
             </div>
         </dialog>

@@ -14,6 +14,7 @@ import { Land as LandType } from "~~/types/land";
 import MapView from "~~/components/land-maps/MapView";
 import { parsePolygonGeometry } from "~~/utils/lands/lands";
 import { geojsonData, simpleData } from "~~/data/data";
+import LandCarousel from "~~/components/land-maps/LandCarousel";
 
 
 const MyLands: NextPage = () => {
@@ -77,7 +78,7 @@ const MyLands: NextPage = () => {
             </div>
             <div className="flex justify-center">
                 <div role="tablist" className="tabs tabs-bordered">
-                    <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Tableau" />
+                    <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Tableau" defaultChecked />
                     <div role="tabpanel" className="tab-content p-10">{!isConnected || isConnecting ? (
                         <RainbowKitCustomConnectButton />
                     ) : <LandsTable lands={getLandsOfAccount ?? []} actions={actions} />}</div>
@@ -88,8 +89,13 @@ const MyLands: NextPage = () => {
                         role="tab"
                         className="tab"
                         aria-label="Carousel"
-                        defaultChecked />
-                    <div role="tabpanel" className="tab-content p-10">Tab content 2</div>
+                    />
+                    <div role="tabpanel" className="tab-content p-10">
+                        {!!lands && lands.length > 0 ? (
+                            <LandCarousel lands={lands} />
+                        ) : (
+                            <p>Loading map data...</p>
+                        )}</div>
                 </div>
             </div>
             <div className="flex items-center flex-col pt-10">

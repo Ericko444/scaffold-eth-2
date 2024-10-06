@@ -11,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import MapView from "~~/components/land-maps/MapView";
 import { Land } from "~~/types/land";
 import { parsePolygonGeometry } from "~~/utils/lands/lands";
+import LandCarousel from "~~/components/land-maps/LandCarousel";
 
 
 const Marketplace: NextPage = () => {
@@ -83,9 +84,26 @@ const Marketplace: NextPage = () => {
                 </div>
             </div>
             <div className="flex justify-center">
-                {!isConnected || isConnecting ? (
-                    <RainbowKitCustomConnectButton />
-                ) : <LandsTable lands={getLandsNotOwnedByAccount ?? []} actions={actions} />}
+                <div role="tablist" className="tabs tabs-bordered">
+                    <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Tableau" defaultChecked />
+                    <div role="tabpanel" className="tab-content p-10">{!isConnected || isConnecting ? (
+                        <RainbowKitCustomConnectButton />
+                    ) : <LandsTable lands={getLandsNotOwnedByAccount ?? []} actions={actions} />}</div>
+
+                    <input
+                        type="radio"
+                        name="my_tabs_1"
+                        role="tab"
+                        className="tab"
+                        aria-label="Carousel"
+                    />
+                    <div role="tabpanel" className="tab-content p-10">
+                        {!!lands && lands.length > 0 ? (
+                            <LandCarousel lands={lands} />
+                        ) : (
+                            <p>Loading map data...</p>
+                        )}</div>
+                </div>
             </div>
             <div className="flex items-center flex-col pt-10">
                 {!!lands && lands.length > 0 ? (
