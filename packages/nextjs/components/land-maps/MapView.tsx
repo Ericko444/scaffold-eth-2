@@ -6,6 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import { Land } from '~~/types/land';
 import { convertIntoFeatureCollection } from '~~/utils/lands/lands';
 import GeoJSONLayer from './GeoJSONLayer';
+import FitBoundsComponent from './FitBoundsComponent';
 
 // Fix Leaflet's default icon paths (necessary when using webpack and TypeScript)
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -43,7 +44,9 @@ const MapView: React.FC<MapViewProps> = ({ lands }) => {
                 url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
             />
             {/* GeoJSON layer */}
-            {data && <GeoJSONLayer data={data} />}
+            {data && (<>
+                <GeoJSONLayer data={data} /> <FitBoundsComponent data={data} />
+            </>)}
         </MapContainer>
     );
 };
