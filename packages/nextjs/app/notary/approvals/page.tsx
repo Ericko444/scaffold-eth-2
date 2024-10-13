@@ -9,6 +9,7 @@ import RequestsTable, { Action, Request } from "~~/app/myRequests/_components/Re
 import { parseEther } from "viem";
 import { ModalApprovals } from "../_components/ModalApprovals";
 import { useState } from "react";
+import RequestsContainer from "~~/app/myRequests/_components/RequestsContainer";
 
 
 const Approvals: NextPage = () => {
@@ -70,11 +71,16 @@ const Approvals: NextPage = () => {
                     </h1>
                 </div>
             </div>
-            <div className="flex justify-center">
+            {/* <div className="flex justify-center">
                 {!isConnected || isConnecting ? (
                     <RainbowKitCustomConnectButton />
                 ) : <RequestsTable requests={getExchangeRequests ?? []} actions={actions} />}
-            </div>
+            </div> */}
+            {!!getExchangeRequests && (
+                getExchangeRequests.map(req => (
+                    <RequestsContainer request={req} type="notary" />
+                ))
+            )}
             <ModalApprovals request={requestId} />
         </>
     );

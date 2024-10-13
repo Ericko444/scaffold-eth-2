@@ -15,6 +15,7 @@ import MapView from "~~/components/land-maps/MapView";
 import { parsePolygonGeometry } from "~~/utils/lands/lands";
 import { geojsonData, simpleData } from "~~/data/data";
 import LandCarousel from "~~/components/land-maps/LandCarousel";
+import GridCards from "~~/components/land-maps/GridCards";
 
 
 const MyLands: NextPage = () => {
@@ -22,6 +23,11 @@ const MyLands: NextPage = () => {
     const [landItem, setLandItem] = useState<Land | null>(null);
     const [lands, setLands] = useState<LandType[] | undefined>([]);
     const [landsDataD, setLandsDataD] = useState<LandType[] | undefined>([]);
+    const [viewMode, setViewMode] = useState<string>("grid");
+
+    const toggleViewMode = () => {
+        setViewMode(viewMode === "grid" ? "map" : "grid");
+    };
 
     const { data: getLandsOfAccount } = useScaffoldReadContract({
         contractName: "YourContract",
@@ -76,37 +82,31 @@ const MyLands: NextPage = () => {
                     </h1>
                 </div>
             </div>
-            <div className="flex justify-center">
-                <div role="tablist" className="tabs tabs-bordered">
-                    <input type="radio" name="my_tabs_1" role="tab" className="tab" aria-label="Tableau" defaultChecked />
-                    <div role="tabpanel" className="tab-content p-10">{!isConnected || isConnecting ? (
-                        <RainbowKitCustomConnectButton />
-                    ) : <LandsTable lands={getLandsOfAccount ?? []} actions={actions} />}</div>
-
-                    <input
-                        type="radio"
-                        name="my_tabs_1"
-                        role="tab"
-                        className="tab"
-                        aria-label="Carousel"
-                    />
-                    <div role="tabpanel" className="tab-content p-10">
+            <div className="container mx-auto p-4">
+                <div className="flex justify-end mb-4">
+                    <button className="btn" onClick={toggleViewMode}>
+                        Switch to {viewMode === "grid" ? "Map" : "Grid"} View
+                    </button>
+                </div>
+                {viewMode === "grid" ? (
+                    <div className="flex justify-center">
+                        {/* <div role="tabpanel" className="tab-content p-10">{!isConnected || isConnecting ? (
+                            <RainbowKitCustomConnectButton />
+                        ) : <LandsTable lands={getLandsNotOwnedByAccount ?? []} actions={actions} />}</div> */}
+                        <GridCards type="myLands" lands={getLandsOfAccount ?? []} />
+                    </div>
+                ) : (
+                    <div className="flex items-center flex-col pt-10">
                         {!!lands && lands.length > 0 ? (
-                            <LandCarousel lands={lands} />
+                            <MapView lands={lands} />
                         ) : (
                             <p>Loading map data...</p>
-                        )}</div>
-                </div>
-            </div>
-            <div className="flex items-center flex-col pt-10">
-                {!!lands && lands.length > 0 ? (
-                    <MapView lands={lands} />
-                ) : (
-                    <p>Loading map data...</p>
-                )}
+                        )}
 
+                    </div>
+                )
+                }
             </div>
-            <ModalDivide land={landItem} />
         </>
     );
 };

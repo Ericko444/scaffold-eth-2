@@ -23,16 +23,29 @@ export function parsePolygonGeometry(input: any): PolygonGeometry {
         input &&
         input.type === 'Polygon' &&
         Array.isArray(input.coordinates) &&
-        input.coordinates.every((ring: any) =>
-            Array.isArray(ring) &&
-            ring.every(
-                (position: any) =>
-                    Array.isArray(position) &&
-                    position.length === 2 &&
-                    typeof position[0] === 'number' &&
-                    typeof position[1] === 'number'
-            )
-        )
+        input.coordinates.every((ring: any, ringIndex: number) => {
+            if (!Array.isArray(ring)) {
+                console.error(`Ring at index ${ringIndex} is not an array.`);
+                return false;
+            }
+            return ring.every(
+                (position: any, posIndex: number) => {
+                    if (!Array.isArray(position)) {
+                        console.error(`Position at index ${posIndex} in ring ${ringIndex} is not an array.`);
+                        return false;
+                    }
+                    if (position.length !== 2) {
+                        console.error(`Position at index ${posIndex} in ring ${ringIndex} does not have 2 elements.`);
+                        return false;
+                    }
+                    if (typeof position[0] !== 'number' || typeof position[1] !== 'number') {
+                        console.error(`Invalid number types at position ${posIndex} in ring ${ringIndex}:`, position);
+                        return false;
+                    }
+                    return true;
+                }
+            );
+        })
     ) {
         const coordinates = input.coordinates as PolygonCoordinates;
         return {

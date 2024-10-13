@@ -8,6 +8,7 @@ import { notification } from "~~/utils/scaffold-eth";
 import RequestsTable, { Action, Request } from "./_components/RequestsTable";
 import { ModalMyRequests } from "./_components/ModalMyRequests";
 import { useState } from "react";
+import RequestsContainer from "./_components/RequestsContainer";
 
 
 const MyRequests: NextPage = () => {
@@ -46,11 +47,16 @@ const MyRequests: NextPage = () => {
                     </h1>
                 </div>
             </div>
-            <div className="flex justify-center">
+            {/* <div className="flex justify-center">
                 {!isConnected || isConnecting ? (
                     <RainbowKitCustomConnectButton />
                 ) : <RequestsTable requests={getExchangeRequests ?? []} actions={actions} />}
-            </div>
+            </div> */}
+            {!!getExchangeRequests && (
+                getExchangeRequests.map(req => (
+                    <RequestsContainer request={req} type="owner2" />
+                ))
+            )}
             <ModalMyRequests request={requestId} />
         </>
     );

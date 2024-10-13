@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     YourContract: {
-      address: "0xC32609C91d6B6b51D48f2611308FEf121B02041f",
+      address: "0xF8e31cb472bc70500f08Cd84917E5A1912Ec8397",
       abi: [
         {
           inputs: [
@@ -541,6 +541,56 @@ const deployedContracts = {
           name: "executeDivision",
           outputs: [],
           stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getAllLands",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "id",
+                  type: "uint256",
+                },
+                {
+                  internalType: "string",
+                  name: "num",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "nom",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "surface",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "surf_reel",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "geometry",
+                  type: "string",
+                },
+                {
+                  internalType: "uint256",
+                  name: "price",
+                  type: "uint256",
+                },
+              ],
+              internalType: "struct YourContract.Land[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
           type: "function",
         },
         {

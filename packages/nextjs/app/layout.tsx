@@ -4,6 +4,7 @@ import { ThemeProvider } from "~~/components/ThemeProvider";
 import "~~/styles/globals.css";
 import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
 import 'leaflet/dist/leaflet.css';
+import StoreProvider from "./storeProvider";
 
 export const metadata = getMetadata({
   title: "MadaTerra",
@@ -15,7 +16,9 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
     <html suppressHydrationWarning>
       <body>
         <ThemeProvider enableSystem>
-          <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
+          <StoreProvider>
+            <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
+          </StoreProvider>
         </ThemeProvider>
       </body>
     </html>

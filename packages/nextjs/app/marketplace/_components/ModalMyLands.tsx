@@ -4,7 +4,11 @@ import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaf
 import { MyLandsTable } from "./MyLandsTable";
 import { useState } from "react";
 
-export const ModalMyLands = () => {
+interface ModalMyLandsProps {
+    idLandToExchange: number
+}
+
+export const ModalMyLands = ({ idLandToExchange }: ModalMyLandsProps) => {
     const [selectedLandId, setSelectedLandId] = useState<number>(0);
     const { address: connectedAddress, isConnected, isConnecting } = useAccount();
 
@@ -31,7 +35,7 @@ export const ModalMyLands = () => {
             await writeContractAsync(
                 {
                     functionName: "requestExchange",
-                    args: [BigInt(selectedLandId), BigInt(2)],
+                    args: [BigInt(selectedLandId), BigInt(idLandToExchange)],
                 },
                 {
                     onBlockConfirmation: txnReceipt => {

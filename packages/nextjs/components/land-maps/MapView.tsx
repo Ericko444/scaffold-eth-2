@@ -46,6 +46,7 @@ const MapView: React.FC<MapViewProps> = ({ lands }) => {
             {/* GeoJSON layer */}
             {data && (<>
                 <GeoJSONLayer data={data} /> <FitBoundsComponent data={data} />
+                <FitBoundsComponent data={data} />
             </>)}
         </MapContainer>
     );

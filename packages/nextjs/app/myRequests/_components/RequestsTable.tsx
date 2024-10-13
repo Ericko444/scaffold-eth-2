@@ -11,6 +11,18 @@ export interface Request {
     isApprovedByNotary: boolean;
 }
 
+export interface RequestItem {
+    id: number;
+    landId1: number;
+    landId2: number;
+    owner1: string;
+    owner2: string;
+    payerIndex: number; // 1 for owner1, 2 for owner2
+    priceDifference: number;
+    isAcceptedBySecondOwner: boolean;
+    isApprovedByNotary: boolean;
+}
+
 export interface Action {
     label: string,
     action: (request: Request) => void;

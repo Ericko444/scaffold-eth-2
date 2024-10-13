@@ -1,3 +1,4 @@
+import { formatEther } from "viem";
 import { Land } from "~~/types/land";
 
 interface LandCardProps {
@@ -14,7 +15,7 @@ const LandCard = ({ land }: LandCardProps) => {
         <div className="card-body">
             <h2 className="card-title">{land.nom}</h2>
             <p>Superficie: {land.surf_reel}</p>
-            <p>Prix: {land.price}</p>
+            <p>Prix: {formatEther(BigInt(land.price))} ETH</p>
             <div className="card-actions justify-end">
                 <button className="btn btn-primary">Détails</button>
             </div>
