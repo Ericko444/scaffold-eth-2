@@ -7,7 +7,9 @@ export interface Land {
     surface: string;
     surf_reel: string;
     price: number;
-    geometry: PolygonGeometry
+    geometry: PolygonGeometry;
+    isForSale: boolean;
+    seller: string
 }
 
 export interface ExchangeRequestDTO {

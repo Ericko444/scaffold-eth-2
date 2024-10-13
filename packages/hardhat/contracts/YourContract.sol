@@ -37,6 +37,8 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 		string surf_reel;
 		string geometry; // New: Store the geometry (coordinates) as a string or URI
 		uint256 price;
+		bool isForSale; // New: Indicates if the land is listed for sale
+		address payable seller; // New: Address of the seller (landowner)
 	}
 
 	struct ExchangeRequest {
@@ -91,15 +93,17 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 
 		_mint(recipient, newItemId);
 
-		lands[newItemId] = Land(
-			newItemId,
-			num,
-			nom,
-			surface,
-			surf_reel,
-			geometry,
-			price
-		);
+		lands[newItemId] = Land({
+			id: newItemId,
+			num: num,
+			nom: nom,
+			surface: surface,
+			surf_reel: surf_reel,
+			price: price,
+			geometry: geometry,
+			isForSale: true,
+			seller: payable(recipient)
+		});
 
 		return newItemId;
 	}
@@ -455,7 +459,9 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 				lands[landId].surface,
 				lands[landId].surf_reel,
 				newGeometries[i], // New geometry for the divided plot
-				lands[landId].price // You can adjust price as needed
+				lands[landId].price, // You can adjust price as needed,
+				false,
+				payable(newOwners[i])
 			);
 		}
 
@@ -464,85 +470,176 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 	}
 
 	// Request division of an existing land NFT
-	function requestLandDivision(
-		uint256 landId,
-		string[] memory newGeometries,
-		address[] memory newOwners
-	) public {
-		require(
-			ownerOf(landId) == msg.sender,
-			"Only the owner can request a division"
-		);
-		require(
-			newGeometries.length == newOwners.length,
-			"Mismatch between new geometries and owners"
-		);
+	// function requestLandDivision(
+	// 	uint256 landId,
+	// 	string[] memory newGeometries,
+	// 	address[] memory newOwners
+	// ) public {
+	// 	require(
+	// 		ownerOf(landId) == msg.sender,
+	// 		"Only the owner can request a division"
+	// 	);
+	// 	require(
+	// 		newGeometries.length == newOwners.length,
+	// 		"Mismatch between new geometries and owners"
+	// 	);
 
-		// Create a new pending division request
-		divisionRequestCounter++;
-		pendingDivisions[divisionRequestCounter] = PendingDivision({
-			originalLandId: landId,
-			newGeometries: newGeometries,
-			newOwners: newOwners,
-			isApproved: false
-		});
+	// 	// Create a new pending division request
+	// 	divisionRequestCounter++;
+	// 	pendingDivisions[divisionRequestCounter] = PendingDivision({
+	// 		originalLandId: landId,
+	// 		newGeometries: newGeometries,
+	// 		newOwners: newOwners,
+	// 		isApproved: false
+	// 	});
 
-		// Emit an event for division request (optional)
-		emit DivisionRequested(divisionRequestCounter, msg.sender, landId);
+	// 	// Emit an event for division request (optional)
+	// 	emit DivisionRequested(divisionRequestCounter, msg.sender, landId);
+	// }
+
+	// // Notary approves the land division request
+	// function approveDivision(uint256 divisionId) public onlyRole(NOTARY_ROLE) {
+	// 	PendingDivision storage division = pendingDivisions[divisionId];
+	// 	require(!division.isApproved, "Division has already been approved");
+
+	// 	// Mark the division as approved
+	// 	division.isApproved = true;
+
+	// 	// Emit an event for division approval (optional)
+	// 	emit DivisionApproved(divisionId);
+	// }
+
+	// // Execute the approved land division
+	// function executeDivision(uint256 divisionId) public {
+	// 	PendingDivision storage division = pendingDivisions[divisionId];
+	// 	require(
+	// 		division.isApproved,
+	// 		"Division has not been approved by the notary"
+	// 	);
+
+	// 	uint256 originalLandId = division.originalLandId;
+	// 	string[] memory newGeometries = division.newGeometries;
+	// 	address[] memory newOwners = division.newOwners;
+
+	// 	// Burn the original NFT (optional: based on logic, you can also leave it untouched)
+	// 	_burn(originalLandId);
+
+	// 	// Mint new NFTs for each divided portion
+	// 	for (uint256 i = 0; i < newGeometries.length; i++) {
+	// 		_tokenIds.increment();
+	// 		uint256 newItemId = _tokenIds.current();
+
+	// 		// Mint a new land NFT for each divided portion
+	// 		_mint(newOwners[i], newItemId);
+
+	// 		// Update the land data with the new geometries
+	// 		lands[newItemId] = Land(
+	// 			newItemId,
+	// 			lands[originalLandId].num, // Retain original details if needed
+	// 			lands[originalLandId].nom,
+	// 			lands[originalLandId].surface,
+	// 			lands[originalLandId].surf_reel,
+	// 			newGeometries[i], // New geometry for the divided plot
+	// 			lands[originalLandId].price, // You can adjust price as needed
+	// 			false,
+	// 			payable(newOwners[i])
+	// 		);
+	// 	}
+
+	// 	// Emit an event for division execution (optional)
+	// 	emit DivisionExecuted(divisionId, msg.sender);
+	// }
+
+	// Function to list a land for sale
+	function listLandForSale(uint256 tokenId, uint256 salePrice) public {
+		require(
+			ownerOf(tokenId) == msg.sender,
+			"Only the owner can list the land for sale"
+		);
+		require(!lands[tokenId].isForSale, "Land is already listed for sale");
+		require(salePrice > 0, "Sale price must be greater than zero");
+
+		lands[tokenId].isForSale = true;
+		lands[tokenId].price = salePrice;
+		lands[tokenId].seller = payable(msg.sender);
+
+		emit LandListedForSale(tokenId, msg.sender, salePrice);
 	}
 
-	// Notary approves the land division request
-	function approveDivision(uint256 divisionId) public onlyRole(NOTARY_ROLE) {
-		PendingDivision storage division = pendingDivisions[divisionId];
-		require(!division.isApproved, "Division has already been approved");
+	// Function to unlist a land from sale
+	function unlistLand(uint256 tokenId) public {
+		require(
+			ownerOf(tokenId) == msg.sender,
+			"Only the owner can unlist the land"
+		);
+		require(lands[tokenId].isForSale, "Land is not listed for sale");
 
-		// Mark the division as approved
-		division.isApproved = true;
+		lands[tokenId].isForSale = false;
+		lands[tokenId].seller = payable(msg.sender);
 
-		// Emit an event for division approval (optional)
-		emit DivisionApproved(divisionId);
+		emit LandUnlisted(tokenId, msg.sender);
 	}
 
-	// Execute the approved land division
-	function executeDivision(uint256 divisionId) public {
-		PendingDivision storage division = pendingDivisions[divisionId];
+	// Function to purchase a land that's listed for sale
+	function purchaseLand(uint256 tokenId) public payable nonReentrant {
+		require(lands[tokenId].isForSale, "Land is not listed for sale");
+		address seller = lands[tokenId].seller;
+		console.log("%s", msg.value);
+		require(msg.sender != seller, "Seller cannot buy their own land");
 		require(
-			division.isApproved,
-			"Division has not been approved by the notary"
+			msg.value >= lands[tokenId].price,
+			"Insufficient funds to purchase the land"
 		);
 
-		uint256 originalLandId = division.originalLandId;
-		string[] memory newGeometries = division.newGeometries;
-		address[] memory newOwners = division.newOwners;
+		uint256 salePrice = lands[tokenId].price;
 
-		// Burn the original NFT (optional: based on logic, you can also leave it untouched)
-		_burn(originalLandId);
+		// Transfer the land ownership
+		_transfer(seller, msg.sender, tokenId);
 
-		// Mint new NFTs for each divided portion
-		for (uint256 i = 0; i < newGeometries.length; i++) {
-			_tokenIds.increment();
-			uint256 newItemId = _tokenIds.current();
+		// Update the land status
+		lands[tokenId].isForSale = false;
+		lands[tokenId].seller = payable(msg.sender);
 
-			// Mint a new land NFT for each divided portion
-			_mint(newOwners[i], newItemId);
+		// Transfer the funds to the seller
+		(bool success, ) = seller.call{ value: salePrice }("");
+		require(success, "Transfer to seller failed");
 
-			// Update the land data with the new geometries
-			lands[newItemId] = Land(
-				newItemId,
-				lands[originalLandId].num, // Retain original details if needed
-				lands[originalLandId].nom,
-				lands[originalLandId].surface,
-				lands[originalLandId].surf_reel,
-				newGeometries[i], // New geometry for the divided plot
-				lands[originalLandId].price // You can adjust price as needed
-			);
+		// Refund excess payment if any
+		if (msg.value > salePrice) {
+			(success, ) = msg.sender.call{ value: msg.value - salePrice }("");
+			require(success, "Refund to buyer failed");
 		}
 
-		// Emit an event for division execution (optional)
-		emit DivisionExecuted(divisionId, msg.sender);
+		emit LandSold(tokenId, seller, msg.sender, salePrice);
 	}
 
-	// Events (optional)
+	// Retrieve all lands that are currently listed for sale
+	function getLandsForSale() public view returns (Land[] memory) {
+		uint256 totalLands = _tokenIds.current();
+		uint256 count = 0;
+
+		// First pass: count how many lands are for sale
+		for (uint256 i = 1; i <= totalLands; i++) {
+			if (_exists(i) && lands[i].isForSale) {
+				count++;
+			}
+		}
+
+		// Create an array with the correct size
+		Land[] memory landsForSale = new Land[](count);
+		uint256 index = 0;
+
+		// Second pass: collect the lands that are for sale
+		for (uint256 i = 1; i <= totalLands; i++) {
+			if (_exists(i) && lands[i].isForSale) {
+				landsForSale[index] = lands[i];
+				index++;
+			}
+		}
+
+		return landsForSale;
+	}
+
 	event ExchangeRequested(
 		uint256 exchangeId,
 		address indexed owner1,
@@ -568,4 +665,17 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 	);
 	event DivisionApproved(uint256 divisionId);
 	event DivisionExecuted(uint256 divisionId, address indexed executor);
+
+	event LandListedForSale(
+		uint256 indexed tokenId,
+		address indexed seller,
+		uint256 price
+	);
+	event LandUnlisted(uint256 indexed tokenId, address indexed seller);
+	event LandSold(
+		uint256 indexed tokenId,
+		address indexed seller,
+		address indexed buyer,
+		uint256 price
+	);
 }

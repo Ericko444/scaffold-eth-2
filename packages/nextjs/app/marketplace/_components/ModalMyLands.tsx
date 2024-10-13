@@ -49,7 +49,7 @@ export const ModalMyLands = ({ idLandToExchange }: ModalMyLandsProps) => {
     };
 
     return (
-        <dialog id="modal_my_lands" className="modal">
+        <dialog id="modal_my_lands" className="modal text-black">
             <div className="modal-box w-11/12 max-w-5xl">
                 <h3 className="font-bold text-lg">Choose the land you want to exchange with this one :</h3>
                 <div className="mt-5 mb-5">

@@ -2,13 +2,15 @@ import { Land } from "~~/types/land";
 import { formatEther } from "viem";
 import { ModalMyLands } from "~~/app/marketplace/_components/ModalMyLands";
 import Link from "next/link";
+import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 
 interface MyLandDetailsProps {
     land: Land
 }
 
+
 const act = () => {
-    const modal = document.getElementById('modal_my_lands') as HTMLDialogElement | null;
+    const modal = document.getElementById('modal_purchase') as HTMLDialogElement | null;
 
     if (modal) {
         modal.showModal();
@@ -18,6 +20,61 @@ const act = () => {
 }
 
 const MyLandDetails = ({ land }: MyLandDetailsProps) => {
+    const { writeContractAsync, isPending } = useScaffoldWriteContract("YourContract");
+    const handleUnlist = async () => {
+        try {
+            await writeContractAsync(
+                {
+                    functionName: "unlistLand",
+                    args: [BigInt(land.id)],
+                    // args: [land?.id, geometryStrings, ["0x7622b05c1cD2fC41a1C65D2Cee5C6CECbe0d23A7", "0x6A647c3c0cC1C267e18A96b68A0D98c48F0Ab3e3"]],
+                },
+                {
+                    onBlockConfirmation: txnReceipt => {
+                        console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+                    },
+                },
+            );
+        } catch (e) {
+            console.error("Error requesting exchange", e);
+        }
+    };
+
+    const handleList = async () => {
+        try {
+            await writeContractAsync(
+                {
+                    functionName: "listLandForSale",
+                    args: [BigInt(land.id), BigInt(land.price)],
+                },
+                {
+                    onBlockConfirmation: txnReceipt => {
+                        console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+                    },
+                },
+            );
+        } catch (e) {
+            console.error("Error requesting exchange", e);
+        }
+    };
+
+    const handlePurchase = async () => {
+        try {
+            await writeContractAsync(
+                {
+                    functionName: "listLandForSale",
+                    args: [BigInt(land.id), BigInt(land.price)],
+                },
+                {
+                    onBlockConfirmation: txnReceipt => {
+                        console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+                    },
+                },
+            );
+        } catch (e) {
+            console.error("Error requesting exchange", e);
+        }
+    };
     return (<div className="flex flex-col lg:flex-row bg-neutral text-neutral-content p-8 mt-20 rounded-lg">
         <div className="w-full lg:w-2/3 space-y-4">
             <h1 className="text-4xl font-bold">{land.nom}</h1>
@@ -47,6 +104,7 @@ const MyLandDetails = ({ land }: MyLandDetailsProps) => {
 
             <div className="mt-6 space-y-3">
                 <Link className="btn btn-primary w-full text-white" href={`/myLands/divide/${land.id}`}>DIVIDE</Link>
+                {land.isForSale ? (<button className="btn bg-white w-full" onClick={handleUnlist}>UNLIST FOR SALE</button>) : (<button className="btn bg-white w-full" onClick={handleList}>LIST FOR SALE</button>)}
             </div>
 
 
@@ -61,7 +119,19 @@ const MyLandDetails = ({ land }: MyLandDetailsProps) => {
                 </div>
             </div>
         </div>
-        <ModalMyLands idLandToExchange={land.id} />
+        <dialog id="modal_purchase" className="modal modal-bottom sm:modal-middle">
+            <div className="modal-box">
+                <h3 className="font-bold text-lg">Confirmation buy</h3>
+                <p className="py-4">Are you sure you want to buy this land for {formatEther(BigInt(land.price))} ETH?</p>
+                <div className="modal-action">
+                    <form method="dialog">
+                        {/* if there is a button in form, it will close the modal */}
+                        <button className="btn btn-success" onClick={handlePurchase}>Yes, Buy</button>
+                        <button className="btn btn-error ml-4">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </dialog>
     </div>
     );
 }

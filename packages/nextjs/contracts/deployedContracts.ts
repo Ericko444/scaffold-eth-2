@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     YourContract: {
-      address: "0xF8e31cb472bc70500f08Cd84917E5A1912Ec8397",
+      address: "0xF342E904702b1D021F03f519D6D9614916b03f37",
       abi: [
         {
           inputs: [
@@ -232,6 +232,81 @@ const deployedContracts = {
           inputs: [
             {
               indexed: true,
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "seller",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "price",
+              type: "uint256",
+            },
+          ],
+          name: "LandListedForSale",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "seller",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "buyer",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "price",
+              type: "uint256",
+            },
+          ],
+          name: "LandSold",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "seller",
+              type: "address",
+            },
+          ],
+          name: "LandUnlisted",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
               internalType: "address",
               name: "previousOwner",
               type: "address",
@@ -407,19 +482,6 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "uint256",
-              name: "divisionId",
-              type: "uint256",
-            },
-          ],
-          name: "approveDivision",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
               name: "exchangeId",
               type: "uint256",
             },
@@ -531,19 +593,6 @@ const deployedContracts = {
           type: "function",
         },
         {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "divisionId",
-              type: "uint256",
-            },
-          ],
-          name: "executeDivision",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
           inputs: [],
           name: "getAllLands",
           outputs: [
@@ -583,6 +632,16 @@ const deployedContracts = {
                   internalType: "uint256",
                   name: "price",
                   type: "uint256",
+                },
+                {
+                  internalType: "bool",
+                  name: "isForSale",
+                  type: "bool",
+                },
+                {
+                  internalType: "address payable",
+                  name: "seller",
+                  type: "address",
                 },
               ],
               internalType: "struct YourContract.Land[]",
@@ -725,10 +784,80 @@ const deployedContracts = {
                   name: "price",
                   type: "uint256",
                 },
+                {
+                  internalType: "bool",
+                  name: "isForSale",
+                  type: "bool",
+                },
+                {
+                  internalType: "address payable",
+                  name: "seller",
+                  type: "address",
+                },
               ],
               internalType: "struct YourContract.Land",
               name: "",
               type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getLandsForSale",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "id",
+                  type: "uint256",
+                },
+                {
+                  internalType: "string",
+                  name: "num",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "nom",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "surface",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "surf_reel",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "geometry",
+                  type: "string",
+                },
+                {
+                  internalType: "uint256",
+                  name: "price",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bool",
+                  name: "isForSale",
+                  type: "bool",
+                },
+                {
+                  internalType: "address payable",
+                  name: "seller",
+                  type: "address",
+                },
+              ],
+              internalType: "struct YourContract.Land[]",
+              name: "",
+              type: "tuple[]",
             },
           ],
           stateMutability: "view",
@@ -780,6 +909,16 @@ const deployedContracts = {
                   internalType: "uint256",
                   name: "price",
                   type: "uint256",
+                },
+                {
+                  internalType: "bool",
+                  name: "isForSale",
+                  type: "bool",
+                },
+                {
+                  internalType: "address payable",
+                  name: "seller",
+                  type: "address",
                 },
               ],
               internalType: "struct YourContract.Land[]",
@@ -836,6 +975,16 @@ const deployedContracts = {
                   internalType: "uint256",
                   name: "price",
                   type: "uint256",
+                },
+                {
+                  internalType: "bool",
+                  name: "isForSale",
+                  type: "bool",
+                },
+                {
+                  internalType: "address payable",
+                  name: "seller",
+                  type: "address",
                 },
               ],
               internalType: "struct YourContract.Land[]",
@@ -1036,8 +1185,36 @@ const deployedContracts = {
               name: "price",
               type: "uint256",
             },
+            {
+              internalType: "bool",
+              name: "isForSale",
+              type: "bool",
+            },
+            {
+              internalType: "address payable",
+              name: "seller",
+              type: "address",
+            },
           ],
           stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "salePrice",
+              type: "uint256",
+            },
+          ],
+          name: "listLandForSale",
+          outputs: [],
+          stateMutability: "nonpayable",
           type: "function",
         },
         {
@@ -1159,6 +1336,19 @@ const deployedContracts = {
           type: "function",
         },
         {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "purchaseLand",
+          outputs: [],
+          stateMutability: "payable",
+          type: "function",
+        },
+        {
           inputs: [],
           name: "renounceOwnership",
           outputs: [],
@@ -1197,29 +1387,6 @@ const deployedContracts = {
             },
           ],
           name: "requestExchange",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "landId",
-              type: "uint256",
-            },
-            {
-              internalType: "string[]",
-              name: "newGeometries",
-              type: "string[]",
-            },
-            {
-              internalType: "address[]",
-              name: "newOwners",
-              type: "address[]",
-            },
-          ],
-          name: "requestLandDivision",
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",
@@ -1412,6 +1579,19 @@ const deployedContracts = {
             },
           ],
           name: "transferOwnership",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "unlistLand",
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",

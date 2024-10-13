@@ -26,8 +26,7 @@ const Marketplace: NextPage = () => {
 
     const { data: getLandsNotOwnedByAccount } = useScaffoldReadContract({
         contractName: "YourContract",
-        functionName: "getLandsNotOwnedByAccount",
-        args: [connectedAddress],
+        functionName: "getLandsForSale",
         watch: true,
     });
 
