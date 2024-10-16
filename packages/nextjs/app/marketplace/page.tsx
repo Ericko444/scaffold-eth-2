@@ -10,15 +10,25 @@ import { ModalMyLands } from "~~/app/marketplace/_components/ModalMyLands";
 import React, { useEffect, useState } from "react";
 import MapView from "~~/components/land-maps/MapView";
 import { Land } from "~~/types/land";
-import { parsePolygonGeometry } from "~~/utils/lands/lands";
+import { filterGeoJSONByIds, filterLandsArrayByIds, LandPropertiesSurf, parsePolygonGeometry } from "~~/utils/lands/lands";
 import LandCarousel from "~~/components/land-maps/LandCarousel";
 import GridCards from "~~/components/land-maps/GridCards";
+import Filter from "./_components/Filter";
+import { SearchDTO, SearchResponse } from "~~/types/search";
+import { AxiosError } from "axios";
+import { FeatureCollection, Polygon } from "geojson";
+import api from "~~/utils/api/api";
+import { geoData } from "../explore/data/data2";
 
 
 const Marketplace: NextPage = () => {
     const { address: connectedAddress, isConnected, isConnecting } = useAccount();
     const [lands, setLands] = useState<Land[] | undefined>([]);
     const [viewMode, setViewMode] = useState<string>("grid");
+
+    const [prompt, setPrompt] = useState<string>('');
+    const [responseData, setResponseData] = useState<SearchResponse | null>(null);
+    const [geoDatas, setGeoDatas] = useState<FeatureCollection<Polygon, LandPropertiesSurf> | null>(geoData);
 
     const toggleViewMode = () => {
         setViewMode(viewMode === "grid" ? "map" : "grid");
@@ -79,6 +89,40 @@ const Marketplace: NextPage = () => {
         }
     ];
 
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        const postData: SearchDTO = {
+            prompt
+        };
+        try {
+
+            const response = await api.post<SearchResponse>('/search', postData);
+            console.log('Post successful:', response);
+            setResponseData(response.data);
+            let ids: string[] = []
+            let tay = response.data;
+            console.log(typeof tay);
+            if (typeof tay === "string") {
+                tay = tay.replace('\n', '');
+                tay = JSON.parse(tay);
+            }
+            tay.map(res => {
+                ids.push(res.num);
+            });
+            console.log(ids);
+            const filter = filterGeoJSONByIds(geoData, ids);
+            const filterLands = filterLandsArrayByIds(lands, ids);
+            setGeoDatas(filter);
+            setLands(filterLands);
+            setPrompt('');
+        } catch (err) {
+            console.error('Error posting data:', err);
+            const errorMessage = (err as AxiosError).message || 'An unexpected error occurred.';
+        } finally {
+        }
+    };
+
 
     return (
         <>
@@ -95,12 +139,36 @@ const Marketplace: NextPage = () => {
                         Switch to {viewMode === "grid" ? "Map" : "Grid"} View
                     </button>
                 </div>
+                <div className="flex justify-between">
+                    <Filter />
+                    <div className="flex items-center flex-col pt-10">
+                        <form className="w-full min-w-96 max-w-3xl" onSubmit={handleSubmit}>
+                            <label className="form-control w-full">
+                                <div className="label">
+                                    <span className="label-text">What type of land are you searching for?</span>
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="e.g : Lands near roads"
+                                    className="input input-bordered input-primar input-lg w-full"
+                                    onChange={(e) => setPrompt(e.target.value)}
+                                    value={prompt}
+                                />
+                            </label>
+                            <button className="btn btn-primary btn-wide mt-5">Search</button>
+                        </form>
+                    </div>
+                </div>
                 {viewMode === "grid" ? (
-                    <div className="flex justify-center">
+                    <div className="flex justify-between">
                         {/* <div role="tabpanel" className="tab-content p-10">{!isConnected || isConnecting ? (
                             <RainbowKitCustomConnectButton />
                         ) : <LandsTable lands={getLandsNotOwnedByAccount ?? []} actions={actions} />}</div> */}
-                        <GridCards type="marketplace" lands={getLandsNotOwnedByAccount ?? []} />
+                        {!!lands && lands.length > 0 ? (
+                            <GridCards type="marketplace" lands={lands} />
+                        ) : (
+                            <p>Loading data...</p>
+                        )}
                     </div>
                 ) : (
                     <div className="flex items-center flex-col pt-10">

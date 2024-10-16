@@ -23,11 +23,6 @@ export const menuLinks: HeaderMenuLink[] = [
     href: "/",
   },
   {
-    label: "Debug Contracts",
-    href: "/debug",
-    icon: <BugAntIcon className="h-4 w-4" />,
-  },
-  {
     label: "My lands",
     href: "/myLands",
   },
@@ -38,6 +33,21 @@ export const menuLinks: HeaderMenuLink[] = [
   {
     label: "My requests",
     href: "/myRequests",
+  },
+  {
+    label: "Explore",
+    href: "/explore",
+  },
+];
+
+export const menuLinksAdmin: HeaderMenuLink[] = [
+  {
+    label: "Home",
+    href: "/",
+  },
+  {
+    label: "Marketplace",
+    href: "/marketplace",
   },
   {
     label: "Approvals",
@@ -51,10 +61,12 @@ export const menuLinks: HeaderMenuLink[] = [
 
 export const HeaderMenuLinks = () => {
   const pathname = usePathname();
+  const { address: connectedAddress } = useAccount();
+  const linksToUse = connectedAddress === "0x1a98EbD96CDB77A8Ea6cE8Bc3EcCd3B449712c7B" ? menuLinksAdmin : menuLinks;
 
   return (
     <>
-      {menuLinks.map(({ label, href, icon }) => {
+      {linksToUse.map(({ label, href, icon }) => {
         const isActive = pathname === href;
         return (
           <li key={href}>

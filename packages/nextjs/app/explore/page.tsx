@@ -1,20 +1,42 @@
 "use client";
 
 import type { NextPage } from "next";
-import React, { } from "react";
+import React, { useEffect } from "react";
 import MapViewGSON from "~~/components/land-maps/MapViewGSON";
 import { geoData } from "./data/data2";
 import { SearchDTO, SearchResponse } from "~~/types/search";
 import { useState } from "react";
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import api from "~~/utils/api/api";
-import { filterGeoJSONByIds, LandPropertiesSurf } from "~~/utils/lands/lands";
+import { filterGeoJSONByIds, LandPropertiesSurf, parsePolygonGeometry, filterLandsArrayByIds } from "~~/utils/lands/lands";
 import { FeatureCollection, Polygon } from "geojson";
+import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
+import { Land } from "~~/types/land";
+import GridCards from "~~/components/land-maps/GridCards";
 
 const Explore: NextPage = () => {
     const [prompt, setPrompt] = useState<string>('');
     const [responseData, setResponseData] = useState<SearchResponse | null>(null);
     const [geoDatas, setGeoDatas] = useState<FeatureCollection<Polygon, LandPropertiesSurf> | null>(geoData);
+    const [lands, setLands] = useState<Land[] | undefined>([]);
+
+    const { data: getAllLands } = useScaffoldReadContract({
+        contractName: "YourContract",
+        functionName: "getLandsForSale",
+        watch: true,
+    });
+
+    useEffect(() => {
+        const landsData: Land[] | undefined = getAllLands?.map(land => {
+            const parsedData = JSON.parse(land.geometry);
+            const geometryObject = parsedData.geometry;
+            return { ...land, id: Number(land.id), price: Number(land.price), geometry: parsePolygonGeometry(geometryObject) }
+        });
+        setLands(landsData)
+        localStorage.setItem("marketLands", JSON.stringify(landsData));
+    }, [getAllLands])
+
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -38,8 +60,9 @@ const Explore: NextPage = () => {
             });
             console.log(ids);
             const filter = filterGeoJSONByIds(geoData, ids);
+            const filterLands = filterLandsArrayByIds(lands, ids);
             setGeoDatas(filter);
-            console.log(filter);
+            setLands(filterLands);
             setPrompt('');
         } catch (err) {
             console.error('Error posting data:', err);
@@ -79,6 +102,11 @@ const Explore: NextPage = () => {
                     <MapViewGSON data={geoDatas} />
                 ) : (
                     <p>Loading map data...</p>
+                )}
+                {!!lands && lands.length > 0 ? (
+                    <GridCards type="marketplace" lands={lands} />
+                ) : (
+                    <p>Loading data...</p>
                 )}
             </div>
         </>

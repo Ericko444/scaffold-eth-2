@@ -95,3 +95,13 @@ export function filterGeoJSONByIds(
         features: filteredFeatures,
     };
 }
+
+export function filterLandsArrayByIds(
+    data: Land[],
+    ids: string[]
+): Land[] {
+    const filteredLands = data.filter((feature) => {
+        return ids.includes(feature.num);
+    });
+    return filteredLands;
+}
