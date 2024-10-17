@@ -16,7 +16,7 @@ const MyRequests: NextPage = () => {
     const [requestId, setRequestId] = useState<Request | null>(null);
 
     const { data: getExchangeRequests } = useScaffoldReadContract({
-        contractName: "YourContract",
+        contractName: "LandRegistry",
         functionName: "getExchangeRequestsAsOwner2",
         args: [connectedAddress],
         watch: true,

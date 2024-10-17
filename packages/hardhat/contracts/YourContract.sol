@@ -575,7 +575,7 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 		require(lands[tokenId].isForSale, "Land is not listed for sale");
 
 		lands[tokenId].isForSale = false;
-		lands[tokenId].seller = payable(msg.sender);
+		lands[tokenId].seller = payable(address(0));
 
 		emit LandUnlisted(tokenId, msg.sender);
 	}
@@ -584,7 +584,6 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 	function purchaseLand(uint256 tokenId) public payable nonReentrant {
 		require(lands[tokenId].isForSale, "Land is not listed for sale");
 		address seller = lands[tokenId].seller;
-		console.log("%s", msg.value);
 		require(msg.sender != seller, "Seller cannot buy their own land");
 		require(
 			msg.value >= lands[tokenId].price,
@@ -598,7 +597,7 @@ contract YourContract is Ownable, ERC721, AccessControl, ReentrancyGuard {
 
 		// Update the land status
 		lands[tokenId].isForSale = false;
-		lands[tokenId].seller = payable(msg.sender);
+		lands[tokenId].seller = payable(address(0));
 
 		// Transfer the funds to the seller
 		(bool success, ) = seller.call{ value: salePrice }("");

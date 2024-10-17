@@ -13,7 +13,7 @@ export const ModalMyLands = ({ idLandToExchange }: ModalMyLandsProps) => {
     const { address: connectedAddress, isConnected, isConnecting } = useAccount();
 
     const { data: getLandsOfAccount } = useScaffoldReadContract({
-        contractName: "YourContract",
+        contractName: "LandRegistry",
         functionName: "getLandsOfAccount",
         args: [connectedAddress],
         watch: true,
@@ -28,7 +28,7 @@ export const ModalMyLands = ({ idLandToExchange }: ModalMyLandsProps) => {
 
     console.log(getLandsOfAccount);
 
-    const { writeContractAsync, isPending } = useScaffoldWriteContract("YourContract");
+    const { writeContractAsync, isPending } = useScaffoldWriteContract("LandRegistry");
 
     const handleRequestExchange = async () => {
         try {

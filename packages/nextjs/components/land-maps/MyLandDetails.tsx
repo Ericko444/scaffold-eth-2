@@ -20,7 +20,7 @@ const act = () => {
 }
 
 const MyLandDetails = ({ land }: MyLandDetailsProps) => {
-    const { writeContractAsync, isPending } = useScaffoldWriteContract("YourContract");
+    const { writeContractAsync, isPending } = useScaffoldWriteContract("LandRegistry");
     const handleUnlist = async () => {
         try {
             await writeContractAsync(

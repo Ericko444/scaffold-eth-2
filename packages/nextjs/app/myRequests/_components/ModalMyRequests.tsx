@@ -11,7 +11,7 @@ interface ModalMyRequestsProps {
 
 export const ModalMyRequests = ({ request }: ModalMyRequestsProps) => {
 
-    const { writeContractAsync, isPending } = useScaffoldWriteContract("YourContract");
+    const { writeContractAsync, isPending } = useScaffoldWriteContract("LandRegistry");
 
     const handleAcceptExchange = async () => {
         try {

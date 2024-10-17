@@ -80,7 +80,7 @@ export const ModalDivide = ({ land }: ModalDivideProps) => {
         }
     };
 
-    const { writeContractAsync, isPending } = useScaffoldWriteContract("YourContract");
+    const { writeContractAsync, isPending } = useScaffoldWriteContract("LandRegistry");
 
     const handleDivision = async () => {
         try {

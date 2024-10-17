@@ -37,7 +37,7 @@ export default function Page({ params }: { params: { slug: string } }) {
         }
     }
 
-    const { writeContractAsync, isPending } = useScaffoldWriteContract("YourContract");
+    const { writeContractAsync, isPending } = useScaffoldWriteContract("LandRegistry");
 
     const handleAcceptExchange = async () => {
         try {

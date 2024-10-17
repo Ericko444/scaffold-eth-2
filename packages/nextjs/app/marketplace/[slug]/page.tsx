@@ -15,7 +15,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     console.log('SLUG', params.slug);
 
     const { data: getLandDetails } = useScaffoldReadContract({
-        contractName: "YourContract",
+        contractName: "LandRegistry",
         functionName: "getLandDetails",
         args: [BigInt(params.slug)],
         watch: true,

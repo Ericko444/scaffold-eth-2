@@ -65,7 +65,7 @@ export const Divide = ({ land }: DivideProps) => {
         }
     };
 
-    const { writeContractAsync, isPending } = useScaffoldWriteContract("YourContract");
+    const { writeContractAsync, isPending } = useScaffoldWriteContract("LandRegistry");
 
     const handleDivision = async () => {
         try {

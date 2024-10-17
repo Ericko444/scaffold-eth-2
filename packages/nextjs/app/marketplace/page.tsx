@@ -35,7 +35,7 @@ const Marketplace: NextPage = () => {
     };
 
     const { data: getLandsNotOwnedByAccount } = useScaffoldReadContract({
-        contractName: "YourContract",
+        contractName: "LandRegistry",
         functionName: "getLandsForSale",
         watch: true,
     });
@@ -52,7 +52,7 @@ const Marketplace: NextPage = () => {
 
 
 
-    const { writeContractAsync, isPending } = useScaffoldWriteContract("YourContract");
+    const { writeContractAsync, isPending } = useScaffoldWriteContract("LandRegistry");
 
     const handleRequestExchange = async () => {
         try {

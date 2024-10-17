@@ -99,7 +99,7 @@ export const Header = () => {
   );
 
   useScaffoldWatchContractEvent({
-    contractName: "YourContract",
+    contractName: "LandRegistry",
     eventName: "ExchangeRequested",
     onLogs: logs => {
       logs.map(log => {

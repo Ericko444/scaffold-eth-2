@@ -6,8 +6,8 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
 const deployedContracts = {
   31337: {
-    YourContract: {
-      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    LandRegistry: {
+      address: "0x837a41023CF81234f89F956C94D676918b4791c1",
       abi: [
         {
           inputs: [
@@ -76,74 +76,17 @@ const deployedContracts = {
             {
               indexed: false,
               internalType: "uint256",
-              name: "divisionId",
-              type: "uint256",
-            },
-          ],
-          name: "DivisionApproved",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "divisionId",
-              type: "uint256",
-            },
-            {
-              indexed: true,
-              internalType: "address",
-              name: "executor",
-              type: "address",
-            },
-          ],
-          name: "DivisionExecuted",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "divisionId",
-              type: "uint256",
-            },
-            {
-              indexed: true,
-              internalType: "address",
-              name: "requester",
-              type: "address",
-            },
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "landId",
-              type: "uint256",
-            },
-          ],
-          name: "DivisionRequested",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: false,
-              internalType: "uint256",
               name: "exchangeId",
               type: "uint256",
             },
             {
-              indexed: true,
+              indexed: false,
               internalType: "address",
               name: "owner1",
               type: "address",
             },
             {
-              indexed: true,
+              indexed: false,
               internalType: "address",
               name: "owner2",
               type: "address",
@@ -175,13 +118,13 @@ const deployedContracts = {
               type: "uint256",
             },
             {
-              indexed: true,
+              indexed: false,
               internalType: "address",
               name: "owner1",
               type: "address",
             },
             {
-              indexed: true,
+              indexed: false,
               internalType: "address",
               name: "owner2",
               type: "address",
@@ -200,13 +143,13 @@ const deployedContracts = {
               type: "uint256",
             },
             {
-              indexed: true,
+              indexed: false,
               internalType: "address",
               name: "owner1",
               type: "address",
             },
             {
-              indexed: true,
+              indexed: false,
               internalType: "address",
               name: "owner2",
               type: "address",
@@ -300,25 +243,6 @@ const deployedContracts = {
             },
           ],
           name: "LandUnlisted",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: true,
-              internalType: "address",
-              name: "previousOwner",
-              type: "address",
-            },
-            {
-              indexed: true,
-              internalType: "address",
-              name: "newOwner",
-              type: "address",
-            },
-          ],
-          name: "OwnershipTransferred",
           type: "event",
         },
         {
@@ -488,7 +412,7 @@ const deployedContracts = {
           ],
           name: "approveExchange",
           outputs: [],
-          stateMutability: "payable",
+          stateMutability: "nonpayable",
           type: "function",
         },
         {
@@ -593,66 +517,6 @@ const deployedContracts = {
           type: "function",
         },
         {
-          inputs: [],
-          name: "getAllLands",
-          outputs: [
-            {
-              components: [
-                {
-                  internalType: "uint256",
-                  name: "id",
-                  type: "uint256",
-                },
-                {
-                  internalType: "string",
-                  name: "num",
-                  type: "string",
-                },
-                {
-                  internalType: "string",
-                  name: "nom",
-                  type: "string",
-                },
-                {
-                  internalType: "string",
-                  name: "surface",
-                  type: "string",
-                },
-                {
-                  internalType: "string",
-                  name: "surf_reel",
-                  type: "string",
-                },
-                {
-                  internalType: "string",
-                  name: "geometry",
-                  type: "string",
-                },
-                {
-                  internalType: "uint256",
-                  name: "price",
-                  type: "uint256",
-                },
-                {
-                  internalType: "bool",
-                  name: "isForSale",
-                  type: "bool",
-                },
-                {
-                  internalType: "address payable",
-                  name: "seller",
-                  type: "address",
-                },
-              ],
-              internalType: "struct YourContract.Land[]",
-              name: "",
-              type: "tuple[]",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
           inputs: [
             {
               internalType: "uint256",
@@ -729,7 +593,7 @@ const deployedContracts = {
                   type: "bool",
                 },
               ],
-              internalType: "struct YourContract.ExchangeRequest[]",
+              internalType: "struct ExchangeAndNotary.ExchangeRequest[]",
               name: "",
               type: "tuple[]",
             },
@@ -795,7 +659,7 @@ const deployedContracts = {
                   type: "address",
                 },
               ],
-              internalType: "struct YourContract.Land",
+              internalType: "struct LandManagement.Land",
               name: "",
               type: "tuple",
             },
@@ -855,73 +719,7 @@ const deployedContracts = {
                   type: "address",
                 },
               ],
-              internalType: "struct YourContract.Land[]",
-              name: "",
-              type: "tuple[]",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "address",
-              name: "owner",
-              type: "address",
-            },
-          ],
-          name: "getLandsNotOwnedByAccount",
-          outputs: [
-            {
-              components: [
-                {
-                  internalType: "uint256",
-                  name: "id",
-                  type: "uint256",
-                },
-                {
-                  internalType: "string",
-                  name: "num",
-                  type: "string",
-                },
-                {
-                  internalType: "string",
-                  name: "nom",
-                  type: "string",
-                },
-                {
-                  internalType: "string",
-                  name: "surface",
-                  type: "string",
-                },
-                {
-                  internalType: "string",
-                  name: "surf_reel",
-                  type: "string",
-                },
-                {
-                  internalType: "string",
-                  name: "geometry",
-                  type: "string",
-                },
-                {
-                  internalType: "uint256",
-                  name: "price",
-                  type: "uint256",
-                },
-                {
-                  internalType: "bool",
-                  name: "isForSale",
-                  type: "bool",
-                },
-                {
-                  internalType: "address payable",
-                  name: "seller",
-                  type: "address",
-                },
-              ],
-              internalType: "struct YourContract.Land[]",
+              internalType: "struct LandManagement.Land[]",
               name: "",
               type: "tuple[]",
             },
@@ -987,7 +785,7 @@ const deployedContracts = {
                   type: "address",
                 },
               ],
-              internalType: "struct YourContract.Land[]",
+              internalType: "struct LandManagement.Land[]",
               name: "",
               type: "tuple[]",
             },
@@ -1047,7 +845,7 @@ const deployedContracts = {
                   type: "bool",
                 },
               ],
-              internalType: "struct YourContract.ExchangeRequest[]",
+              internalType: "struct ExchangeAndNotary.ExchangeRequest[]",
               name: "",
               type: "tuple[]",
             },
@@ -1280,19 +1078,6 @@ const deployedContracts = {
           type: "function",
         },
         {
-          inputs: [],
-          name: "owner",
-          outputs: [
-            {
-              internalType: "address",
-              name: "",
-              type: "address",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
           inputs: [
             {
               internalType: "uint256",
@@ -1315,30 +1100,6 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "uint256",
-              name: "",
-              type: "uint256",
-            },
-          ],
-          name: "pendingDivisions",
-          outputs: [
-            {
-              internalType: "uint256",
-              name: "originalLandId",
-              type: "uint256",
-            },
-            {
-              internalType: "bool",
-              name: "isApproved",
-              type: "bool",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
               name: "tokenId",
               type: "uint256",
             },
@@ -1346,13 +1107,6 @@ const deployedContracts = {
           name: "purchaseLand",
           outputs: [],
           stateMutability: "payable",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "renounceOwnership",
-          outputs: [],
-          stateMutability: "nonpayable",
           type: "function",
         },
         {
@@ -1481,24 +1235,6 @@ const deployedContracts = {
         {
           inputs: [
             {
-              internalType: "uint256",
-              name: "tokenId",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "newPrice",
-              type: "uint256",
-            },
-          ],
-          name: "setPrice",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
               internalType: "bytes4",
               name: "interfaceId",
               type: "bytes4",
@@ -1573,19 +1309,6 @@ const deployedContracts = {
         {
           inputs: [
             {
-              internalType: "address",
-              name: "newOwner",
-              type: "address",
-            },
-          ],
-          name: "transferOwnership",
-          outputs: [],
-          stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
               internalType: "uint256",
               name: "tokenId",
               type: "uint256",
@@ -1598,27 +1321,40 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {
-        owner: "@openzeppelin/contracts/access/Ownable.sol",
-        renounceOwnership: "@openzeppelin/contracts/access/Ownable.sol",
-        transferOwnership: "@openzeppelin/contracts/access/Ownable.sol",
-        approve: "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        balanceOf: "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        getApproved: "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        isApprovedForAll: "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        name: "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        ownerOf: "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        safeTransferFrom: "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        setApprovalForAll: "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        supportsInterface: "@openzeppelin/contracts/access/AccessControl.sol",
-        symbol: "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        tokenURI: "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        transferFrom: "@openzeppelin/contracts/token/ERC721/ERC721.sol",
-        DEFAULT_ADMIN_ROLE: "@openzeppelin/contracts/access/AccessControl.sol",
-        getRoleAdmin: "@openzeppelin/contracts/access/AccessControl.sol",
-        grantRole: "@openzeppelin/contracts/access/AccessControl.sol",
-        hasRole: "@openzeppelin/contracts/access/AccessControl.sol",
-        renounceRole: "@openzeppelin/contracts/access/AccessControl.sol",
-        revokeRole: "@openzeppelin/contracts/access/AccessControl.sol",
+        DEFAULT_ADMIN_ROLE: "contracts/ExchangeAndNotary.sol",
+        approve: "contracts/ExchangeAndNotary.sol",
+        balanceOf: "contracts/ExchangeAndNotary.sol",
+        divideLandNFT: "contracts/ExchangeAndNotary.sol",
+        getApproved: "contracts/ExchangeAndNotary.sol",
+        getLandDetails: "contracts/ExchangeAndNotary.sol",
+        getLandsForSale: "contracts/ExchangeAndNotary.sol",
+        getLandsOfAccount: "contracts/ExchangeAndNotary.sol",
+        getRoleAdmin: "contracts/ExchangeAndNotary.sol",
+        grantRole: "contracts/ExchangeAndNotary.sol",
+        hasRole: "contracts/ExchangeAndNotary.sol",
+        isApprovedForAll: "contracts/ExchangeAndNotary.sol",
+        lands: "contracts/ExchangeAndNotary.sol",
+        mintLandNFT: "contracts/ExchangeAndNotary.sol",
+        name: "contracts/ExchangeAndNotary.sol",
+        ownerOf: "contracts/ExchangeAndNotary.sol",
+        renounceRole: "contracts/ExchangeAndNotary.sol",
+        revokeRole: "contracts/ExchangeAndNotary.sol",
+        safeTransferFrom: "contracts/ExchangeAndNotary.sol",
+        setApprovalForAll: "contracts/ExchangeAndNotary.sol",
+        supportsInterface: "contracts/ExchangeAndNotary.sol",
+        symbol: "contracts/ExchangeAndNotary.sol",
+        tokenURI: "contracts/ExchangeAndNotary.sol",
+        transferFrom: "contracts/ExchangeAndNotary.sol",
+        listLandForSale: "contracts/SaleMarketplace.sol",
+        purchaseLand: "contracts/SaleMarketplace.sol",
+        unlistLand: "contracts/SaleMarketplace.sol",
+        NOTARY_ROLE: "contracts/ExchangeAndNotary.sol",
+        acceptExchange: "contracts/ExchangeAndNotary.sol",
+        approveExchange: "contracts/ExchangeAndNotary.sol",
+        exchangeRequests: "contracts/ExchangeAndNotary.sol",
+        getExchangeRequestsAsOwner2: "contracts/ExchangeAndNotary.sol",
+        getRequestsWaitingForNotary: "contracts/ExchangeAndNotary.sol",
+        requestExchange: "contracts/ExchangeAndNotary.sol",
       },
     },
   },

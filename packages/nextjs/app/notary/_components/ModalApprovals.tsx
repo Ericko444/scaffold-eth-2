@@ -10,7 +10,7 @@ interface ModalApprovalsProps {
 
 export const ModalApprovals = ({ request }: ModalApprovalsProps) => {
 
-    const { writeContractAsync, isPending } = useScaffoldWriteContract("YourContract");
+    const { writeContractAsync, isPending } = useScaffoldWriteContract("LandRegistry");
 
     const handleAcceptExchange = async () => {
         try {

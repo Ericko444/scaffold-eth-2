@@ -30,7 +30,7 @@ const MyLands: NextPage = () => {
     };
 
     const { data: getLandsOfAccount } = useScaffoldReadContract({
-        contractName: "YourContract",
+        contractName: "LandRegistry",
         functionName: "getLandsOfAccount",
         args: [connectedAddress],
         watch: true,

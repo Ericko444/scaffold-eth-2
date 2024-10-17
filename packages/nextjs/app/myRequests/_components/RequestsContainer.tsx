@@ -17,13 +17,13 @@ const RequestsContainer = ({ request, type }: RequestsContainerProps) => {
     const dispatch = useAppDispatch();
 
     const { data: getLand1 } = useScaffoldReadContract({
-        contractName: "YourContract",
+        contractName: "LandRegistry",
         functionName: "getLandDetails",
         args: [request.landId1],
         watch: true,
     });
     const { data: getLand2 } = useScaffoldReadContract({
-        contractName: "YourContract",
+        contractName: "LandRegistry",
         functionName: "getLandDetails",
         args: [request.landId2],
         watch: true,

@@ -17,14 +17,14 @@ const Approvals: NextPage = () => {
     const [requestId, setRequestId] = useState<Request | null>(null);
 
     const { data: getExchangeRequests } = useScaffoldReadContract({
-        contractName: "YourContract",
+        contractName: "LandRegistry",
         functionName: "getRequestsWaitingForNotary",
         watch: true,
     });
 
     console.log(getExchangeRequests);
 
-    const { writeContractAsync, isPending } = useScaffoldWriteContract("YourContract");
+    const { writeContractAsync, isPending } = useScaffoldWriteContract("LandRegistry");
 
     const handleAcceptExchange = async (request: Request) => {
         try {

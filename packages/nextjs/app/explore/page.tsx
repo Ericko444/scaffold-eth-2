@@ -21,7 +21,7 @@ const Explore: NextPage = () => {
     const [lands, setLands] = useState<Land[] | undefined>([]);
 
     const { data: getAllLands } = useScaffoldReadContract({
-        contractName: "YourContract",
+        contractName: "LandRegistry",
         functionName: "getLandsForSale",
         watch: true,
     });
