@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     LandRegistry: {
-      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      address: "0xC3549920b94a795D75E6C003944943D552C46F97",
       abi: [
         {
           inputs: [
@@ -412,7 +412,7 @@ const deployedContracts = {
           ],
           name: "approveExchange",
           outputs: [],
-          stateMutability: "nonpayable",
+          stateMutability: "payable",
           type: "function",
         },
         {
@@ -514,6 +514,24 @@ const deployedContracts = {
             },
           ],
           stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "exchangeId",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "value",
+              type: "uint256",
+            },
+          ],
+          name: "executeExchange",
+          outputs: [],
+          stateMutability: "payable",
           type: "function",
         },
         {
@@ -1352,6 +1370,7 @@ const deployedContracts = {
         acceptExchange: "contracts/ExchangeAndNotary.sol",
         approveExchange: "contracts/ExchangeAndNotary.sol",
         exchangeRequests: "contracts/ExchangeAndNotary.sol",
+        executeExchange: "contracts/ExchangeAndNotary.sol",
         getExchangeRequestsAsOwner2: "contracts/ExchangeAndNotary.sol",
         getRequestsWaitingForNotary: "contracts/ExchangeAndNotary.sol",
         requestExchange: "contracts/ExchangeAndNotary.sol",
