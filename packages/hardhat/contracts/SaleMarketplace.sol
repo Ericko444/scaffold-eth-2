@@ -42,7 +42,7 @@ contract SaleMarketplace is LandManagement {
 		require(lands[tokenId].isForSale, "Land is not listed for sale");
 
 		lands[tokenId].isForSale = false;
-		lands[tokenId].seller = payable(address(0));
+		lands[tokenId].seller = payable(msg.sender);
 
 		emit LandUnlisted(tokenId, msg.sender);
 	}
@@ -64,7 +64,7 @@ contract SaleMarketplace is LandManagement {
 
 		// Mark land as no longer for sale
 		lands[tokenId].isForSale = false;
-		lands[tokenId].seller = payable(address(0));
+		lands[tokenId].seller = payable(msg.sender);
 
 		// Transfer the sale price to the seller
 		(bool success, ) = seller.call{ value: salePrice }("");

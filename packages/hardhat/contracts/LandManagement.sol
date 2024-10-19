@@ -156,6 +156,8 @@ contract LandManagement is ERC721, AccessControl {
 
 		// Retire the original NFT (optional: you can burn it or leave it)
 		_burn(landId);
+
+		delete lands[landId];
 	}
 
 	// Retrieve all lands owned by an account

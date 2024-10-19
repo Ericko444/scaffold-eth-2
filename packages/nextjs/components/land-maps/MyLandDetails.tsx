@@ -91,7 +91,7 @@ const MyLandDetails = ({ land }: MyLandDetailsProps) => {
                     </div>
                 </div>
                 <div>
-                    <p className="font-semibold">DCLHodler#f6b2</p>
+                    <p className="font-semibold">{land.seller}</p>
                 </div>
             </div>
         </div>

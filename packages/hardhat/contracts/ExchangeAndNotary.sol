@@ -2,8 +2,10 @@
 pragma solidity >=0.8.0 <0.9.0;
 
 import "./LandManagement.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract ExchangeAndNotary is LandManagement {
+contract ExchangeAndNotary is LandManagement, ReentrancyGuard {
 	bytes32 public constant NOTARY_ROLE = keccak256("NOTARY_ROLE");
 
 	struct ExchangeRequest {
@@ -92,31 +94,71 @@ contract ExchangeAndNotary is LandManagement {
 		emit ExchangeAccepted(exchangeId, request.owner1, request.owner2);
 	}
 
-	function approveExchange(uint256 exchangeId) public onlyRole(NOTARY_ROLE) {
+	// The notary approves the exchange request
+	function approveExchange(
+		uint256 exchangeId
+	) public payable onlyRole(NOTARY_ROLE) {
 		ExchangeRequest storage request = exchangeRequests[exchangeId];
 		require(
 			request.isAcceptedBySecondOwner,
 			"The second owner must accept the exchange before notary approval"
 		);
 
+		uint value = msg.value;
+
 		request.isApprovedByNotary = true;
 
 		emit ExchangeApproved(exchangeId);
 
-		executeExchange(exchangeId);
+		// Execute the exchange
+		executeExchange(exchangeId, value);
 	}
 
-	function executeExchange(uint256 exchangeId) internal {
+	// Execute the approved land exchange
+	function executeExchange(
+		uint256 exchangeId,
+		uint value
+	) public payable nonReentrant {
 		ExchangeRequest storage request = exchangeRequests[exchangeId];
 		require(
 			request.isApprovedByNotary,
 			"The notary must approve the exchange"
 		);
 
-		_transfer(request.owner1, request.owner2, request.landId1);
-		_transfer(request.owner2, request.owner1, request.landId2);
+		address owner1 = request.owner1;
+		address owner2 = request.owner2;
+		uint8 payerIndex = request.payerIndex;
 
-		emit ExchangeExecuted(exchangeId, request.owner1, request.owner2);
+		uint256 landId1 = request.landId1;
+		uint256 landId2 = request.landId2;
+
+		// If there is a price difference, the payer must cover it
+		if (request.priceDifference > 0) {
+			if (payerIndex == 1) {
+				// Owner 1 pays the difference
+				require(
+					value >= request.priceDifference,
+					"Insufficient Ether sent to balance the exchange"
+				);
+				payable(owner2).transfer(request.priceDifference);
+			} else if (payerIndex == 2) {
+				// Owner 2 pays the difference
+				require(
+					value >= request.priceDifference,
+					"Insufficient Ether sent to balance the exchange"
+				);
+				payable(owner1).transfer(request.priceDifference);
+			}
+		}
+
+		// Transfer the land NFTs between owners
+		_transfer(owner1, owner2, landId1);
+		_transfer(owner2, owner1, landId2);
+
+		lands[landId1].seller = payable(owner2);
+		lands[landId2].seller = payable(owner1);
+
+		emit ExchangeExecuted(exchangeId, owner1, owner2);
 	}
 
 	// Get a list of exchange requests where the provided address is the second owner (owner2)
