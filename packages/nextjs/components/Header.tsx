@@ -35,6 +35,10 @@ export const menuLinks: HeaderMenuLink[] = [
     href: "/myRequests",
   },
   {
+    label: "Auctions",
+    href: "/auction",
+  },
+  {
     label: "Explore",
     href: "/explore",
   },
@@ -44,6 +48,10 @@ export const menuLinksAdmin: HeaderMenuLink[] = [
   {
     label: "Home",
     href: "/",
+  },
+  {
+    label: "Government's lands",
+    href: "/gov",
   },
   {
     label: "Marketplace",

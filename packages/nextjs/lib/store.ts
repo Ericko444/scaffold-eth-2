@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 import exchangesReducer from './features/land/exchangeSlice';
+import auctionsReducer from './features/land/auctionSlice';
 
 export const makeStore = () => {
     return configureStore({
         reducer: {
-            exchanges: exchangesReducer
+            exchanges: exchangesReducer,
+            auctions: auctionsReducer
         },
     })
 }

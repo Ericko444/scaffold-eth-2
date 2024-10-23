@@ -8,6 +8,7 @@ import "@openzeppelin/contracts/utils/Counters.sol"; // Import the Counters libr
 contract LandManagement is ERC721, AccessControl {
 	using Counters for Counters.Counter; // Apply Counters library to Counter
 	Counters.Counter internal _tokenIds; // Declare token counter
+	bytes32 public constant NOTARY_ROLEEE = keccak256("NOTARY_ROLE");
 
 	struct Land {
 		uint256 id;

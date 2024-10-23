@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     LandRegistry: {
-      address: "0xC3549920b94a795D75E6C003944943D552C46F97",
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
       abi: [
         {
           inputs: [
@@ -68,6 +68,88 @@ const deployedContracts = {
             },
           ],
           name: "ApprovalForAll",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+          ],
+          name: "AuctionCreated",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "winner",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "winningBid",
+              type: "uint256",
+            },
+          ],
+          name: "AuctionEnded",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "endTime",
+              type: "uint256",
+            },
+          ],
+          name: "AuctionStarted",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "bidder",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "bid",
+              type: "uint256",
+            },
+          ],
+          name: "BidRefunded",
           type: "event",
         },
         {
@@ -250,6 +332,31 @@ const deployedContracts = {
           inputs: [
             {
               indexed: true,
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "bidder",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "bid",
+              type: "uint256",
+            },
+          ],
+          name: "NewBidPlaced",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
               internalType: "bytes32",
               name: "role",
               type: "bytes32",
@@ -372,6 +479,32 @@ const deployedContracts = {
           type: "function",
         },
         {
+          inputs: [],
+          name: "NOTARY_ROLEE",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "NOTARY_ROLEEE",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
           inputs: [
             {
               internalType: "uint256",
@@ -418,6 +551,74 @@ const deployedContracts = {
         {
           inputs: [
             {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "auctionIds",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "auctions",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+            {
+              internalType: "address payable",
+              name: "highestBidder",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "highestBid",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "endTime",
+              type: "uint256",
+            },
+            {
+              internalType: "bool",
+              name: "active",
+              type: "bool",
+            },
+            {
+              internalType: "bool",
+              name: "ended",
+              type: "bool",
+            },
+            {
+              internalType: "bool",
+              name: "isPending",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
               internalType: "address",
               name: "owner",
               type: "address",
@@ -441,6 +642,19 @@ const deployedContracts = {
               name: "landId",
               type: "uint256",
             },
+          ],
+          name: "createAuction",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
             {
               internalType: "string[]",
               name: "newGeometries",
@@ -453,6 +667,19 @@ const deployedContracts = {
             },
           ],
           name: "divideLandNFT",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+          ],
+          name: "endAuction",
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",
@@ -535,6 +762,106 @@ const deployedContracts = {
           type: "function",
         },
         {
+          inputs: [],
+          name: "getActiveAuctions",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "landId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "highestBidder",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "highestBid",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "endTime",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bool",
+                  name: "active",
+                  type: "bool",
+                },
+                {
+                  internalType: "bool",
+                  name: "ended",
+                  type: "bool",
+                },
+                {
+                  internalType: "bool",
+                  name: "isPending",
+                  type: "bool",
+                },
+              ],
+              internalType: "struct LandAuction.AuctionInfo[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getAllAuctions",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "landId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "highestBidder",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "highestBid",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "endTime",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bool",
+                  name: "active",
+                  type: "bool",
+                },
+                {
+                  internalType: "bool",
+                  name: "ended",
+                  type: "bool",
+                },
+                {
+                  internalType: "bool",
+                  name: "isPending",
+                  type: "bool",
+                },
+              ],
+              internalType: "struct LandAuction.AuctionInfo[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
           inputs: [
             {
               internalType: "uint256",
@@ -548,6 +875,56 @@ const deployedContracts = {
               internalType: "address",
               name: "",
               type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getEndedAuctions",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "landId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "highestBidder",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "highestBid",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "endTime",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bool",
+                  name: "active",
+                  type: "bool",
+                },
+                {
+                  internalType: "bool",
+                  name: "ended",
+                  type: "bool",
+                },
+                {
+                  internalType: "bool",
+                  name: "isPending",
+                  type: "bool",
+                },
+              ],
+              internalType: "struct LandAuction.AuctionInfo[]",
+              name: "",
+              type: "tuple[]",
             },
           ],
           stateMutability: "view",
@@ -804,6 +1181,56 @@ const deployedContracts = {
                 },
               ],
               internalType: "struct LandManagement.Land[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getPendingAuctions",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "landId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "highestBidder",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "highestBid",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "endTime",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bool",
+                  name: "active",
+                  type: "bool",
+                },
+                {
+                  internalType: "bool",
+                  name: "ended",
+                  type: "bool",
+                },
+                {
+                  internalType: "bool",
+                  name: "isPending",
+                  type: "bool",
+                },
+              ],
+              internalType: "struct LandAuction.AuctionInfo[]",
               name: "",
               type: "tuple[]",
             },
@@ -1118,6 +1545,19 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+          ],
+          name: "placeBid",
+          outputs: [],
+          stateMutability: "payable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
               name: "tokenId",
               type: "uint256",
             },
@@ -1253,6 +1693,24 @@ const deployedContracts = {
         {
           inputs: [
             {
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "duration",
+              type: "uint256",
+            },
+          ],
+          name: "startAuction",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
               internalType: "bytes4",
               name: "interfaceId",
               type: "bytes4",
@@ -1339,30 +1797,31 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {
-        DEFAULT_ADMIN_ROLE: "contracts/ExchangeAndNotary.sol",
-        approve: "contracts/ExchangeAndNotary.sol",
-        balanceOf: "contracts/ExchangeAndNotary.sol",
-        divideLandNFT: "contracts/ExchangeAndNotary.sol",
-        getApproved: "contracts/ExchangeAndNotary.sol",
-        getLandDetails: "contracts/ExchangeAndNotary.sol",
-        getLandsForSale: "contracts/ExchangeAndNotary.sol",
-        getLandsOfAccount: "contracts/ExchangeAndNotary.sol",
-        getRoleAdmin: "contracts/ExchangeAndNotary.sol",
-        grantRole: "contracts/ExchangeAndNotary.sol",
-        hasRole: "contracts/ExchangeAndNotary.sol",
-        isApprovedForAll: "contracts/ExchangeAndNotary.sol",
-        lands: "contracts/ExchangeAndNotary.sol",
-        mintLandNFT: "contracts/ExchangeAndNotary.sol",
-        name: "contracts/ExchangeAndNotary.sol",
-        ownerOf: "contracts/ExchangeAndNotary.sol",
-        renounceRole: "contracts/ExchangeAndNotary.sol",
-        revokeRole: "contracts/ExchangeAndNotary.sol",
-        safeTransferFrom: "contracts/ExchangeAndNotary.sol",
-        setApprovalForAll: "contracts/ExchangeAndNotary.sol",
-        supportsInterface: "contracts/ExchangeAndNotary.sol",
-        symbol: "contracts/ExchangeAndNotary.sol",
-        tokenURI: "contracts/ExchangeAndNotary.sol",
-        transferFrom: "contracts/ExchangeAndNotary.sol",
+        DEFAULT_ADMIN_ROLE: "contracts/LandAuction.sol",
+        NOTARY_ROLEEE: "contracts/LandAuction.sol",
+        approve: "contracts/LandAuction.sol",
+        balanceOf: "contracts/LandAuction.sol",
+        divideLandNFT: "contracts/LandAuction.sol",
+        getApproved: "contracts/LandAuction.sol",
+        getLandDetails: "contracts/LandAuction.sol",
+        getLandsForSale: "contracts/LandAuction.sol",
+        getLandsOfAccount: "contracts/LandAuction.sol",
+        getRoleAdmin: "contracts/LandAuction.sol",
+        grantRole: "contracts/LandAuction.sol",
+        hasRole: "contracts/LandAuction.sol",
+        isApprovedForAll: "contracts/LandAuction.sol",
+        lands: "contracts/LandAuction.sol",
+        mintLandNFT: "contracts/LandAuction.sol",
+        name: "contracts/LandAuction.sol",
+        ownerOf: "contracts/LandAuction.sol",
+        renounceRole: "contracts/LandAuction.sol",
+        revokeRole: "contracts/LandAuction.sol",
+        safeTransferFrom: "contracts/LandAuction.sol",
+        setApprovalForAll: "contracts/LandAuction.sol",
+        supportsInterface: "contracts/LandAuction.sol",
+        symbol: "contracts/LandAuction.sol",
+        tokenURI: "contracts/LandAuction.sol",
+        transferFrom: "contracts/LandAuction.sol",
         listLandForSale: "contracts/SaleMarketplace.sol",
         purchaseLand: "contracts/SaleMarketplace.sol",
         unlistLand: "contracts/SaleMarketplace.sol",
@@ -1374,6 +1833,17 @@ const deployedContracts = {
         getExchangeRequestsAsOwner2: "contracts/ExchangeAndNotary.sol",
         getRequestsWaitingForNotary: "contracts/ExchangeAndNotary.sol",
         requestExchange: "contracts/ExchangeAndNotary.sol",
+        NOTARY_ROLEE: "contracts/LandAuction.sol",
+        auctionIds: "contracts/LandAuction.sol",
+        auctions: "contracts/LandAuction.sol",
+        createAuction: "contracts/LandAuction.sol",
+        endAuction: "contracts/LandAuction.sol",
+        getActiveAuctions: "contracts/LandAuction.sol",
+        getAllAuctions: "contracts/LandAuction.sol",
+        getEndedAuctions: "contracts/LandAuction.sol",
+        getPendingAuctions: "contracts/LandAuction.sol",
+        placeBid: "contracts/LandAuction.sol",
+        startAuction: "contracts/LandAuction.sol",
       },
     },
   },

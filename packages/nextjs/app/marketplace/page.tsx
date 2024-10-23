@@ -139,26 +139,7 @@ const Marketplace: NextPage = () => {
                         Switch to {viewMode === "grid" ? "Map" : "Grid"} View
                     </button>
                 </div>
-                <div className="flex justify-between">
-                    <Filter />
-                    <div className="flex items-center flex-col pt-10">
-                        <form className="w-full min-w-96 max-w-3xl" onSubmit={handleSubmit}>
-                            <label className="form-control w-full">
-                                <div className="label">
-                                    <span className="label-text">What type of land are you searching for?</span>
-                                </div>
-                                <input
-                                    type="text"
-                                    placeholder="e.g : Lands near roads"
-                                    className="input input-bordered input-primar input-lg w-full"
-                                    onChange={(e) => setPrompt(e.target.value)}
-                                    value={prompt}
-                                />
-                            </label>
-                            <button className="btn btn-primary btn-wide mt-5">Search</button>
-                        </form>
-                    </div>
-                </div>
+                <Filter />
                 {viewMode === "grid" ? (
                     <div className="flex justify-between">
                         {/* <div role="tabpanel" className="tab-content p-10">{!isConnected || isConnecting ? (
