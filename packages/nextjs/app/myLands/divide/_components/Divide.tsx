@@ -1,13 +1,14 @@
 import { FeatureCollection, Feature } from "geojson";
 import { ChangeEvent, useState } from "react";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
-import { Land } from "~~/types/land"
+import { Land, PolygonGeometry } from "~~/types/land"
 
 interface DivideProps {
-    land: Land
+    land: Land,
+    setLands: React.Dispatch<React.SetStateAction<Land[]>>;
 }
 
-export const Divide = ({ land }: DivideProps) => {
+export const Divide = ({ land, setLands }: DivideProps) => {
     const [jsonData, setJsonData] = useState<any>(null);
     const [geometryStrings, setGeometryStrings] = useState<string[]>([]);
     const [number, setNumber] = useState<number | undefined>();
@@ -50,9 +51,32 @@ export const Divide = ({ land }: DivideProps) => {
                     const text = e.target?.result as string;
                     const jsonData: FeatureCollection = JSON.parse(text);
 
-                    const geometryStrings: string[] = jsonData.features.map((feature: Feature) => {
+                    let lands: Land[] = [];
+
+                    const count = jsonData.features.length
+
+                    setNumber(count);
+
+                    const newCount = count ?? 0;
+
+                    setTextValues((prevValues) => {
+                        const values = [...prevValues];
+                        if (newCount > values.length) {
+                            // Add empty strings to match the new count
+                            return values.concat(Array(newCount - values.length).fill(''));
+                        } else {
+                            // Truncate the array to match the new count
+                            return values.slice(0, newCount);
+                        }
+                    });
+
+                    const geometryStrings: string[] = jsonData.features.map((feature: Feature, index) => {
+                        let landItem = { ...land, geometry: feature.geometry as PolygonGeometry, nom: `${land.nom}-${index + 1}` };
+                        lands.push(landItem);
                         return JSON.stringify({ geometry: feature.geometry });
                     });
+
+                    setLands(lands);
 
                     setGeometryStrings(geometryStrings);
                     console.log('Geometry Strings:', geometryStrings);

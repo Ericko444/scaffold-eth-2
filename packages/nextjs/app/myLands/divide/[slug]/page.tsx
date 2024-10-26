@@ -13,6 +13,7 @@ import { Divide } from "../_components/Divide";
 export default function Page({ params }: { params: { slug: string } }) {
     const { address: connectedAddress, isConnected, isConnecting } = useAccount();
     const [land, setLand] = useState<Land[]>([]);
+    const [lands, setLands] = useState<Land[]>([]);
 
     console.log('SLUG', params.slug);
 
@@ -34,6 +35,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                 geometry: parsePolygonGeometry(geometryObject),
             };
             setLand([landsData]); // Set land as an array containing landsData
+            setLands([landsData]); // Set land as an array containing landsData
         } else {
             setLand([]); // Set land to an empty array if no data
         }
@@ -48,13 +50,13 @@ export default function Page({ params }: { params: { slug: string } }) {
                 </button>
             </div>
             <div className="flex items-center flex-col pt-10">
-                {!!land && land.length > 0 ? (
-                    <MapView lands={land} />
+                {!!lands && lands.length > 0 ? (
+                    <MapView lands={lands} />
                 ) : (
                     <p>Loading map data...</p>
                 )}
             </div>
-            <Divide land={land[0]}></Divide>
+            <Divide land={land[0]} setLands={setLands}></Divide>
         </div>
     )
 }

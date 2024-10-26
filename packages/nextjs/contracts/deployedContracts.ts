@@ -10,13 +10,7 @@ const deployedContracts = {
       address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
       abi: [
         {
-          inputs: [
-            {
-              internalType: "address",
-              name: "notary",
-              type: "address",
-            },
-          ],
+          inputs: [],
           stateMutability: "nonpayable",
           type: "constructor",
         },
@@ -175,19 +169,6 @@ const deployedContracts = {
             },
           ],
           name: "ExchangeAccepted",
-          type: "event",
-        },
-        {
-          anonymous: false,
-          inputs: [
-            {
-              indexed: false,
-              internalType: "uint256",
-              name: "exchangeId",
-              type: "uint256",
-            },
-          ],
-          name: "ExchangeApproved",
           type: "event",
         },
         {
@@ -467,19 +448,6 @@ const deployedContracts = {
         },
         {
           inputs: [],
-          name: "NOTARY_ROLE",
-          outputs: [
-            {
-              internalType: "bytes32",
-              name: "",
-              type: "bytes32",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
           name: "NOTARY_ROLEE",
           outputs: [
             {
@@ -514,7 +482,7 @@ const deployedContracts = {
           ],
           name: "acceptExchange",
           outputs: [],
-          stateMutability: "nonpayable",
+          stateMutability: "payable",
           type: "function",
         },
         {
@@ -533,19 +501,6 @@ const deployedContracts = {
           name: "approve",
           outputs: [],
           stateMutability: "nonpayable",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "exchangeId",
-              type: "uint256",
-            },
-          ],
-          name: "approveExchange",
-          outputs: [],
-          stateMutability: "payable",
           type: "function",
         },
         {
@@ -734,31 +689,8 @@ const deployedContracts = {
               name: "isAcceptedBySecondOwner",
               type: "bool",
             },
-            {
-              internalType: "bool",
-              name: "isApprovedByNotary",
-              type: "bool",
-            },
           ],
           stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [
-            {
-              internalType: "uint256",
-              name: "exchangeId",
-              type: "uint256",
-            },
-            {
-              internalType: "uint256",
-              name: "value",
-              type: "uint256",
-            },
-          ],
-          name: "executeExchange",
-          outputs: [],
-          stateMutability: "payable",
           type: "function",
         },
         {
@@ -980,11 +912,6 @@ const deployedContracts = {
                 {
                   internalType: "bool",
                   name: "isAcceptedBySecondOwner",
-                  type: "bool",
-                },
-                {
-                  internalType: "bool",
-                  name: "isApprovedByNotary",
                   type: "bool",
                 },
               ],
@@ -1231,66 +1158,6 @@ const deployedContracts = {
                 },
               ],
               internalType: "struct LandAuction.AuctionInfo[]",
-              name: "",
-              type: "tuple[]",
-            },
-          ],
-          stateMutability: "view",
-          type: "function",
-        },
-        {
-          inputs: [],
-          name: "getRequestsWaitingForNotary",
-          outputs: [
-            {
-              components: [
-                {
-                  internalType: "uint256",
-                  name: "id",
-                  type: "uint256",
-                },
-                {
-                  internalType: "uint256",
-                  name: "landId1",
-                  type: "uint256",
-                },
-                {
-                  internalType: "uint256",
-                  name: "landId2",
-                  type: "uint256",
-                },
-                {
-                  internalType: "address",
-                  name: "owner1",
-                  type: "address",
-                },
-                {
-                  internalType: "address",
-                  name: "owner2",
-                  type: "address",
-                },
-                {
-                  internalType: "uint8",
-                  name: "payerIndex",
-                  type: "uint8",
-                },
-                {
-                  internalType: "uint256",
-                  name: "priceDifference",
-                  type: "uint256",
-                },
-                {
-                  internalType: "bool",
-                  name: "isAcceptedBySecondOwner",
-                  type: "bool",
-                },
-                {
-                  internalType: "bool",
-                  name: "isApprovedByNotary",
-                  type: "bool",
-                },
-              ],
-              internalType: "struct ExchangeAndNotary.ExchangeRequest[]",
               name: "",
               type: "tuple[]",
             },
@@ -1825,13 +1692,9 @@ const deployedContracts = {
         listLandForSale: "contracts/SaleMarketplace.sol",
         purchaseLand: "contracts/SaleMarketplace.sol",
         unlistLand: "contracts/SaleMarketplace.sol",
-        NOTARY_ROLE: "contracts/ExchangeAndNotary.sol",
         acceptExchange: "contracts/ExchangeAndNotary.sol",
-        approveExchange: "contracts/ExchangeAndNotary.sol",
         exchangeRequests: "contracts/ExchangeAndNotary.sol",
-        executeExchange: "contracts/ExchangeAndNotary.sol",
         getExchangeRequestsAsOwner2: "contracts/ExchangeAndNotary.sol",
-        getRequestsWaitingForNotary: "contracts/ExchangeAndNotary.sol",
         requestExchange: "contracts/ExchangeAndNotary.sol",
         NOTARY_ROLEE: "contracts/LandAuction.sol",
         auctionIds: "contracts/LandAuction.sol",

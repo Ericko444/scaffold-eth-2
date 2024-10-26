@@ -103,11 +103,11 @@ const Explore: NextPage = () => {
                 ) : (
                     <p>Loading map data...</p>
                 )}
-                {!!lands && lands.length > 0 ? (
+                {/* {!!lands && lands.length > 0 ? (
                     <GridCards type="marketplace" lands={lands} />
                 ) : (
                     <p>Loading data...</p>
-                )}
+                )} */}
             </div>
         </>
     );

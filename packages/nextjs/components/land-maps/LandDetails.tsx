@@ -2,6 +2,7 @@ import { Land } from "~~/types/land";
 import { formatEther } from "viem";
 import { ModalMyLands } from "~~/app/marketplace/_components/ModalMyLands";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
+import { Address } from "../scaffold-eth";
 
 interface LandDetailsProps {
     land: Land
@@ -60,13 +61,8 @@ const LandDetails = ({ land }: LandDetailsProps) => {
             </div>
 
             <div className="flex items-center mt-4 space-x-2">
-                <div className="avatar">
-                    <div className="w-12 rounded-full">
-                        <img src="https://via.placeholder.com/48" alt="Owner Avatar" />
-                    </div>
-                </div>
                 <div>
-                    <p className="font-semibold">{land.seller}</p>
+                    <p className="font-semibold"><Address address={land.seller} /></p>
                 </div>
             </div>
         </div>
@@ -94,12 +90,7 @@ const LandDetails = ({ land }: LandDetailsProps) => {
                 <div className="flex justify-between items-center mt-4">
                     <span className="font-semibold">Owner</span>
                     <div className="flex items-center space-x-2">
-                        <div className="avatar">
-                            <div className="w-6 rounded-full">
-                                <img src="https://via.placeholder.com/48" alt="Owner Avatar" />
-                            </div>
-                        </div>
-                        <p className="font-semibold">{land.seller}</p>
+                        <p className="font-semibold"><Address address={land.seller} /></p>
                     </div>
                 </div>
             </div>

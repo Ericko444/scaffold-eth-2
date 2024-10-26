@@ -12,7 +12,5 @@ contract LandRegistry is
 	ExchangeAndNotary,
 	LandAuction
 {
-	constructor(address notary) LandManagement() {
-		_setupRole(NOTARY_ROLE, notary);
-	}
+	constructor() LandManagement() {}
 }

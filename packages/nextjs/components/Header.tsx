@@ -58,10 +58,6 @@ export const menuLinksAdmin: HeaderMenuLink[] = [
     href: "/marketplace",
   },
   {
-    label: "Approvals",
-    href: "/notary/approvals",
-  },
-  {
     label: "Explore",
     href: "/explore",
   },

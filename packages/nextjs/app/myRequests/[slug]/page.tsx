@@ -12,6 +12,7 @@ import { useAppSelector } from "~~/lib/hooks";
 import { selectExchangeById, selectExchanges } from "~~/lib/features/land/exchangeSlice";
 import ExchangeDetails from "~~/components/land-maps/ExchangeDetails";
 import { formatEther } from "viem";
+import { redirect } from "next/navigation";
 
 export default function Page({ params }: { params: { slug: string } }) {
     const { address: connectedAddress, isConnected, isConnecting } = useAccount();
@@ -58,6 +59,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                 {
                     functionName: "acceptExchange",
                     args: [BigInt(requestDt[0].id)],
+                    value: BigInt(requestDt[0].request.priceDifference)
                 },
                 {
                     onBlockConfirmation: txnReceipt => {
@@ -65,6 +67,7 @@ export default function Page({ params }: { params: { slug: string } }) {
                     },
                 },
             );
+            redirect('/myLands');
         } catch (e) {
             console.error("Error requesting exchange", e);
         }

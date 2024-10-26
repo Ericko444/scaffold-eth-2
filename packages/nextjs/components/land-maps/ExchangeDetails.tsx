@@ -3,6 +3,7 @@ import { formatEther } from "viem";
 import { ModalMyLands } from "~~/app/marketplace/_components/ModalMyLands";
 import { RequestItem } from "~~/app/myRequests/_components/RequestsTable";
 import { useAccount } from "wagmi";
+import { Address } from "../scaffold-eth";
 
 interface ExchangeDetailsProps {
     lands: Land[],
@@ -45,18 +46,6 @@ const ExchangeDetails = ({ lands, request }: ExchangeDetailsProps) => {
                                 <p className="text-sm">No description</p>
                             </div>
 
-                            {/* Owner Info */}
-                            <div className="flex items-center mt-4 space-x-2">
-                                {/* Owner Avatar */}
-                                <div className="avatar">
-                                    <div className="w-12 rounded-full">
-                                        <img src="https://via.placeholder.com/48" alt="Owner Avatar" />
-                                    </div>
-                                </div>
-                                <div>
-                                    <p className="font-semibold">{land.num}</p>
-                                </div>
-                            </div>
                         </div>
 
                         {/* Right Section */}
@@ -81,12 +70,7 @@ const ExchangeDetails = ({ lands, request }: ExchangeDetailsProps) => {
                                     <span className="font-semibold">Owner</span>
                                     <div className="flex items-center space-x-2">
                                         {/* Owner Avatar */}
-                                        <div className="avatar">
-                                            <div className="w-6 rounded-full">
-                                                <img src="https://via.placeholder.com/48" alt="Owner Avatar" />
-                                            </div>
-                                        </div>
-                                        <p className="font-semibold text-sm">{requestOwners[index]}</p>
+                                        <p className="font-semibold text-sm"><Address address={requestOwners[index]} /> </p>
                                     </div>
                                 </div>
                             </div>
@@ -107,7 +91,7 @@ const ExchangeDetails = ({ lands, request }: ExchangeDetailsProps) => {
                         </div>
                         <div className="flex justify-between">
                             <span className="font-semibold">{requestOwners[request.payerIndex - 1]} will pay {formatEther(BigInt(request.priceDifference))} ETH to </span>
-                            <span>{requestOwners[payReceiverIndex - 1]}</span>
+                            <span><Address address={requestOwners[payReceiverIndex - 1]} /></span>
                         </div>
                     </div>
                 </div>
