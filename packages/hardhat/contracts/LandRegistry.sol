@@ -12,5 +12,9 @@ contract LandRegistry is
 	ExchangeAndNotary,
 	LandAuction
 {
-	constructor() LandManagement() {}
+	bytes32 public constant NOTARY_ROLEEEEE = keccak256("NOTARY_ROLE");
+
+	constructor(address notary) LandManagement() {
+		_setupRole(NOTARY_ROLEEEEE, notary);
+	}
 }

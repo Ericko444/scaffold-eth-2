@@ -36,7 +36,7 @@ const MapView: React.FC<MapViewProps> = ({ lands }) => {
         <MapContainer
             center={position}
             zoom={17}
-            style={{ height: '600px', width: '1200px' }}
+            style={{ height: '800px', width: '1400px' }}
         >
             {/* Base map layer */}
             <TileLayer

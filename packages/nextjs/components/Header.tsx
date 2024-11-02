@@ -61,6 +61,10 @@ export const menuLinksAdmin: HeaderMenuLink[] = [
     label: "Explore",
     href: "/explore",
   },
+  {
+    label: "Auctions",
+    href: "/auction",
+  },
 ];
 
 export const HeaderMenuLinks = () => {

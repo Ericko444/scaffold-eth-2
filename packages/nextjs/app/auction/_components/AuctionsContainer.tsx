@@ -1,16 +1,30 @@
 import { useState, useEffect } from "react";
 import RequestsContainer from "~~/app/myRequests/_components/RequestsContainer";
 import LandCard from "~~/components/land-maps/LandCard";
+import LandCardAuction from "~~/components/land-maps/LandCardAuction";
 import RequestComponent from "~~/components/land-maps/RequestComponent";
 import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
+import { fetchAuction } from "~~/lib/features/land/auctionSlice";
 import { fetchRequest } from "~~/lib/features/land/exchangeSlice";
 import { useAppDispatch } from "~~/lib/hooks";
-import { Auction, Land } from "~~/types/land";
+import { Auction, AuctionItem, Land } from "~~/types/land";
 import { parsePolygonGeometry } from "~~/utils/lands/lands";
 
 interface AuctionsContainerProps {
     auction: Auction | null,
     type: string
+}
+
+function auctionToAuctionItem(auction: Auction): AuctionItem {
+    return {
+        landId: Number(auction.landId),
+        highestBidder: auction.highestBidder,
+        highestBid: Number(auction.highestBid),
+        endTime: Number(auction.endTime),
+        active: auction.active,
+        ended: auction.ended,
+        isPending: auction.isPending,
+    };
 }
 
 const AuctionsContainer = ({ auction, type }: AuctionsContainerProps) => {
@@ -41,18 +55,10 @@ const AuctionsContainer = ({ auction, type }: AuctionsContainerProps) => {
     }, [auction, getLand]);
 
     if (!!auction && !!land) {
-        // const requestItem = {
-        //     ...request,
-        //     id: Number(request.id),
-        //     landId1: Number(request.landId1),
-        //     landId2: Number(request.landId2),
-        //     payerIndex: Number(request.payerIndex),// 1 for owner1, 2 for owner2
-        //     priceDifference: Number(request.priceDifference),
-        // }
-        // dispatch(fetchRequest({ land1: lands[0], land2: lands[1], request: requestItem, id: Number(request.id) }));
+        dispatch(fetchAuction({ id: land.id, land: land, auction: auctionToAuctionItem(auction) }));
         return (
             <div className="container mx-auto">
-                <LandCard land={land} />
+                <LandCardAuction land={land} auction={auctionToAuctionItem(auction)} />
             </div>
         );
     }

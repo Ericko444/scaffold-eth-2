@@ -26,7 +26,10 @@ const auctionsSlice = createSlice({
     reducers: {
         setAuctions: (state, action) => {
             auctionsAdapter.setAll(state, action.payload);
-        }
+        },
+        updateAuction: (state, action) => {
+            auctionsAdapter.updateOne(state, action.payload);
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -55,7 +58,8 @@ export const selectAuctionIds = createSelector(
 )
 
 export const {
-    setAuctions
+    setAuctions,
+    updateAuction,
 } = auctionsSlice.actions;
 
 export default auctionsSlice.reducer;

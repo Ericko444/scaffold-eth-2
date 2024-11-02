@@ -7,6 +7,7 @@ import { useScaffoldReadContract, useScaffoldWriteContract } from "~~/hooks/scaf
 import { notification } from "~~/utils/scaffold-eth";
 import { useState } from "react";
 import AuctionsContainer from "./_components/AuctionsContainer";
+import Link from "next/link";
 
 
 const Auctions: NextPage = () => {
@@ -17,7 +18,6 @@ const Auctions: NextPage = () => {
         watch: true,
     });
 
-    console.log(getAuctions);
     return (
         <>
             <div className="flex items-center flex-col pt-10">
@@ -27,11 +27,18 @@ const Auctions: NextPage = () => {
                     </h1>
                 </div>
             </div>
-            {!!getAuctions && (
-                getAuctions.map(auct => (
-                    <AuctionsContainer auction={auct} type="owner2" />
-                ))
-            )}
+            <div className="container mx-auto p-4">
+                <div className="grid gap-6 gap-y-10 grid-cols-1 md:grid-cols-3 lg:grid-cols-4">
+                    {!!getAuctions && (
+                        getAuctions.map(auct => (
+                            <Link href={`/auction/${auct.landId}`}>
+                                <AuctionsContainer auction={auct} type="owner2" />
+                            </Link>
+                        ))
+                    )}
+                </div>
+            </div>
+
 
         </>
     );
