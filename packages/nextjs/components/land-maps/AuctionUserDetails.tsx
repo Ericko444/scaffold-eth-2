@@ -12,6 +12,7 @@ import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { useAppDispatch, useAppSelector } from "~~/lib/hooks";
 import { selectAuctionById, updateAuction } from "~~/lib/features/land/auctionSlice";
 import { useGlobalState } from "~~/services/store/store";
+import BidInput from "../utils/BidInput";
 
 interface AuctionUserDetailsProps {
     land: Land,
@@ -19,7 +20,7 @@ interface AuctionUserDetailsProps {
 }
 
 const act = () => {
-    const modal = document.getElementById('modal_start') as HTMLDialogElement | null;
+    const modal = document.getElementById('modal_bid') as HTMLDialogElement | null;
 
     if (modal) {
         modal.showModal();
@@ -32,15 +33,17 @@ const AuctionUserDetails = ({ land, auction }: AuctionUserDetailsProps) => {
     const dispatch = useAppDispatch();
     const auctionIt = useAppSelector((state) => selectAuctionById(state, auction.landId));
     const { writeContractAsync, isPending } = useScaffoldWriteContract("LandRegistry");
-    const [duration, setDuration] = useState<number>(0);
+    const [bid, setBid] = useState<string>("0");
     const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrency.price);
     const formattedBalance = land.price ? Number(formatEther(BigInt(land.price))) : 0;
-    const handleStartAuction = async () => {
+    console.log("END TIME", auction.endTime);
+    const handleBid = async () => {
         try {
             await writeContractAsync(
                 {
-                    functionName: "startAuction",
-                    args: [BigInt(auctionIt.auction.landId), BigInt(duration)],
+                    functionName: "placeBid",
+                    args: [BigInt(auctionIt.auction.landId)],
+                    value: BigInt(bid)
                 },
                 {
                     onBlockConfirmation: txnReceipt => {
@@ -82,8 +85,7 @@ const AuctionUserDetails = ({ land, auction }: AuctionUserDetailsProps) => {
             </div>
 
             <div className="mt-6 space-y-3">
-                {auctionIt.auction.isPending && (<button className="btn btn-primary w-full text-white" onClick={act}>START AUCTION</button>)}
-                {auctionIt.auction.active && (<button className="btn btn-error w-full text-white" onClick={() => { }}>END AUCTION</button>)}
+                {auctionIt.auction.active && (<button className="btn btn-primary w-full text-white" onClick={act}>BID</button>)}
             </div>
 
             <div className="mt-6 space-y-2">
@@ -95,15 +97,19 @@ const AuctionUserDetails = ({ land, auction }: AuctionUserDetailsProps) => {
                     <span className="font-semibold">Network</span>
                     <span>ETHEREUM</span>
                 </div>
+                <div className="flex justify-between">
+                    <span className="font-semibold">Highest Bid</span>
+                    <span>{formatEther(BigInt(auction.highestBid))} ETH</span>
+                </div>
             </div>
         </div>
-        <dialog id="modal_start" className="modal modal-bottom sm:modal-middle text-black">
+        <dialog id="modal_bid" className="modal modal-bottom sm:modal-middle text-black">
             <div className="modal-box">
-                <h3 className="font-bold text-lg">Set Auction Duration</h3>
-                <DurationInput onChange={setDuration} />
+                <h3 className="font-bold text-lg">Set Bid</h3>
+                <BidInput minimumBid={Number(formatEther(BigInt(land.price)))} onBidChange={setBid} />
                 <div className="modal-action">
                     <form method="dialog">
-                        <button className="btn btn-success" onClick={handleStartAuction}>Start Auction</button>
+                        <button className="btn btn-success" onClick={handleBid}>Confirm</button>
                         <button className="btn btn-error ml-4">Cancel</button>
                     </form>
                 </div>

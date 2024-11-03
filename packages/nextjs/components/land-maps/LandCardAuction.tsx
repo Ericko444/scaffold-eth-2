@@ -15,7 +15,7 @@ const LandCardAuction = ({ land, auction }: LandCardAuctionProps) => {
             <div className="card-body">
                 <h2 className="card-title">{land.nom}</h2>
                 <div>
-                    {auction.isPending && (<span className="badge badge-success">Pending</span>)}
+                    {auction.isPending && (<span className="badge badge-warning">Pending</span>)}
                     {auction.active && (<span className="badge badge-success">Active</span>)}
                     {auction.ended && (<span className="badge badge-error">Ended</span>)}
                 </div>

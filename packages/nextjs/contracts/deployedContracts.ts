@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     LandRegistry: {
-      address: "0x2A590C461Db46bca129E8dBe5C3998A8fF402e76",
+      address: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
       abi: [
         {
           inputs: [
@@ -826,6 +826,30 @@ const deployedContracts = {
               internalType: "address",
               name: "",
               type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+          ],
+          name: "getBids",
+          outputs: [
+            {
+              internalType: "address[]",
+              name: "bidders",
+              type: "address[]",
+            },
+            {
+              internalType: "uint256[]",
+              name: "bidAmounts",
+              type: "uint256[]",
             },
           ],
           stateMutability: "view",
@@ -1722,6 +1746,7 @@ const deployedContracts = {
         endAuction: "contracts/LandAuction.sol",
         getActiveAuctions: "contracts/LandAuction.sol",
         getAllAuctions: "contracts/LandAuction.sol",
+        getBids: "contracts/LandAuction.sol",
         getEndedAuctions: "contracts/LandAuction.sol",
         getPendingAuctions: "contracts/LandAuction.sol",
         placeBid: "contracts/LandAuction.sol",

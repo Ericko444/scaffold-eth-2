@@ -6,6 +6,8 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "./LandManagement.sol";
 
+import "hardhat/console.sol";
+
 contract LandAuction is LandManagement {
 	bytes32 public constant NOTARY_ROLEE = keccak256("NOTARY_ROLE");
 
@@ -100,10 +102,6 @@ contract LandAuction is LandManagement {
 			"Bid must be higher than the current highest bid"
 		);
 
-		if (auction.highestBidder != address(0)) {
-			auction.bids[auction.highestBidder] += auction.highestBid;
-		}
-
 		if (auction.bids[msg.sender] == 0) {
 			auction.bidders.push(msg.sender);
 		}
@@ -115,9 +113,30 @@ contract LandAuction is LandManagement {
 		emit NewBidPlaced(landId, msg.sender, msg.value);
 	}
 
+	function getBids(
+		uint256 landId
+	)
+		public
+		view
+		returns (address[] memory bidders, uint256[] memory bidAmounts)
+	{
+		Auction storage auction = auctions[landId];
+		uint256 numBidders = auction.bidders.length;
+		bidders = new address[](numBidders);
+		bidAmounts = new uint256[](numBidders);
+		for (uint256 i = 0; i < numBidders; i++) {
+			address bidder = auction.bidders[i];
+			bidders[i] = bidder;
+			bidAmounts[i] = auction.bids[bidder];
+		}
+		return (bidders, bidAmounts);
+	}
+
 	// Function to end the auction and transfer the land to the highest bidder
 	function endAuction(uint256 landId) public onlyRole(NOTARY_ROLEE) {
 		Auction storage auction = auctions[landId];
+		console.log("%s", block.timestamp);
+		console.log("%s", auction.endTime);
 		require(auction.active, "Auction is not active");
 		require(
 			block.timestamp >= auction.endTime,

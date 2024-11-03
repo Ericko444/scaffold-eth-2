@@ -28,6 +28,16 @@ const act = () => {
     }
 }
 
+const act_end = () => {
+    const modal = document.getElementById('modal_end') as HTMLDialogElement | null;
+
+    if (modal) {
+        modal.showModal();
+    } else {
+        console.error("Modal element not found");
+    }
+}
+
 const AuctionGovDetails = ({ land, auction }: AuctionGovDetailsProps) => {
     const dispatch = useAppDispatch();
     const auctionIt = useAppSelector((state) => selectAuctionById(state, auction.landId));
@@ -59,6 +69,23 @@ const AuctionGovDetails = ({ land, auction }: AuctionGovDetailsProps) => {
             console.error("Error requesting exchange", e);
         }
     };
+    const handleEndAuction = async () => {
+        try {
+            await writeContractAsync(
+                {
+                    functionName: "endAuction",
+                    args: [BigInt(auctionIt.auction.landId)],
+                },
+                {
+                    onBlockConfirmation: txnReceipt => {
+                        console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+                    },
+                },
+            );
+        } catch (e) {
+            console.error("Error requesting exchange", e);
+        }
+    };
     return (<div className="flex flex-col lg:flex-row bg-neutral text-neutral-content p-8 mt-20">
         <div className="w-full lg:w-2/3 space-y-4">
             <h1 className="text-4xl font-bold">{land.nom}</h1>
@@ -83,7 +110,7 @@ const AuctionGovDetails = ({ land, auction }: AuctionGovDetailsProps) => {
 
             <div className="mt-6 space-y-3">
                 {auctionIt.auction.isPending && (<button className="btn btn-primary w-full text-white" onClick={act}>START AUCTION</button>)}
-                {auctionIt.auction.active && (<button className="btn btn-error w-full text-white" onClick={() => { }}>END AUCTION</button>)}
+                {auctionIt.auction.active && (<button className="btn btn-error w-full text-white" onClick={act_end}>END AUCTION</button>)}
             </div>
 
             <div className="mt-6 space-y-2">
@@ -104,6 +131,18 @@ const AuctionGovDetails = ({ land, auction }: AuctionGovDetailsProps) => {
                 <div className="modal-action">
                     <form method="dialog">
                         <button className="btn btn-success" onClick={handleStartAuction}>Start Auction</button>
+                        <button className="btn btn-error ml-4">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        </dialog>
+        <dialog id="modal_end" className="modal modal-bottom sm:modal-middle text-black">
+            <div className="modal-box">
+                <h3 className="font-bold text-lg">End Auction</h3>
+                <p>Do you really want to end this auction ?</p>
+                <div className="modal-action">
+                    <form method="dialog">
+                        <button className="btn btn-success" onClick={handleEndAuction}>Confirm</button>
                         <button className="btn btn-error ml-4">Cancel</button>
                     </form>
                 </div>

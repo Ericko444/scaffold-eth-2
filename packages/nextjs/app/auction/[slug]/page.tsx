@@ -1,17 +1,31 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { formatEther } from "viem";
 import { useAccount } from "wagmi";
 import AuctionGovDetails from "~~/components/land-maps/AuctionGovDetails";
+import AuctionUserDetails from "~~/components/land-maps/AuctionUserDetails";
 import MapView from "~~/components/land-maps/MapView";
+import { Address } from "~~/components/scaffold-eth";
+import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
 import { selectAuctionById, selectAuctions } from "~~/lib/features/land/auctionSlice";
 import { useAppSelector } from "~~/lib/hooks";
 import { AuctionDTO, Land } from "~~/types/land";
 
 export default function Page({ params }: { params: { slug: string } }) {
     const { address: connectedAddress, isConnected, isConnecting } = useAccount();
+    const [isAdmin, setisAdmin] = useState<boolean>(false);
     const [lands, setLands] = useState<Land[]>([]);
     const auctions = useAppSelector(selectAuctions);
+
+    const { data: getBids } = useScaffoldReadContract({
+        contractName: "LandRegistry",
+        functionName: "getBids",
+        args: [BigInt(params.slug)],
+        watch: true,
+    });
+
+    console.log("BIDS", getBids);
 
     function filterById(items: AuctionDTO[], id: number): AuctionDTO[] {
         return items.filter(item => item.id === id);
@@ -23,6 +37,10 @@ export default function Page({ params }: { params: { slug: string } }) {
     useEffect(() => {
         if (auctionDt.length > 0 && !!auctionDt[0].land) {
             setLands(lands.concat([auctionDt[0].land]));
+        }
+
+        if (connectedAddress === "0x1a98EbD96CDB77A8Ea6cE8Bc3EcCd3B449712c7B") {
+            setisAdmin(true);
         }
     }, []);
 
@@ -36,26 +54,37 @@ export default function Page({ params }: { params: { slug: string } }) {
             <div className="flex items-center flex-col pt-10">
                 <MapView lands={lands} />
             </div>
-            {!!lands && lands.length > 0 ? (
+            {!!lands && lands.length > 0 && isAdmin ? (
                 <AuctionGovDetails land={lands[0]} auction={auctionDt[0].auction} />
             ) : (
-                <p>Loading data...</p>
+                <p></p>
             )}
-            {/* <dialog id="modal_my_lands" className="modal modal-bottom sm:modal-middle">
-                <div className="modal-box">
-                    <h3 className="font-bold text-lg">Confirmation exchange</h3>
-                    <p className="py-4">{confMessage}</p>
-                    <div className="modal-action">
-                        <form method="dialog">
-                            <button className="btn btn-success" onClick={handleAcceptExchange}>Accept offer</button>
-                            <button className="btn btn-error ml-4">Deny</button>
-                        </form>
-                    </div>
+            {!!lands && lands.length > 0 && !isAdmin ? (
+                <AuctionUserDetails land={lands[0]} auction={auctionDt[0].auction} />
+            ) : (
+                <p></p>
+            )}
+            <div className="flex justify-start px-4 md:px-0 mt-6">
+                <div className="overflow-x-auto w-auto shadow-2xl rounded-xl">
+                    <h4 className="text-lg">List of bids</h4>
+                    <table className="table text-xl bg-base-100 table-zebra w-full md:table-md table-sm">
+                        <thead>
+                            <tr className="rounded-xl text-sm text-base-content">
+                                <th className="bg-primary">Bidder</th>
+                                <th className="bg-primary">Amount (ETH)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {!!getBids && getBids[0].map((element, index) => (
+                                <tr key={element} className="hover text-sm">
+                                    <td><Address address={element} /></td>
+                                    <td>{Number(formatEther(BigInt(getBids[1][index])))}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
-            </dialog> */}
-            {/* <div className="flex items-center flex-col pt-10">
-                <button className="btn btn-neutral btn-lg" onClick={act}>Accept offer</button>
-            </div> */}
+            </div>
         </div>
     )
 }
