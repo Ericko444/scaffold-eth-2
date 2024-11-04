@@ -1,4 +1,5 @@
 import { SetStateAction, useState } from 'react';
+import { formatEther } from 'viem';
 
 interface Land {
     id: bigint;
@@ -32,22 +33,20 @@ export const MyLandsTable = ({ lands, setSelectedLandId, selectedLandId }: Lands
                     <thead>
                         <tr className="rounded-xl text-sm text-base-content">
                             <th className="bg-primary">Nom du titre</th>
-                            <th className="bg-primary">Numero</th>
+                            <th className="bg-primary">Numero titre</th>
                             <th className="bg-primary">Prix</th>
                             <th className="bg-primary">Surface réelle</th>
-                            <th className="bg-primary">Surface</th>
                             <th className="bg-primary">Select</th>
                         </tr>
                     </thead>
                     <tbody>
                         {lands.map((land) => (
                             <tr key={land.id} className="hover text-sm">
-                                <td className="text-right md:py-4">{land.nom}</td>
-                                <td className="text-right md:py-4">{land.num}</td>
-                                <td className="text-right md:py-4">{Number(land.price)}</td>
-                                <td className="text-right md:py-4">{land.surf_reel}</td>
-                                <td className="text-right md:py-4">{land.surface}</td>
-                                <td className="text-right md:py-4">
+                                <td>{land.nom}</td>
+                                <td>{land.num}</td>
+                                <td>{formatEther(BigInt(land.price))} ETH</td>
+                                <td>{land.surf_reel}</td>
+                                <td>
                                     <input
                                         type="radio"
                                         name="selectedLand"

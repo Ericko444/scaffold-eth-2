@@ -51,13 +51,14 @@ export const ModalMyLands = ({ idLandToExchange }: ModalMyLandsProps) => {
     return (
         <dialog id="modal_my_lands" className="modal text-black">
             <div className="modal-box w-11/12 max-w-5xl">
-                <h3 className="font-bold text-lg">Choose the land you want to exchange with this one :</h3>
+                <h3 className="font-bold text-lg">Veuillez choisir le terrain que vous voulez échanger :</h3>
                 <div className="mt-5 mb-5">
                     <MyLandsTable lands={getLandsOfAccount ?? []} selectedLandId={selectedLandId} setSelectedLandId={setSelectedLandId} />
                 </div>
                 <div className="modal-action">
                     <form method="dialog">
-                        <button className="btn btn-primary" onClick={handleRequestExchange}>Validate</button>
+                        <button className="btn btn-primary" onClick={handleRequestExchange}>Valider</button>
+                        <button className="btn btn-error ml-4">Cancel</button>
                     </form>
                 </div>
             </div>

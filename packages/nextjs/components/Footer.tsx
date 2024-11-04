@@ -30,17 +30,8 @@ export const Footer = () => {
                 </div>
               </div>
             )}
-            {isLocalNetwork && (
-              <>
-                {/* <Faucet /> */}
-                <Link href="/blockexplorer" passHref className="btn btn-primary btn-sm font-normal gap-1">
-                  <MagnifyingGlassIcon className="h-4 w-4" />
-                  <span>Block Explorer</span>
-                </Link>
-              </>
-            )}
           </div>
-          <SwitchTheme className={`pointer-events-auto ${isLocalNetwork ? "self-end md:self-auto" : ""}`} />
+          {/* <SwitchTheme className={`pointer-events-auto ${isLocalNetwork ? "self-end md:self-auto" : ""}`} /> */}
         </div>
       </div>
       <div className="w-full">

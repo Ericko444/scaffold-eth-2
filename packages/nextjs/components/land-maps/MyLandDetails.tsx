@@ -4,6 +4,7 @@ import { ModalMyLands } from "~~/app/marketplace/_components/ModalMyLands";
 import Link from "next/link";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { Address } from "../scaffold-eth";
+import { useGlobalState } from "~~/services/store/store";
 
 interface MyLandDetailsProps {
     land: Land
@@ -22,6 +23,8 @@ const act = () => {
 
 const MyLandDetails = ({ land }: MyLandDetailsProps) => {
     const { writeContractAsync, isPending } = useScaffoldWriteContract("LandRegistry");
+    const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrency.price);
+    const formattedBalance = land.price ? Number(formatEther(BigInt(land.price))) : 0;
     const handleUnlist = async () => {
         try {
             await writeContractAsync(
@@ -95,7 +98,7 @@ const MyLandDetails = ({ land }: MyLandDetailsProps) => {
         <div className="w-full lg:w-1/3 bg-black shadow-lg p-6 rounded-lg">
             <div className="flex flex-col items-center">
                 <span className="text-2xl font-bold">{formatEther(BigInt(land.price))} ETH</span>
-                <span className="text-sm text-gray-500">($7,072.06)</span>
+                <span className="text-sm text-gray-500">{(nativeCurrencyPrice * formattedBalance).toFixed(2)} $</span>
             </div>
 
             <div className="mt-6 space-y-3">

@@ -113,9 +113,9 @@ export const Divide = ({ land, setLands }: DivideProps) => {
     console.log(isPending, "...");
     return (
         <div className="bg-neutral text-neutral-content p-8 mt-20 rounded-lg">
-            <h3 className="font-bold text-lg">Divide land : {land?.nom}</h3>
+            <h3 className="font-bold text-lg">Diviser terrain : {land?.nom}</h3>
             <div className="mt-5 mb-5">
-                <p>Split data input :</p>
+                <p>Données (.shp ou .geojson) :</p>
                 <input
                     type="file"
                     accept=".geojson"
@@ -123,7 +123,7 @@ export const Divide = ({ land, setLands }: DivideProps) => {
                     className="file-input file-input-bordered file-input-primary w-full max-w-xs text-black" />
             </div>
             <div className="mt-5 mb-5">
-                <p>Number of divisions :</p>
+                <p>Nombre de divisions :</p>
                 <input
                     type="number"
                     placeholder="Number of divisions"
@@ -144,7 +144,7 @@ export const Divide = ({ land, setLands }: DivideProps) => {
                     />
                 ))}
             </div>
-            <button className="btn btn-primary" onClick={handleDivision}>Validate</button>
+            <button className="btn btn-primary" onClick={handleDivision}>Valider</button>
         </div>
     )
 }

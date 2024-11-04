@@ -35,8 +35,8 @@ export default function Page({ params }: { params: { slug: string } }) {
             requestOwners[0] = requestDt[0].request.owner1 === connectedAddress ? "You" : requestDt[0].request.owner1;
             requestOwners[1] = requestDt[0].request.owner2 === connectedAddress ? "You" : requestDt[0].request.owner2;
             const payReceiverIndex = requestDt[0].request.payerIndex === 2 ? 1 : 2;
-            const action = payReceiverIndex === 1 ? "pay" : "receive";
-            const message = `Do you want to accept the offer and ${action} ${formatEther(BigInt(requestDt[0].request.priceDifference))} ?`
+            const action = payReceiverIndex === 1 ? "payer" : "recevoir";
+            const message = `Voulez-vous accepter l'échange et ${action} ${formatEther(BigInt(requestDt[0].request.priceDifference))} ?`
             setConfMessage(message);
         }
     }, [])
@@ -91,19 +91,19 @@ export default function Page({ params }: { params: { slug: string } }) {
             )}
             <dialog id="modal_my_lands" className="modal modal-bottom sm:modal-middle">
                 <div className="modal-box">
-                    <h3 className="font-bold text-lg">Confirmation exchange</h3>
+                    <h3 className="font-bold text-lg">Confirmation de l'échange</h3>
                     <p className="py-4">{confMessage}</p>
                     <div className="modal-action">
                         <form method="dialog">
                             {/* if there is a button in form, it will close the modal */}
-                            <button className="btn btn-success" onClick={handleAcceptExchange}>Accept offer</button>
-                            <button className="btn btn-error ml-4">Deny</button>
+                            <button className="btn btn-success" onClick={handleAcceptExchange}>Accepter l'offre</button>
+                            <button className="btn btn-error ml-4">Annuler</button>
                         </form>
                     </div>
                 </div>
             </dialog>
             <div className="flex items-center flex-col pt-10">
-                <button className="btn btn-neutral btn-lg" onClick={act}>Accept offer</button>
+                <button className="btn btn-neutral btn-lg" onClick={act}>Accepter l'offre</button>
             </div>
         </div>
     )

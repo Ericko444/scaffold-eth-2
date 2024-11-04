@@ -95,6 +95,9 @@ contract LandAuction is LandManagement {
 	// Function to place a bid on an active auction
 	function placeBid(uint256 landId) public payable {
 		Auction storage auction = auctions[landId];
+		console.log("%s", timeLeft(landId));
+		console.log("%s", block.timestamp);
+		console.log("%s", auction.endTime);
 		require(auction.active, "Auction is not active");
 		require(block.timestamp < auction.endTime, "Auction has already ended");
 		require(
@@ -132,23 +135,32 @@ contract LandAuction is LandManagement {
 		return (bidders, bidAmounts);
 	}
 
+	function timeLeft(uint256 landId) public view returns (uint256) {
+		Auction storage auction = auctions[landId];
+		if (block.timestamp >= auction.endTime) {
+			return 0;
+		}
+		return auction.endTime - block.timestamp;
+	}
+
 	// Function to end the auction and transfer the land to the highest bidder
 	function endAuction(uint256 landId) public onlyRole(NOTARY_ROLEE) {
 		Auction storage auction = auctions[landId];
+		console.log("%s", timeLeft(landId));
 		console.log("%s", block.timestamp);
-		console.log("%s", auction.endTime);
 		require(auction.active, "Auction is not active");
-		require(
-			block.timestamp >= auction.endTime,
-			"Auction has not ended yet"
-		);
+		require(timeLeft(landId) == 0, "Auction has not ended yet");
 		require(!auction.ended, "Auction has already been ended");
 
 		auction.active = false;
 		auction.ended = true;
 
 		if (auction.highestBidder != address(0)) {
-			_transfer(address(this), auction.highestBidder, landId);
+			_transfer(
+				address(0x1a98EbD96CDB77A8Ea6cE8Bc3EcCd3B449712c7B),
+				auction.highestBidder,
+				landId
+			);
 			emit AuctionEnded(
 				landId,
 				auction.highestBidder,

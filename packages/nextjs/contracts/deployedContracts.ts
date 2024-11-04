@@ -1654,6 +1654,25 @@ const deployedContracts = {
           inputs: [
             {
               internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+          ],
+          name: "timeLeft",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
               name: "tokenId",
               type: "uint256",
             },
@@ -1751,6 +1770,7 @@ const deployedContracts = {
         getPendingAuctions: "contracts/LandAuction.sol",
         placeBid: "contracts/LandAuction.sol",
         startAuction: "contracts/LandAuction.sol",
+        timeLeft: "contracts/LandAuction.sol",
       },
     },
   },

@@ -34,21 +34,21 @@ const Marketplace: NextPage = () => {
         setViewMode(viewMode === "grid" ? "map" : "grid");
     };
 
-    const { data: getLandsNotOwnedByAccount } = useScaffoldReadContract({
+    const { data: getLandsForSale } = useScaffoldReadContract({
         contractName: "LandRegistry",
         functionName: "getLandsForSale",
         watch: true,
     });
 
     useEffect(() => {
-        const landsData: Land[] | undefined = getLandsNotOwnedByAccount?.map(land => {
+        const landsData: Land[] | undefined = getLandsForSale?.map(land => {
             const parsedData = JSON.parse(land.geometry);
             const geometryObject = parsedData.geometry;
             return { ...land, id: Number(land.id), price: Number(land.price), geometry: parsePolygonGeometry(geometryObject) }
         });
         setLands(landsData)
         localStorage.setItem("marketLands", JSON.stringify(landsData));
-    }, [getLandsNotOwnedByAccount])
+    }, [getLandsForSale])
 
 
 
@@ -129,22 +129,37 @@ const Marketplace: NextPage = () => {
             <div className="flex items-center flex-col pt-10">
                 <div className="px-5">
                     <h1 className="text-center mb-8">
-                        <span className="block text-4xl font-bold">Lands on sale</span>
+                        <span className="block text-4xl font-bold">Liste des propriétés à vendre</span>
                     </h1>
                 </div>
             </div>
             <div className="container mx-auto p-4">
-                <div className="flex justify-end mb-4">
-                    <button className="btn" onClick={toggleViewMode}>
-                        Switch to {viewMode === "grid" ? "Map" : "Grid"} View
-                    </button>
+                <div className="flex justify-between items-center mb-4 space-x-4">
+                    {/* Filter on the Left */}
+                    <div className="w-1/4">
+                        <Filter />
+                    </div>
+
+                    {/* Search Bar in the Center */}
+                    <input
+                        type="text"
+                        placeholder="Search properties..."
+                        className="input input-bordered flex-grow"
+                    // onChange={(e) => handleSearch(e.target.value)}
+                    />
+
+                    {/* View Mode Toggle Button on the Right */}
+                    <div className="w-1/4 flex justify-end">
+                        <button className="btn" onClick={toggleViewMode}>
+                            Switch to {viewMode === "grid" ? "Map" : "Grid"} View
+                        </button>
+                    </div>
                 </div>
-                <Filter />
+
+                {/* Filter and View Logic */}
                 {viewMode === "grid" ? (
                     <div className="flex justify-between">
-                        {/* <div role="tabpanel" className="tab-content p-10">{!isConnected || isConnecting ? (
-                            <RainbowKitCustomConnectButton />
-                        ) : <LandsTable lands={getLandsNotOwnedByAccount ?? []} actions={actions} />}</div> */}
+                        {/* Content for Grid View */}
                         {!!lands && lands.length > 0 ? (
                             <GridCards type="marketplace" lands={lands} />
                         ) : (
@@ -153,17 +168,18 @@ const Marketplace: NextPage = () => {
                     </div>
                 ) : (
                     <div className="flex items-center flex-col pt-10">
+                        {/* Content for Map View */}
                         {!!lands && lands.length > 0 ? (
                             <MapView lands={lands} />
                         ) : (
                             <p>Loading map data...</p>
                         )}
-
                     </div>
-                )
-                }
+                )}
             </div>
         </>
+
+
     );
 };
 

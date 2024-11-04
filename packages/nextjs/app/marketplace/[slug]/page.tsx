@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import LandDetails from "~~/components/land-maps/LandDetails";
@@ -41,9 +42,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     return (
         <div className="container mx-auto p-4">
             <div className="flex justify-start mb-4">
-                <button className="btn" onClick={() => { }}>
-                    Back
-                </button>
+                <Link href={`/marketplace`} className="btn">Retour</Link>
             </div>
             <div className="flex items-center flex-col pt-10">
                 {!!land && land.length > 0 ? (

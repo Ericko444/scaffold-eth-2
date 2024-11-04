@@ -34,7 +34,7 @@ const blockieSizeMap = {
  */
 export const Address = ({ address, disableAddressLink, format, size = "base" }: AddressProps) => {
   const { address: connectedAddress } = useAccount();
-  const verifyAddress = address === "You" ? connectedAddress : address;
+  const verifyAddress = address === "Vous" ? connectedAddress : address;
   const [ens, setEns] = useState<string | null>();
   const [ensAvatar, setEnsAvatar] = useState<string | null>();
   const [addressCopied, setAddressCopied] = useState(false);

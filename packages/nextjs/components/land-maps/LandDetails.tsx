@@ -3,6 +3,7 @@ import { formatEther } from "viem";
 import { ModalMyLands } from "~~/app/marketplace/_components/ModalMyLands";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { Address } from "../scaffold-eth";
+import { useGlobalState } from "~~/services/store/store";
 
 interface LandDetailsProps {
     land: Land
@@ -33,6 +34,8 @@ const act2 = () => {
 
 const LandDetails = ({ land }: LandDetailsProps) => {
     const { writeContractAsync, isPending } = useScaffoldWriteContract("LandRegistry");
+    const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrency.price);
+    const formattedBalance = land.price ? Number(formatEther(BigInt(land.price))) : 0;
     const handlePurchase = async () => {
         try {
             await writeContractAsync(
@@ -70,12 +73,12 @@ const LandDetails = ({ land }: LandDetailsProps) => {
         <div className="w-full lg:w-1/3 bg-black shadow-lg p-6 rounded-lg">
             <div className="flex flex-col items-center">
                 <span className="text-2xl font-bold">{formatEther(BigInt(land.price))} ETH</span>
-                <span className="text-sm text-gray-500">($7,072.06)</span>
+                <span className="text-sm text-gray-500">{(nativeCurrencyPrice * formattedBalance).toFixed(2)} $</span>
             </div>
 
             <div className="mt-6 space-y-3">
-                <button className="btn btn-primary w-full text-white" onClick={act2}>BUY WITH CRYPTO</button>
-                <button className="btn bg-white w-full" onClick={act}>MAKE AN EXCHANGE OFFER</button>
+                <button className="btn btn-primary w-full text-white" onClick={act2}>ACHETER</button>
+                <button className="btn bg-white w-full" onClick={act}>DEMANDER UNE ECHANGE</button>
             </div>
 
             <div className="mt-6 space-y-2">
@@ -88,7 +91,7 @@ const LandDetails = ({ land }: LandDetailsProps) => {
                     <span>ETHEREUM</span>
                 </div>
                 <div className="flex justify-between items-center mt-4">
-                    <span className="font-semibold">Owner</span>
+                    <span className="font-semibold">Propriétaire</span>
                     <div className="flex items-center space-x-2">
                         <p className="font-semibold"><Address address={land.seller} /></p>
                     </div>
