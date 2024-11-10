@@ -148,8 +148,12 @@ contract LandAuction is LandManagement {
 		Auction storage auction = auctions[landId];
 		console.log("%s", timeLeft(landId));
 		console.log("%s", block.timestamp);
+		console.log("%s", auction.endTime);
 		require(auction.active, "Auction is not active");
-		require(timeLeft(landId) == 0, "Auction has not ended yet");
+		// require(
+		// 	block.timestamp >= auction.endTime,
+		// 	"Auction has not ended yet"
+		// );
 		require(!auction.ended, "Auction has already been ended");
 
 		auction.active = false;

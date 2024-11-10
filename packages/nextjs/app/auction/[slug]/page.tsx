@@ -65,26 +65,34 @@ export default function Page({ params }: { params: { slug: string } }) {
                 <p></p>
             )}
             <div className="flex justify-start px-4 md:px-0 mt-6">
-                <div className="overflow-x-auto w-auto shadow-2xl rounded-xl">
-                    <h4 className="text-lg">List of bids</h4>
-                    <table className="table text-xl bg-base-100 table-zebra w-full md:table-md table-sm">
+                <div className="overflow-x-auto w-auto shadow-2xl rounded-xl bg-base-100 p-4">
+                    <h4 className="text-lg font-bold text-black mb-4">Liste des enchères</h4>
+                    <table className="table w-full text-base bg-neutral-focus text-primary rounded-lg table-zebra">
                         <thead>
-                            <tr className="rounded-xl text-sm text-base-content">
-                                <th className="bg-primary">Bidder</th>
-                                <th className="bg-primary">Amount (ETH)</th>
+                            <tr className="text-sm text-primary">
+                                <th className="bg-primary text-primary-content rounded-tl-lg">Enchérisseur</th>
+                                <th className="bg-primary text-primary-content rounded-tr-lg">Montant (ETH)</th>
                             </tr>
                         </thead>
                         <tbody>
                             {!!getBids && getBids[0].map((element, index) => (
-                                <tr key={element} className="hover text-sm">
-                                    <td><Address address={element} /></td>
-                                    <td>{Number(formatEther(BigInt(getBids[1][index])))}</td>
+                                <tr key={element} className="hover:bg-neutral-content hover:text-neutral-focus transition-all duration-200 ease-in-out text-sm">
+                                    <td className="px-4 py-2">
+                                        <div className="flex items-center space-x-2">
+                                            <div className="badge badge-accent badge-outline">#{index + 1}</div>
+                                            <Address address={element} />
+                                        </div>
+                                    </td>
+                                    <td className="px-4 py-2 font-semibold text-accent-focus">
+                                        {Number(formatEther(BigInt(getBids[1][index])))} ETH
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </div>
             </div>
+
         </div>
     )
 }

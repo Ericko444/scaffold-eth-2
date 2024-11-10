@@ -5,13 +5,32 @@ import { ModalMyLands } from "~~/app/marketplace/_components/ModalMyLands";
 import { AuctionItem, Land } from "~~/types/land";
 import { Address } from "../scaffold-eth";
 import DurationInput from "../utils/DurationInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Duration } from "~~/types/utils";
 import { redirect } from "next/navigation";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { useAppDispatch, useAppSelector } from "~~/lib/hooks";
 import { selectAuctionById, updateAuction } from "~~/lib/features/land/auctionSlice";
 import { useGlobalState } from "~~/services/store/store";
+
+import { Dispatch, SetStateAction } from 'react';
+
+function startTimer(
+    auctionEndTime: number,
+    setTimeRemaining: Dispatch<SetStateAction<number>>
+): void {
+    const intervalId: number = window.setInterval(() => {
+        const currentTime: number = Date.now();
+        const timeRemaining: number = (auctionEndTime * 1000) - currentTime;
+        if (timeRemaining <= 0) {
+            clearInterval(intervalId);
+            setTimeRemaining(0);
+        } else {
+            setTimeRemaining(timeRemaining);
+        }
+    }, 1000); // Update every second
+}
+
 
 interface AuctionGovDetailsProps {
     land: Land,
@@ -45,6 +64,30 @@ const AuctionGovDetails = ({ land, auction }: AuctionGovDetailsProps) => {
     const [duration, setDuration] = useState<number>(0);
     const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrency.price);
     const formattedBalance = land.price ? Number(formatEther(BigInt(land.price))) : 0;
+
+    const [timeRemaining, setTimeRemaining] = useState<number>(0);
+
+    useEffect(() => {
+
+        if (auction.active) {
+            startTimer(auction.endTime, setTimeRemaining);
+        }
+
+        return () => {
+            setTimeRemaining(0);
+        };
+    }, [auction]);
+
+    function formatTime(ms: number): string {
+        const totalSeconds: number = Math.floor(ms / 1000);
+        const hours: string = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+        const minutes: string = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+        const seconds: string = String(totalSeconds % 60).padStart(2, '0');
+
+        return `${hours}:${minutes}:${seconds}`;
+    }
+
+
     const handleStartAuction = async () => {
         try {
             await writeContractAsync(
@@ -121,6 +164,10 @@ const AuctionGovDetails = ({ land, auction }: AuctionGovDetailsProps) => {
                 <div className="flex justify-between">
                     <span className="font-semibold">Network</span>
                     <span>ETHEREUM</span>
+                </div>
+                <div className="flex justify-between">
+                    <span className="font-semibold">Time Remaining:</span>
+                    <span>{formatTime(timeRemaining)}</span>
                 </div>
             </div>
         </div>

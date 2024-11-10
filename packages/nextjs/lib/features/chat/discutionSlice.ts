@@ -7,13 +7,13 @@ const chatAdapter = createEntityAdapter<chatItem>({
 
 });
 
-export const fetchChat = createAsyncThunk('exchange/fetchChat', async (exchange: chatItem) => {
-    return [exchange];
+export const fetchChat = createAsyncThunk('exchange/fetchChat', async (chat: chatItem) => {
+    return chat;
 });
 
 export interface chatState {
     error: string,
-    status: string
+    status: string,
 }
 
 const initialState = chatAdapter.getInitialState({
@@ -35,7 +35,7 @@ const chatsSlice = createSlice({
                 state.status = 'loading'
             })
             .addCase(fetchChat.fulfilled, (state, action) => {
-                chatAdapter.setAll(state, action.payload);
+                chatAdapter.addOne(state, action.payload);
                 state.status = 'idle'
             })
             .addCase(fetchChat.rejected, (state) => {

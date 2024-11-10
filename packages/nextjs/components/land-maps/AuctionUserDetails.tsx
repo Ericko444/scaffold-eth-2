@@ -5,7 +5,7 @@ import { ModalMyLands } from "~~/app/marketplace/_components/ModalMyLands";
 import { AuctionItem, Land } from "~~/types/land";
 import { Address } from "../scaffold-eth";
 import DurationInput from "../utils/DurationInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Duration } from "~~/types/utils";
 import { redirect } from "next/navigation";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
@@ -13,6 +13,24 @@ import { useAppDispatch, useAppSelector } from "~~/lib/hooks";
 import { selectAuctionById, updateAuction } from "~~/lib/features/land/auctionSlice";
 import { useGlobalState } from "~~/services/store/store";
 import BidInput from "../utils/BidInput";
+
+import { Dispatch, SetStateAction } from 'react';
+
+function startTimer(
+    auctionEndTime: number,
+    setTimeRemaining: Dispatch<SetStateAction<number>>
+): void {
+    const intervalId: number = window.setInterval(() => {
+        const currentTime: number = Date.now();
+        const timeRemaining: number = (auctionEndTime * 1000) - currentTime;
+        if (timeRemaining <= 0) {
+            clearInterval(intervalId);
+            setTimeRemaining(0);
+        } else {
+            setTimeRemaining(timeRemaining);
+        }
+    }, 1000); // Update every second
+}
 
 interface AuctionUserDetailsProps {
     land: Land,
@@ -36,7 +54,30 @@ const AuctionUserDetails = ({ land, auction }: AuctionUserDetailsProps) => {
     const [bid, setBid] = useState<string>("0");
     const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrency.price);
     const formattedBalance = land.price ? Number(formatEther(BigInt(land.price))) : 0;
-    console.log("END TIME", auction.endTime);
+
+
+    const [timeRemaining, setTimeRemaining] = useState<number>(0);
+
+    useEffect(() => {
+
+        if (auction.active) {
+            startTimer(auction.endTime, setTimeRemaining);
+        }
+
+        return () => {
+            setTimeRemaining(0);
+        };
+    }, [auction]);
+
+    function formatTime(ms: number): string {
+        const totalSeconds: number = Math.floor(ms / 1000);
+        const hours: string = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+        const minutes: string = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+        const seconds: string = String(totalSeconds % 60).padStart(2, '0');
+
+        return `${hours}:${minutes}:${seconds}`;
+    }
+
     const handleBid = async () => {
         try {
             await writeContractAsync(
@@ -66,6 +107,9 @@ const AuctionUserDetails = ({ land, auction }: AuctionUserDetailsProps) => {
         <div className="w-full lg:w-2/3 space-y-4">
             <h1 className="text-4xl font-bold">{land.nom}</h1>
             <div className="badge badge-primary text-white p-3">{land.num}</div>
+            {auction.isPending && (<span className="badge badge-warning p-3">Pending</span>)}
+            {auction.active && (<span className="badge badge-success p-3">Active</span>)}
+            {auction.ended && (<span className="badge badge-error p-3">Ended</span>)}
             <div className="mt-4">
                 <h2 className="text-lg font-semibold">Description</h2>
                 <p className="text-sm">No description</p>
@@ -85,7 +129,7 @@ const AuctionUserDetails = ({ land, auction }: AuctionUserDetailsProps) => {
             </div>
 
             <div className="mt-6 space-y-3">
-                {auctionIt.auction.active && (<button className="btn btn-primary w-full text-white" onClick={act}>BID</button>)}
+                {auctionIt.auction.active && (<button className="btn btn-primary w-full text-white" onClick={act}>Enchérir</button>)}
             </div>
 
             <div className="mt-6 space-y-2">
@@ -98,19 +142,23 @@ const AuctionUserDetails = ({ land, auction }: AuctionUserDetailsProps) => {
                     <span>ETHEREUM</span>
                 </div>
                 <div className="flex justify-between">
-                    <span className="font-semibold">Highest Bid</span>
+                    <span className="font-semibold">Enchère la plus élevée</span>
                     <span>{formatEther(BigInt(auction.highestBid))} ETH</span>
+                </div>
+                <div className="flex justify-between">
+                    <span className="font-semibold">Temps restant:</span>
+                    <span>{formatTime(timeRemaining)}</span>
                 </div>
             </div>
         </div>
         <dialog id="modal_bid" className="modal modal-bottom sm:modal-middle text-black">
             <div className="modal-box">
-                <h3 className="font-bold text-lg">Set Bid</h3>
+                <h3 className="font-bold text-lg">Enchérir</h3>
                 <BidInput minimumBid={Number(formatEther(BigInt(land.price)))} onBidChange={setBid} />
                 <div className="modal-action">
                     <form method="dialog">
-                        <button className="btn btn-success" onClick={handleBid}>Confirm</button>
-                        <button className="btn btn-error ml-4">Cancel</button>
+                        <button className="btn btn-success" onClick={handleBid}>Confirmer</button>
+                        <button className="btn btn-error ml-4">Annuler</button>
                     </form>
                 </div>
             </div>

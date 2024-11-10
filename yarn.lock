@@ -2259,6 +2259,7 @@ __metadata:
     eslint-config-prettier: ^8.5.0
     eslint-plugin-prettier: ^4.2.1
     leaflet: ^1.9.4
+    leaflet-defaulticon-compatibility: ^0.1.2
     next: ^14.0.4
     next-themes: ^0.2.1
     nprogress: ^0.2.0
@@ -11407,6 +11408,13 @@ __metadata:
   dependencies:
     language-subtag-registry: ~0.3.2
   checksum: c81b5d8b9f5f9cfd06ee71ada6ddfe1cf83044dd5eeefcd1e420ad491944da8957688db4a0a9bc562df4afdc2783425cbbdfd152c01d93179cf86888903123cf
+  languageName: node
+  linkType: hard
+
+"leaflet-defaulticon-compatibility@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "leaflet-defaulticon-compatibility@npm:0.1.2"
+  checksum: 07a9a12797a439ef047f3cb314850db60fc3a0e362761999aa98f4b4ca725afc648a4696790491ce3d1e9d0844653f858b598f67ca52fa942ca11c1dc2ddde7d
   languageName: node
   linkType: hard
 

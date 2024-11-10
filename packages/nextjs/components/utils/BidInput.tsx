@@ -35,7 +35,7 @@ const BidInput: React.FC<BidInputProps> = ({ minimumBid, onBidChange }) => {
     return (
         <div className="form-control w-full max-w-xs">
             <label className="label">
-                <span className="label-text">Your Bid (Minimum: {minimumBid} ETH)</span>
+                <span className="label-text">Votre enchère (Minimum: {minimumBid} ETH)</span>
             </label>
             <input
                 type="number"
