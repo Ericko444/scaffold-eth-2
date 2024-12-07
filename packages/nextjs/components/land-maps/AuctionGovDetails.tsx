@@ -7,7 +7,7 @@ import { Address } from "../scaffold-eth";
 import DurationInput from "../utils/DurationInput";
 import { useEffect, useState } from "react";
 import { Duration } from "~~/types/utils";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { useAppDispatch, useAppSelector } from "~~/lib/hooks";
 import { selectAuctionById, updateAuction } from "~~/lib/features/land/auctionSlice";
@@ -21,14 +21,18 @@ function startTimer(
 ): void {
     const intervalId: number = window.setInterval(() => {
         const currentTime: number = Date.now();
-        const timeRemaining: number = (auctionEndTime * 1000) - currentTime;
+        const auctionEndTimeDate = new Date(auctionEndTime).getTime();
+        const timeRemaining: number = auctionEndTimeDate - currentTime;
+        console.log(currentTime, "currentTime");
+        console.log(auctionEndTimeDate, "auctionEndTime");
+        console.log(timeRemaining, "timeRemaining");
         if (timeRemaining <= 0) {
             clearInterval(intervalId);
             setTimeRemaining(0);
         } else {
             setTimeRemaining(timeRemaining);
         }
-    }, 1000); // Update every second
+    }, 1000);
 }
 
 
@@ -64,6 +68,7 @@ const AuctionGovDetails = ({ land, auction }: AuctionGovDetailsProps) => {
     const [duration, setDuration] = useState<number>(0);
     const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrency.price);
     const formattedBalance = land.price ? Number(formatEther(BigInt(land.price))) : 0;
+    const router = useRouter();
 
     const [timeRemaining, setTimeRemaining] = useState<number>(0);
 
@@ -93,7 +98,7 @@ const AuctionGovDetails = ({ land, auction }: AuctionGovDetailsProps) => {
             await writeContractAsync(
                 {
                     functionName: "startAuction",
-                    args: [BigInt(auctionIt.auction.landId), BigInt(duration)],
+                    args: [BigInt(auctionIt.auction.landId), BigInt(Date.now() + duration * 1000)],
                 },
                 {
                     onBlockConfirmation: txnReceipt => {
@@ -105,6 +110,7 @@ const AuctionGovDetails = ({ land, auction }: AuctionGovDetailsProps) => {
                                 active: true
                             }
                         }));
+                        router.push('/auction');
                     },
                 },
             );
@@ -122,6 +128,7 @@ const AuctionGovDetails = ({ land, auction }: AuctionGovDetailsProps) => {
                 {
                     onBlockConfirmation: txnReceipt => {
                         console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+                        router.push('/auction');
                     },
                 },
             );

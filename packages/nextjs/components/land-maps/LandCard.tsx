@@ -14,8 +14,8 @@ const LandCard = ({ land }: LandCardProps) => {
         </figure>
         <div className="card-body">
             <h2 className="card-title">{land.nom}</h2>
-            <p>Superficie: {land.surf_reel}</p>
-            <p>Prix: {formatEther(BigInt(land.price))} ETH</p>
+            <p>Superficie: {parseFloat(land.surf_reel.replace(",", ".")).toFixed(2)} Ha</p>
+            <p>Prix: {Number(formatEther(BigInt(land.price))).toFixed(2)} ETH</p>
             <div className="card-actions justify-end">
                 <button className="btn btn-primary">Détails</button>
             </div>

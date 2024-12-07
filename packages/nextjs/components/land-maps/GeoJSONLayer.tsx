@@ -28,7 +28,7 @@ const GeoJSONLayer: React.FC<GeoJSONLayerProps> = ({ data, style }) => {
         console.log(properties);
         let idToUse = !!properties.id ? properties.id : properties.Id;
         if (properties && properties.nom && properties.surface) {
-            const popupContent = `<strong><a href='/marketplace/${idToUse}'>${properties.nom}<a></strong><br/>Surface: ${properties.surface}`;
+            const popupContent = `<strong><a href='/marketplace/${idToUse}'>${properties.nom}<a></strong><br/>Surface: ${Number(properties.surface).toFixed(2)} Ha`;
             layer.bindPopup(popupContent);
         }
     };

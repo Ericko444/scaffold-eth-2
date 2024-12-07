@@ -25,7 +25,6 @@ export default function Page({ params }: { params: { slug: string } }) {
         watch: true,
     });
 
-    console.log("BIDS", getBids);
 
     function filterById(items: AuctionDTO[], id: number): AuctionDTO[] {
         return items.filter(item => item.id === id);

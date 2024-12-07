@@ -1,7 +1,12 @@
-import { FeatureCollection, Point, Polygon } from "geojson";
-
-export const geoDataPoints: FeatureCollection<Point, any> = {
+{
     "type": "FeatureCollection",
+    "name": "antsirabe_points",
+    "crs": {
+        "type": "name",
+        "properties": {
+            "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+        }
+    },
     "features": [
         {
             "type": "Feature",

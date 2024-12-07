@@ -4,7 +4,8 @@ export interface SearchDTO {
 
 export interface SearchDTOWithData {
     prompt: string,
-    data: string[]
+    data: string[],
+    contexts: string[]
 }
 
 export interface SearchResponseItem {
@@ -13,5 +14,7 @@ export interface SearchResponseItem {
 }
 
 export interface SearchResponse {
-    data: SearchResponseItem[]
+    contexte: string,
+    terrains: SearchResponseItem[],
+    usedData: string[]
 }

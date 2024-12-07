@@ -1,7 +1,8 @@
 import { FeatureCollection, Feature } from "geojson";
 import { ChangeEvent, useState } from "react";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
-import { Land, PolygonGeometry } from "~~/types/land"
+import { Land, PolygonGeometry } from "~~/types/land";
+import { useRouter } from 'next/navigation';
 
 interface DivideProps {
     land: Land,
@@ -13,6 +14,8 @@ export const Divide = ({ land, setLands }: DivideProps) => {
     const [geometryStrings, setGeometryStrings] = useState<string[]>([]);
     const [number, setNumber] = useState<number | undefined>();
     const [textValues, setTextValues] = useState<string[]>([]);
+    const [confMessage, setConfMessage] = useState<string>("");
+    const router = useRouter();
 
     const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = event.target.value;
@@ -31,6 +34,16 @@ export const Divide = ({ land, setLands }: DivideProps) => {
             }
         });
     };
+
+    const act = () => {
+        const modal = document.getElementById('modal_divide') as HTMLDialogElement | null;
+
+        if (modal) {
+            modal.showModal();
+        } else {
+            console.error("Modal element not found");
+        }
+    }
 
     const handleTextChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = event.target.value;
@@ -102,6 +115,7 @@ export const Divide = ({ land, setLands }: DivideProps) => {
                 {
                     onBlockConfirmation: txnReceipt => {
                         console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+                        router.push('/myLands');
                     },
                 },
             );
@@ -135,7 +149,7 @@ export const Divide = ({ land, setLands }: DivideProps) => {
                 <p>Adresses :</p>
                 {textValues.map((value, index) => (
                     <input
-                        className="input input-bordered input-primary w-full max-w-xs mr-3 text-black"
+                        className="input input-bordered input-primary w-full max-w-md mr-3 text-black"
                         key={index}
                         placeholder={`Adress ${index + 1}`}
                         type="text"
@@ -144,7 +158,19 @@ export const Divide = ({ land, setLands }: DivideProps) => {
                     />
                 ))}
             </div>
-            <button className="btn btn-primary" onClick={handleDivision}>Valider</button>
+            <button className="btn btn-primary" onClick={act}>Valider</button>
+            <dialog id="modal_divide" className="modal modal-bottom sm:modal-middle text-black">
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg">Confirmer la division</h3>
+                    <p className="py-4">Confirmer la division du terrain {land?.nom}?</p>
+                    <div className="modal-action">
+                        <form method="dialog">
+                            <button className="btn btn-success" onClick={handleDivision}>Confirmer</button>
+                            <button className="btn btn-error ml-4">Annuler</button>
+                        </form>
+                    </div>
+                </div>
+            </dialog>
         </div>
     )
 }

@@ -14,6 +14,7 @@ import { Land } from "~~/types/land";
 import GridCards from "~~/components/land-maps/GridCards";
 import { useAppDispatch, useAppSelector } from "~~/lib/hooks";
 import { fetchChat, selectChats } from "~~/lib/features/chat/discutionSlice";
+import { ArrowPathIcon, ClockIcon } from "@heroicons/react/24/outline";
 
 function generateRandomId(): number {
     return Math.floor(Math.random() * 9999) + 1;
@@ -28,6 +29,7 @@ const Explore: NextPage = () => {
     const dispatch = useAppDispatch();
     const chats = useAppSelector(selectChats);
     const [dataIds, setDataIds] = useState<string[]>([]);
+    const [contexts, setContexts] = useState<string[]>([]);
 
     console.log("CHATS", chats);
 
@@ -58,7 +60,8 @@ const Explore: NextPage = () => {
             };
             const postDataSearch: SearchDTOWithData = {
                 prompt,
-                data: dataIds
+                data: dataIds,
+                contexts: contexts
             };
             const response = !!dataIds && dataIds.length > 0 ? await api.post<SearchResponse>('/searchData', postDataSearch) : await api.post<SearchResponse>('/search', postData);
             console.log('Post successful:', response);
@@ -70,12 +73,13 @@ const Explore: NextPage = () => {
                 tay = tay.replace('\n', '');
                 tay = JSON.parse(tay);
             }
-            tay.map(res => {
+            tay.terrains.map(res => {
                 ids.push(res.num);
             });
+            setContexts(tay.usedData);
             setDataIds(ids);
             console.log(ids);
-            dispatch(fetchChat({ prompt, data: ids, response: prompt, id: generateRandomId() }));
+            dispatch(fetchChat({ prompt, data: ids, response: tay.contexte, id: generateRandomId() }));
             const filter = filterGeoJSONByIds(geoData, ids);
             const filterLands = filterLandsArrayByIds(lands, ids);
             setGeoDatas(filter);
@@ -95,8 +99,18 @@ const Explore: NextPage = () => {
                 {/* Sidebar Chat */}
                 <div className="w-1/4 bg-gray-100 flex flex-col border-r">
                     {/* Chat Header */}
-                    <div className="p-5 border-b">
-                        <h2 className="text-xl font-bold">Explore Data</h2>
+                    <div className="p-5 border-b flex items-center">
+                        <h2 className="text-xl font-bold flex-grow">Explore Data</h2>
+                        <div className="flex space-x-2">
+                            <button className="btn btn-sm btn-primary flex items-center">
+                                <ArrowPathIcon className="w-5 h-5 mr-1" />
+                                Reset
+                            </button>
+                            <button className="btn btn-sm btn-primary flex items-center">
+                                <ClockIcon className="w-5 h-5 mr-1" />
+                                History
+                            </button>
+                        </div>
                     </div>
 
                     {/* Chat Messages (Scrollable) */}
@@ -149,7 +163,7 @@ const Explore: NextPage = () => {
                         </div>
                         <div className="relative w-full h-full">
                             <div className={`w-full h-full ${loading ? 'blur-sm' : ''}`}>
-                                <MapViewGSON data={geoDatas} />
+                                <MapViewGSON data={geoDatas} contexts={contexts} />
                                 <span className="loading loading-spinner loading-lg absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 pointer-events-none text-primary"></span>
                             </div>
                             {loading && (

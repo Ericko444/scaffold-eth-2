@@ -28,9 +28,10 @@ import 'leaflet-defaulticon-compatibility';
 
 interface MapViewGSONProps {
     data: GeoJsonObject | null;
+    contexts: string[]
 }
 
-const MapViewGSON: React.FC<MapViewGSONProps> = ({ data }) => {
+const MapViewGSON: React.FC<MapViewGSONProps> = ({ data, contexts }) => {
     const position: [number, number] = [-19.887306227883506, 47.05264176331643];
     const dt = useMemo(() => {
         if (!data) {
@@ -56,14 +57,12 @@ const MapViewGSON: React.FC<MapViewGSONProps> = ({ data }) => {
             {/* GeoJSON layer */}
             {dt && (
                 <>
-                    <GeoJSONLayer data={points} style={{
-                        color: 'green',
-                        weight: 2,
-                    }} />
-                    <GeoJSONLayer data={zones} style={{
+                    {contexts.includes("water") && (<GeoJSONLayer data={points} />)}
+                    {contexts.includes("land occupation") && (<GeoJSONLayer data={zones} style={{
                         color: 'red',
                         weight: 2,
-                    }} />
+                    }} />)}
+
                     <GeoJSONLayer data={dt} style={{
                         color: 'blue',
                         weight: 2,

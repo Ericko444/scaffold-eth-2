@@ -12,7 +12,7 @@ import { useAppSelector } from "~~/lib/hooks";
 import { selectExchangeById, selectExchanges } from "~~/lib/features/land/exchangeSlice";
 import ExchangeDetails from "~~/components/land-maps/ExchangeDetails";
 import { formatEther } from "viem";
-import { redirect } from "next/navigation";
+import { useRouter } from 'next/navigation';
 
 export default function Page({ params }: { params: { slug: string } }) {
     const { address: connectedAddress, isConnected, isConnecting } = useAccount();
@@ -20,6 +20,7 @@ export default function Page({ params }: { params: { slug: string } }) {
     const [request, setRequest] = useState<Request | null>(null);
     const exchanges = useAppSelector(selectExchanges);
     const [confMessage, setConfMessage] = useState<string>("");
+    const router = useRouter();
     console.log(exchanges);
 
     function filterById(items: ExchangeRequestDTO[], id: number): ExchangeRequestDTO[] {
@@ -64,10 +65,10 @@ export default function Page({ params }: { params: { slug: string } }) {
                 {
                     onBlockConfirmation: txnReceipt => {
                         console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+                        router.push('/myLands');
                     },
                 },
             );
-            redirect('/myLands');
         } catch (e) {
             console.error("Error requesting exchange", e);
         }

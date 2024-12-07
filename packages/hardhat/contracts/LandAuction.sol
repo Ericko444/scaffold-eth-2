@@ -84,8 +84,7 @@ contract LandAuction is LandManagement {
 			"Auction must be created first and be in pending state"
 		);
 		require(!auction.active, "Auction is already active");
-
-		auction.endTime = block.timestamp + duration;
+		auction.endTime = duration;
 		auction.active = true;
 		auction.isPending = false;
 
@@ -93,13 +92,10 @@ contract LandAuction is LandManagement {
 	}
 
 	// Function to place a bid on an active auction
-	function placeBid(uint256 landId) public payable {
+	function placeBid(uint256 landId, uint256 blockTimestamp) public payable {
 		Auction storage auction = auctions[landId];
-		console.log("%s", timeLeft(landId));
-		console.log("%s", block.timestamp);
-		console.log("%s", auction.endTime);
 		require(auction.active, "Auction is not active");
-		require(block.timestamp < auction.endTime, "Auction has already ended");
+		require(blockTimestamp < auction.endTime, "Auction has already ended");
 		require(
 			msg.value > auction.highestBid,
 			"Bid must be higher than the current highest bid"
@@ -146,9 +142,6 @@ contract LandAuction is LandManagement {
 	// Function to end the auction and transfer the land to the highest bidder
 	function endAuction(uint256 landId) public onlyRole(NOTARY_ROLEE) {
 		Auction storage auction = auctions[landId];
-		console.log("%s", timeLeft(landId));
-		console.log("%s", block.timestamp);
-		console.log("%s", auction.endTime);
 		require(auction.active, "Auction is not active");
 		// require(
 		// 	block.timestamp >= auction.endTime,

@@ -1458,6 +1458,11 @@ const deployedContracts = {
               name: "landId",
               type: "uint256",
             },
+            {
+              internalType: "uint256",
+              name: "blockTimestamp",
+              type: "uint256",
+            },
           ],
           name: "placeBid",
           outputs: [],

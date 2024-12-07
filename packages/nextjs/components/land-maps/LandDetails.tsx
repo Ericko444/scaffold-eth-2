@@ -4,6 +4,7 @@ import { ModalMyLands } from "~~/app/marketplace/_components/ModalMyLands";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { Address } from "../scaffold-eth";
 import { useGlobalState } from "~~/services/store/store";
+import { useRouter } from 'next/navigation';
 
 interface LandDetailsProps {
     land: Land
@@ -36,6 +37,7 @@ const LandDetails = ({ land }: LandDetailsProps) => {
     const { writeContractAsync, isPending } = useScaffoldWriteContract("LandRegistry");
     const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrency.price);
     const formattedBalance = land.price ? Number(formatEther(BigInt(land.price))) : 0;
+    const router = useRouter();
     const handlePurchase = async () => {
         try {
             await writeContractAsync(
@@ -47,6 +49,7 @@ const LandDetails = ({ land }: LandDetailsProps) => {
                 {
                     onBlockConfirmation: txnReceipt => {
                         console.log("📦 Transaction blockHash", txnReceipt.blockHash);
+                        router.push('/myLands');
                     },
                 },
             );

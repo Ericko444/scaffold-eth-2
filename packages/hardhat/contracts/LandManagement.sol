@@ -140,6 +140,8 @@ contract LandManagement is ERC721, AccessControl {
 
 			string memory iString = uintToString(i + 1);
 
+			uint256 unitPrice = lands[landId].price / newGeometries.length;
+
 			// Update the land data with the new geometries
 			string memory num = string(abi.encodePacked("-", iString));
 			lands[newItemId] = Land(
@@ -149,7 +151,7 @@ contract LandManagement is ERC721, AccessControl {
 				lands[landId].surface,
 				lands[landId].surf_reel,
 				newGeometries[i], // New geometry for the divided plot
-				lands[landId].price, // You can adjust price as needed,
+				unitPrice, // You can adjust price as needed,
 				false,
 				payable(newOwners[i])
 			);
