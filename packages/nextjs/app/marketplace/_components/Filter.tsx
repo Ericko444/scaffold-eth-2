@@ -11,7 +11,7 @@ const Filter = () => {
                 <h2 className="font-bold mb-2">Status</h2>
                 <div className="form-control">
                     <label className="label cursor-pointer">
-                        <span className="label-text">All lands</span>
+                        <span className="label-text">Tous les terrains</span>
                         <input
                             type="radio"
                             name="status"
@@ -22,24 +22,13 @@ const Filter = () => {
                         />
                     </label>
                     <label className="label cursor-pointer">
-                        <span className="label-text">Available to buy</span>
+                        <span className="label-text">Disponible pour achat</span>
                         <input
                             type="radio"
                             name="status"
                             className="radio checked:bg-primary"
                             value="buy"
                             checked={status === "buy"}
-                            onChange={handleStatusChange}
-                        />
-                    </label>
-                    <label className="label cursor-pointer">
-                        <span className="label-text">Owned by me</span>
-                        <input
-                            type="radio"
-                            name="status"
-                            className="radio checked:bg-primary"
-                            value="mine"
-                            checked={status === "mine"}
                             onChange={handleStatusChange}
                         />
                     </label>

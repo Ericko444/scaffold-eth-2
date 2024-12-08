@@ -41,11 +41,23 @@ const Marketplace: NextPage = () => {
     });
 
     useEffect(() => {
-        const landsData: Land[] | undefined = getLandsForSale?.map(land => {
-            const parsedData = JSON.parse(land.geometry);
-            const geometryObject = parsedData.geometry;
-            return { ...land, id: Number(land.id), price: Number(land.price), geometry: parsePolygonGeometry(geometryObject) }
-        });
+        // const landsData: Land[] | undefined = getLandsForSale?.map(land => {
+        //     const parsedData = JSON.parse(land.geometry);
+        //     const geometryObject = parsedData.geometry;
+        //     return { ...land, id: Number(land.id), price: Number(land.price), geometry: parsePolygonGeometry(geometryObject) }
+        // });
+        const landsData: Land[] | undefined = getLandsForSale
+            ?.filter(land => land.seller !== connectedAddress)
+            .map(land => {
+                const parsedData = JSON.parse(land.geometry);
+                const geometryObject = parsedData.geometry;
+                return {
+                    ...land,
+                    id: Number(land.id),
+                    price: Number(land.price),
+                    geometry: parsePolygonGeometry(geometryObject)
+                };
+            });
         setLands(landsData)
         localStorage.setItem("marketLands", JSON.stringify(landsData));
     }, [getLandsForSale])
@@ -89,47 +101,13 @@ const Marketplace: NextPage = () => {
         }
     ];
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        const postData: SearchDTO = {
-            prompt
-        };
-        try {
-
-            const response = await api.post<SearchResponse>('/search', postData);
-            console.log('Post successful:', response);
-            setResponseData(response.data);
-            let ids: string[] = []
-            let tay = response.data;
-            console.log(typeof tay);
-            if (typeof tay === "string") {
-                tay = tay.replace('\n', '');
-                tay = JSON.parse(tay);
-            }
-            tay.map(res => {
-                ids.push(res.num);
-            });
-            console.log(ids);
-            const filter = filterGeoJSONByIds(geoData, ids);
-            const filterLands = filterLandsArrayByIds(lands, ids);
-            setGeoDatas(filter);
-            setLands(filterLands);
-            setPrompt('');
-        } catch (err) {
-            console.error('Error posting data:', err);
-            const errorMessage = (err as AxiosError).message || 'An unexpected error occurred.';
-        } finally {
-        }
-    };
-
 
     return (
         <>
             <div className="flex items-center flex-col pt-10">
                 <div className="px-5">
                     <h1 className="text-center mb-8">
-                        <span className="block text-4xl font-bold">Liste des propriétés à vendre</span>
+                        <span className="block text-4xl font-bold">Marketplace</span>
                     </h1>
                 </div>
             </div>
@@ -143,7 +121,7 @@ const Marketplace: NextPage = () => {
                     {/* Search Bar in the Center */}
                     <input
                         type="text"
-                        placeholder="Search properties..."
+                        placeholder="Rechercher propriété"
                         className="input input-bordered flex-grow"
                     // onChange={(e) => handleSearch(e.target.value)}
                     />

@@ -19,11 +19,11 @@ type HeaderMenuLink = {
 
 export const menuLinks: HeaderMenuLink[] = [
   {
-    label: "Home",
+    label: "Accueil",
     href: "/",
   },
   {
-    label: "My lands",
+    label: "Mes propriétés",
     href: "/myLands",
   },
   {
@@ -31,22 +31,22 @@ export const menuLinks: HeaderMenuLink[] = [
     href: "/marketplace",
   },
   {
-    label: "My requests",
+    label: "Mes demandes",
     href: "/myRequests",
   },
   {
-    label: "Auctions",
+    label: "Vente aux enchères",
     href: "/auction",
   },
   {
-    label: "Explore",
+    label: "Explorer",
     href: "/explore",
   },
 ];
 
 export const menuLinksAdmin: HeaderMenuLink[] = [
   {
-    label: "Home",
+    label: "Accueil",
     href: "/",
   },
   {
@@ -58,11 +58,11 @@ export const menuLinksAdmin: HeaderMenuLink[] = [
     href: "/marketplace",
   },
   {
-    label: "Explore",
+    label: "Explorer",
     href: "/explore",
   },
   {
-    label: "Auctions",
+    label: "Vente aux enchères",
     href: "/auction",
   },
 ];
