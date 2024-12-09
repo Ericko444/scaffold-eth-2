@@ -41,6 +41,13 @@ export default function Page({ params }: { params: { slug: string } }) {
     console.log(land); // Logs an array of Land objects
     return (
         <div className="container mx-auto p-4">
+            <div className="flex items-center flex-col pt-10">
+                <div className="px-5">
+                    <h1 className="text-center mb-8">
+                        <span className="block text-4xl font-bold">Ma propriété : {!!land && land.length > 0 ? `${land[0].nom}` : ""}</span>
+                    </h1>
+                </div>
+            </div>
             <div className="flex justify-start mb-4">
                 <button className="btn" onClick={() => { }}>
                     Back

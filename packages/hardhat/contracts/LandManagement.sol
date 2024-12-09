@@ -116,6 +116,7 @@ contract LandManagement is ERC721, AccessControl {
 	function divideLandNFT(
 		uint256 landId,
 		string[] memory newGeometries,
+		string[] memory newSurfaces,
 		address[] memory newOwners
 	) public {
 		require(
@@ -148,8 +149,8 @@ contract LandManagement is ERC721, AccessControl {
 				newItemId,
 				string(abi.encodePacked(lands[landId].num, num)), // Retain original details if needed
 				string(abi.encodePacked(lands[landId].nom, num)),
-				lands[landId].surface,
-				lands[landId].surf_reel,
+				newSurfaces[i],
+				newSurfaces[i],
 				newGeometries[i], // New geometry for the divided plot
 				unitPrice, // You can adjust price as needed,
 				false,

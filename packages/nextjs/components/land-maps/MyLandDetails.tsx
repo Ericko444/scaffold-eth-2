@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { Address } from "../scaffold-eth";
 import { useGlobalState } from "~~/services/store/store";
+import { formatCurrency } from "~~/utils/balances/balances";
 
 interface MyLandDetailsProps {
     land: Land
@@ -24,7 +25,9 @@ const act = () => {
 const MyLandDetails = ({ land }: MyLandDetailsProps) => {
     const { writeContractAsync, isPending } = useScaffoldWriteContract("LandRegistry");
     const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrency.price);
+    const ariaryValue = useGlobalState(state => state.ariaryValue);
     const formattedBalance = land.price ? Number(formatEther(BigInt(land.price))) : 0;
+    const ariaryBalance = (nativeCurrencyPrice * formattedBalance * ariaryValue);
     const handleUnlist = async () => {
         try {
             await writeContractAsync(
@@ -85,7 +88,8 @@ const MyLandDetails = ({ land }: MyLandDetailsProps) => {
             <div className="badge badge-primary text-white p-3">{land.num}</div>
             <div className="mt-4">
                 <h2 className="text-lg font-semibold">Description</h2>
-                <p className="text-sm">No description</p>
+                <p className="text-sm">Superficie: {parseFloat(land.surf_reel.replace(",", ".")).toFixed(2)} Hectares</p>
+                <p className="text-sm">...</p>
             </div>
 
             <div className="flex items-center mt-4 space-x-2">
@@ -98,12 +102,12 @@ const MyLandDetails = ({ land }: MyLandDetailsProps) => {
         <div className="w-full lg:w-1/3 bg-black shadow-lg p-6 rounded-lg">
             <div className="flex flex-col items-center">
                 <span className="text-2xl font-bold">{formatEther(BigInt(land.price))} ETH</span>
-                <span className="text-sm text-gray-500">{(nativeCurrencyPrice * formattedBalance).toFixed(2)} $</span>
+                <span className="text-sm text-gray-500">{formatCurrency(ariaryBalance, "Ar")} / {formatCurrency(nativeCurrencyPrice * formattedBalance, "$")}</span>
             </div>
 
             <div className="mt-6 space-y-3">
-                <Link className="btn btn-primary w-full text-white" href={`/myLands/divide/${land.id}`}>DIVIDE</Link>
-                {land.isForSale ? (<button className="btn bg-white w-full" onClick={handleUnlist}>UNLIST FOR SALE</button>) : (<button className="btn bg-white w-full" onClick={handleList}>LIST FOR SALE</button>)}
+                <Link className="btn btn-primary w-full text-white" href={`/myLands/divide/${land.id}`}>DIVISER</Link>
+                {land.isForSale ? (<button className="btn bg-white w-full" onClick={handleUnlist}>RETIRER LA VENTE</button>) : (<button className="btn bg-white w-full" onClick={handleList}>METTRE EN VENTE</button>)}
             </div>
 
 
@@ -120,13 +124,13 @@ const MyLandDetails = ({ land }: MyLandDetailsProps) => {
         </div>
         <dialog id="modal_purchase" className="modal modal-bottom sm:modal-middle">
             <div className="modal-box">
-                <h3 className="font-bold text-lg">Confirmation buy</h3>
-                <p className="py-4">Are you sure you want to buy this land for {formatEther(BigInt(land.price))} ETH?</p>
+                <h3 className="font-bold text-lg">Confirmation achat</h3>
+                <p className="py-4">Êtes-vous sûr de vouloir acheter ce terrain pour {formatEther(BigInt(land.price))} ETH / {formatCurrency(ariaryBalance, "Ar")}?</p>
                 <div className="modal-action">
                     <form method="dialog">
                         {/* if there is a button in form, it will close the modal */}
-                        <button className="btn btn-success" onClick={handlePurchase}>Yes, Buy</button>
-                        <button className="btn btn-error ml-4">Cancel</button>
+                        <button className="btn btn-success" onClick={handlePurchase}>Oui, acheter</button>
+                        <button className="btn btn-error ml-4">Annuler</button>
                     </form>
                 </div>
             </div>

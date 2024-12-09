@@ -3,6 +3,7 @@ import { ChangeEvent, useState } from "react";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-eth";
 import { Land, PolygonGeometry } from "~~/types/land";
 import { useRouter } from 'next/navigation';
+import * as turf from '@turf/turf';
 
 interface DivideProps {
     land: Land,
@@ -12,6 +13,7 @@ interface DivideProps {
 export const Divide = ({ land, setLands }: DivideProps) => {
     const [jsonData, setJsonData] = useState<any>(null);
     const [geometryStrings, setGeometryStrings] = useState<string[]>([]);
+    const [surfacesStrings, setSurfacesStrings] = useState<string[]>([]);
     const [number, setNumber] = useState<number | undefined>();
     const [textValues, setTextValues] = useState<string[]>([]);
     const [confMessage, setConfMessage] = useState<string>("");
@@ -83,15 +85,31 @@ export const Divide = ({ land, setLands }: DivideProps) => {
                         }
                     });
 
+                    jsonData.features.forEach((feature, index) => {
+                        console.log(`Feature ${index}:`, feature.geometry.type);
+                    });
+
                     const geometryStrings: string[] = jsonData.features.map((feature: Feature, index) => {
                         let landItem = { ...land, geometry: feature.geometry as PolygonGeometry, nom: `${land.nom}-${index + 1}` };
                         lands.push(landItem);
                         return JSON.stringify({ geometry: feature.geometry });
                     });
 
+                    const areasInHectares: string[] = jsonData.features
+                        .filter((feature) => feature.geometry.type === 'Polygon' || feature.geometry.type === 'MultiPolygon')
+                        .map((feature) => {
+                            const geometry = feature.geometry;
+                            const areaInSquareMeters = turf.area(geometry);
+                            return (areaInSquareMeters / 10000).toFixed(2);
+                        });
+
+                    // Log or return the areas in hectares
+                    console.log("areasInHectares", areasInHectares);
+
                     setLands(lands);
 
                     setGeometryStrings(geometryStrings);
+                    setSurfacesStrings(areasInHectares);
                     console.log('Geometry Strings:', geometryStrings);
                 } catch (error) {
                     console.error('Error parsing JSON:', error);
@@ -109,7 +127,7 @@ export const Divide = ({ land, setLands }: DivideProps) => {
             await writeContractAsync(
                 {
                     functionName: "divideLandNFT",
-                    args: [BigInt(land?.id), geometryStrings, textValues],
+                    args: [BigInt(land?.id), geometryStrings, surfacesStrings, textValues],
                     // args: [land?.id, geometryStrings, ["0x7622b05c1cD2fC41a1C65D2Cee5C6CECbe0d23A7", "0x6A647c3c0cC1C267e18A96b68A0D98c48F0Ab3e3"]],
                 },
                 {

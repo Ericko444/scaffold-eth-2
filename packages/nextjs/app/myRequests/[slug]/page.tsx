@@ -13,6 +13,8 @@ import { selectExchangeById, selectExchanges } from "~~/lib/features/land/exchan
 import ExchangeDetails from "~~/components/land-maps/ExchangeDetails";
 import { formatEther } from "viem";
 import { useRouter } from 'next/navigation';
+import { useGlobalState } from "~~/services/store/store";
+import { formatCurrency } from "~~/utils/balances/balances";
 
 export default function Page({ params }: { params: { slug: string } }) {
     const { address: connectedAddress, isConnected, isConnecting } = useAccount();
@@ -21,6 +23,8 @@ export default function Page({ params }: { params: { slug: string } }) {
     const exchanges = useAppSelector(selectExchanges);
     const [confMessage, setConfMessage] = useState<string>("");
     const router = useRouter();
+    const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrency.price);
+    const ariaryValue = useGlobalState(state => state.ariaryValue);
     console.log(exchanges);
 
     function filterById(items: ExchangeRequestDTO[], id: number): ExchangeRequestDTO[] {
@@ -36,8 +40,10 @@ export default function Page({ params }: { params: { slug: string } }) {
             requestOwners[0] = requestDt[0].request.owner1 === connectedAddress ? "You" : requestDt[0].request.owner1;
             requestOwners[1] = requestDt[0].request.owner2 === connectedAddress ? "You" : requestDt[0].request.owner2;
             const payReceiverIndex = requestDt[0].request.payerIndex === 2 ? 1 : 2;
+            const formattedBalance = Number(formatEther(BigInt(requestDt[0].request.priceDifference)));
+            const ariaryBalance = (nativeCurrencyPrice * formattedBalance * ariaryValue);
             const action = payReceiverIndex === 1 ? "payer" : "recevoir";
-            const message = `Voulez-vous accepter l'échange et ${action} ${formatEther(BigInt(requestDt[0].request.priceDifference))} ?`
+            const message = `Voulez-vous accepter l'échange et ${action} ${formattedBalance} ETH / ${formatCurrency(ariaryBalance, "Ar")} ?`
             setConfMessage(message);
         }
     }, [])
@@ -77,6 +83,13 @@ export default function Page({ params }: { params: { slug: string } }) {
 
     return (
         <div className="container mx-auto p-4">
+            <div className="flex items-center flex-col pt-10">
+                <div className="px-5">
+                    <h1 className="text-center mb-8">
+                        <span className="block text-4xl font-bold">Demande d'échange : {!!lands && lands.length > 0 ? `${lands[0].nom} - ${lands[1].nom}` : ""}</span>
+                    </h1>
+                </div>
+            </div>
             <div className="flex justify-start mb-4">
                 <button className="btn" onClick={() => { }}>
                     Back
@@ -103,8 +116,9 @@ export default function Page({ params }: { params: { slug: string } }) {
                     </div>
                 </div>
             </dialog>
-            <div className="flex items-center flex-col pt-10">
-                <button className="btn btn-neutral btn-lg" onClick={act}>Accepter l'offre</button>
+            <div className="flex items-center flex-row justify-center pt-10">
+                <button className="btn btn-neutral btn-lg mr-4" onClick={act}>Accepter l'offre</button>
+                <button className="btn btn-error btn-lg ml-4" onClick={act}>Refuser l'offre</button>
             </div>
         </div>
     )

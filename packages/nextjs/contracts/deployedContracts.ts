@@ -7,7 +7,7 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 const deployedContracts = {
   31337: {
     LandRegistry: {
-      address: "0xd710a67624Ad831683C86a48291c597adE30F787",
+      address: "0x886a2A3ABF5B79AA5dFF1C73016BD07CFc817e04",
       abi: [
         {
           inputs: [
@@ -632,6 +632,11 @@ const deployedContracts = {
             {
               internalType: "string[]",
               name: "newGeometries",
+              type: "string[]",
+            },
+            {
+              internalType: "string[]",
+              name: "newSurfaces",
               type: "string[]",
             },
             {

@@ -5,6 +5,7 @@ import { RequestItem } from "~~/app/myRequests/_components/RequestsTable";
 import { useAccount } from "wagmi";
 import { Address } from "../scaffold-eth";
 import { useGlobalState } from "~~/services/store/store";
+import { formatCurrency } from "~~/utils/balances/balances";
 
 interface ExchangeDetailsProps {
     lands: Land[],
@@ -32,6 +33,12 @@ const ExchangeDetails = ({ lands, request }: ExchangeDetailsProps) => {
     const formattedBalance_0 = lands[0].price ? Number(formatEther(BigInt(lands[0].price))) : 0;
     const formattedBalance_1 = lands[1].price ? Number(formatEther(BigInt(lands[1].price))) : 0;
     formattedBalances.push(formattedBalance_0, formattedBalance_1);
+    const ariaryValue = useGlobalState(state => state.ariaryValue);
+    let ariaryBalances = []
+    const ariaryBalance_0 = (nativeCurrencyPrice * formattedBalance_0 * ariaryValue);
+    const ariaryBalance_1 = (nativeCurrencyPrice * formattedBalance_1 * ariaryValue);
+    ariaryBalances.push(ariaryBalance_0, ariaryBalance_1);
+    const ariaryPriceDifference = Number(formatEther(BigInt(request.priceDifference))) * nativeCurrencyPrice * ariaryValue;
     return (
         <>
             <div className="bg-neutral text-neutral-content p-8 mt-20 rounded-lg">
@@ -50,7 +57,8 @@ const ExchangeDetails = ({ lands, request }: ExchangeDetailsProps) => {
                                 {/* Description */}
                                 <div className="mt-4">
                                     <h2 className="text-lg font-semibold">Description</h2>
-                                    <p className="text-sm">No description</p>
+                                    <p className="text-sm">Superficie: {parseFloat(land.surf_reel.replace(",", ".")).toFixed(2)} Hectares</p>
+                                    <p className="text-sm">...</p>
                                 </div>
 
                             </div>
@@ -60,7 +68,7 @@ const ExchangeDetails = ({ lands, request }: ExchangeDetailsProps) => {
                                 {/* Price */}
                                 <div className="flex flex-col items-center">
                                     <span className="text-2xl font-bold">{formatEther(BigInt(land.price))} ETH</span>
-                                    <span className="text-sm text-gray-500">{(nativeCurrencyPrice * formattedBalances[index]).toFixed(2)} $</span>
+                                    <span className="text-sm text-gray-500">{formatCurrency(ariaryBalances[index], "Ar")} / {formatCurrency(nativeCurrencyPrice * formattedBalances[index], "$")}</span>
                                 </div>
 
                                 {/* Item Details */}
@@ -94,7 +102,7 @@ const ExchangeDetails = ({ lands, request }: ExchangeDetailsProps) => {
                         {/* Price Difference Section */}
                         <div className="flex justify-between items-center border-b pb-2">
                             <span className="font-semibold text-gray-600">Différence de prix</span>
-                            <span className="text-lg font-bold text-indigo-600">{formatEther(BigInt(request.priceDifference))} ETH</span>
+                            <span className="text-lg font-bold text-indigo-600">{formatEther(BigInt(request.priceDifference))} ETH / {formatCurrency(ariaryPriceDifference, "Ar")}</span>
                         </div>
 
                         {/* Payment Details Section */}

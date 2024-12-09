@@ -113,8 +113,22 @@ export const Header = () => {
       logs.map(log => {
         const { exchangeId, owner2 } = log.args;
         if (connectedAddress === owner2) {
-          notification.success("You have one exchange request");
+          notification.success("Vous avez recu une demande d'échange");
           console.log("📡 ExchangeRequested event", exchangeId);
+        }
+      });
+    },
+  });
+
+  useScaffoldWatchContractEvent({
+    contractName: "LandRegistry",
+    eventName: "ExchangeAccepted",
+    onLogs: logs => {
+      logs.map(log => {
+        const { exchangeId, owner1 } = log.args;
+        if (connectedAddress === owner1) {
+          notification.success("Votre demande d'échange a été accepté");
+          console.log("📡 ExchangeAccepted event", exchangeId);
         }
       });
     },

@@ -9,6 +9,7 @@ interface FeatureProperties {
     Id: number;
     nom: string;
     surface: number | string;
+    surf_reel: number | string;
 }
 
 interface GeoJSONLayerProps {
