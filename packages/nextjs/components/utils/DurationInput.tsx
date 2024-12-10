@@ -34,7 +34,7 @@ const DurationInput: React.FC<DurationInputProps> = ({ onChange }) => {
             {/* Hours Input */}
             <div className="form-control w-24">
                 <label className="label">
-                    <span className="label-text">Hours</span>
+                    <span className="label-text">Heures</span>
                 </label>
                 <input
                     type="number"
@@ -65,7 +65,7 @@ const DurationInput: React.FC<DurationInputProps> = ({ onChange }) => {
             {/* Seconds Input */}
             <div className="form-control w-24">
                 <label className="label">
-                    <span className="label-text">Seconds</span>
+                    <span className="label-text">Secondes</span>
                 </label>
                 <input
                     type="number"

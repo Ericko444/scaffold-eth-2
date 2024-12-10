@@ -70,7 +70,7 @@ export const useTransactor = (_walletClient?: WalletClient): TransactionFunc => 
       blockExplorerTxURL = network ? getBlockExplorerTxLink(network, transactionHash) : "";
 
       notificationId = notification.loading(
-        <TxnNotification message="Waiting for transaction to complete." blockExplorerLink={blockExplorerTxURL} />,
+        <TxnNotification message="Transaction en attente." blockExplorerLink={blockExplorerTxURL} />,
       );
 
       transactionReceipt = await publicClient.waitForTransactionReceipt({
@@ -82,7 +82,7 @@ export const useTransactor = (_walletClient?: WalletClient): TransactionFunc => 
       if (transactionReceipt.status === "reverted") throw new Error("Transaction reverted");
 
       notification.success(
-        <TxnNotification message="Transaction completed successfully!" blockExplorerLink={blockExplorerTxURL} />,
+        <TxnNotification message="Transaction réussie!" blockExplorerLink={blockExplorerTxURL} />,
         {
           icon: "🎉",
         },

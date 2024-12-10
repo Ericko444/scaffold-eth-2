@@ -57,11 +57,11 @@ const MapViewGSON: React.FC<MapViewGSONProps> = ({ data, contexts }) => {
             {/* GeoJSON layer */}
             {dt && (
                 <>
-                    {contexts.includes("water") && (<GeoJSONLayer data={points} />)}
+                    {/* {contexts.includes("water") && (<GeoJSONLayer data={points} />)}
                     {contexts.includes("land occupation") && (<GeoJSONLayer data={zones} style={{
                         color: 'red',
                         weight: 2,
-                    }} />)}
+                    }} />)} */}
 
                     <GeoJSONLayer data={dt} style={{
                         color: 'blue',

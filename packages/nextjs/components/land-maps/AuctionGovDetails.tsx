@@ -14,6 +14,7 @@ import { selectAuctionById, updateAuction } from "~~/lib/features/land/auctionSl
 import { useGlobalState } from "~~/services/store/store";
 
 import { Dispatch, SetStateAction } from 'react';
+import { formatCurrency } from "~~/utils/balances/balances";
 
 function startTimer(
     auctionEndTime: number,
@@ -68,6 +69,8 @@ const AuctionGovDetails = ({ land, auction }: AuctionGovDetailsProps) => {
     const [duration, setDuration] = useState<number>(0);
     const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrency.price);
     const formattedBalance = land.price ? Number(formatEther(BigInt(land.price))) : 0;
+    const ariaryValue = useGlobalState(state => state.ariaryValue);
+    const ariaryBalance = (nativeCurrencyPrice * formattedBalance * ariaryValue);
     const router = useRouter();
 
     const [timeRemaining, setTimeRemaining] = useState<number>(0);
@@ -142,7 +145,8 @@ const AuctionGovDetails = ({ land, auction }: AuctionGovDetailsProps) => {
             <div className="badge badge-primary text-white p-3">{land.num}</div>
             <div className="mt-4">
                 <h2 className="text-lg font-semibold">Description</h2>
-                <p className="text-sm">No description</p>
+                <p className="text-sm">Superficie: {parseFloat(land.surf_reel.replace(",", ".")).toFixed(2)} Hectares</p>
+                <p className="text-sm">...</p>
             </div>
 
             <div className="flex items-center mt-4 space-x-2">
@@ -155,12 +159,12 @@ const AuctionGovDetails = ({ land, auction }: AuctionGovDetailsProps) => {
         <div className="w-full lg:w-1/3 bg-black shadow-lg p-6 rounded-lg">
             <div className="flex flex-col items-center">
                 <span className="text-2xl font-bold">{formatEther(BigInt(land.price))} ETH</span>
-                <span className="text-sm text-gray-500">{(nativeCurrencyPrice * formattedBalance).toFixed(2)} $</span>
+                <span className="text-sm text-gray-500">{formatCurrency(ariaryBalance, "Ar")} / {formatCurrency(nativeCurrencyPrice * formattedBalance, "$")}</span>
             </div>
 
             <div className="mt-6 space-y-3">
-                {auctionIt.auction.isPending && (<button className="btn btn-primary w-full text-white" onClick={act}>START AUCTION</button>)}
-                {auctionIt.auction.active && (<button className="btn btn-error w-full text-white" onClick={act_end}>END AUCTION</button>)}
+                {auctionIt.auction.isPending && (<button className="btn btn-primary w-full text-white uppercase" onClick={act}>Démarrer l'enchère</button>)}
+                {auctionIt.auction.active && (<button className="btn btn-error w-full text-white uppercase" onClick={act_end}>Fin de l'enchère</button>)}
             </div>
 
             <div className="mt-6 space-y-2">
@@ -173,31 +177,31 @@ const AuctionGovDetails = ({ land, auction }: AuctionGovDetailsProps) => {
                     <span>ETHEREUM</span>
                 </div>
                 <div className="flex justify-between">
-                    <span className="font-semibold">Time Remaining:</span>
+                    <span className="font-semibold">Temps restant:</span>
                     <span>{formatTime(timeRemaining)}</span>
                 </div>
             </div>
         </div>
         <dialog id="modal_start" className="modal modal-bottom sm:modal-middle text-black">
             <div className="modal-box">
-                <h3 className="font-bold text-lg">Set Auction Duration</h3>
+                <h3 className="font-bold text-lg">Définir la durée de l'enchère</h3>
                 <DurationInput onChange={setDuration} />
                 <div className="modal-action">
                     <form method="dialog">
-                        <button className="btn btn-success" onClick={handleStartAuction}>Start Auction</button>
-                        <button className="btn btn-error ml-4">Cancel</button>
+                        <button className="btn btn-success" onClick={handleStartAuction}>Démarrer</button>
+                        <button className="btn btn-error ml-4">Annuler</button>
                     </form>
                 </div>
             </div>
         </dialog>
         <dialog id="modal_end" className="modal modal-bottom sm:modal-middle text-black">
             <div className="modal-box">
-                <h3 className="font-bold text-lg">End Auction</h3>
-                <p>Do you really want to end this auction ?</p>
+                <h3 className="font-bold text-lg">Terminer l'enchère</h3>
+                <p>Voulez-vous mettre fin à cette vente aux enchères ?</p>
                 <div className="modal-action">
                     <form method="dialog">
-                        <button className="btn btn-success" onClick={handleEndAuction}>Confirm</button>
-                        <button className="btn btn-error ml-4">Cancel</button>
+                        <button className="btn btn-success" onClick={handleEndAuction}>Confirmer</button>
+                        <button className="btn btn-error ml-4">Annuler</button>
                     </form>
                 </div>
             </div>

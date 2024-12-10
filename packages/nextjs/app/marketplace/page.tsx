@@ -141,7 +141,12 @@ const Marketplace: NextPage = () => {
                         {!!lands && lands.length > 0 ? (
                             <GridCards type="marketplace" lands={lands} />
                         ) : (
-                            <p>Loading data...</p>
+                            <div className="flex items-center justify-center min-h-screen">
+                                <div className="flex items-center space-x-2">
+                                    <span className="loading loading-spinner loading-lg"></span>
+                                    <span>Loading data...</span>
+                                </div>
+                            </div>
                         )}
                     </div>
                 ) : (
@@ -150,7 +155,12 @@ const Marketplace: NextPage = () => {
                         {!!lands && lands.length > 0 ? (
                             <MapView lands={lands} />
                         ) : (
-                            <p>Loading map data...</p>
+                            <div className="flex items-center justify-center min-h-screen">
+                                <div className="flex items-center space-x-2">
+                                    <span className="loading loading-spinner loading-lg"></span>
+                                    <span>Loading data...</span>
+                                </div>
+                            </div>
                         )}
                     </div>
                 )}

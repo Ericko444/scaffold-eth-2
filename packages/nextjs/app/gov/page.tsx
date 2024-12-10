@@ -78,7 +78,7 @@ const MyLands: NextPage = () => {
             <div className="flex items-center flex-col pt-10">
                 <div className="px-5">
                     <h1 className="text-center mb-8">
-                        <span className="block text-4xl font-bold">Government's lands</span>
+                        <span className="block text-4xl font-bold">Propriétés du gouvernement</span>
                     </h1>
                 </div>
             </div>

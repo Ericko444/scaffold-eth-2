@@ -105,13 +105,13 @@ const LandDetails = ({ land }: LandDetailsProps) => {
         <ModalMyLands idLandToExchange={land.id} />
         <dialog id="modal_purchase" className="modal modal-bottom sm:modal-middle text-black">
             <div className="modal-box">
-                <h3 className="font-bold text-lg">Confirmation buy</h3>
-                <p className="py-4">Are you sure you want to buy this land for {formatEther(BigInt(land.price))} ETH?</p>
+                <h3 className="font-bold text-lg">Confirmation de votre achat</h3>
+                <p className="py-4">Êtes-vous sûr de vouloir acheter ce terrain pour {formatEther(BigInt(land.price))} ETH?</p>
                 <div className="modal-action">
                     <form method="dialog">
                         {/* if there is a button in form, it will close the modal */}
-                        <button className="btn btn-success" onClick={handlePurchase}>Yes, Buy</button>
-                        <button className="btn btn-error ml-4">Cancel</button>
+                        <button className="btn btn-success" onClick={handlePurchase}>Oui, Acheter</button>
+                        <button className="btn btn-error ml-4">Annuler</button>
                     </form>
                 </div>
             </div>

@@ -50,7 +50,7 @@ export const menuLinksAdmin: HeaderMenuLink[] = [
     href: "/",
   },
   {
-    label: "Government's lands",
+    label: "Propriétés du gouvernement",
     href: "/gov",
   },
   {
@@ -129,6 +129,32 @@ export const Header = () => {
         if (connectedAddress === owner1) {
           notification.success("Votre demande d'échange a été accepté");
           console.log("📡 ExchangeAccepted event", exchangeId);
+        }
+      });
+    },
+  });
+
+  useScaffoldWatchContractEvent({
+    contractName: "LandRegistry",
+    eventName: "AuctionStarted",
+    onLogs: logs => {
+      logs.map(log => {
+        if (connectedAddress !== '0x1a98EbD96CDB77A8Ea6cE8Bc3EcCd3B449712c7B') {
+          notification.success("Une nouvelle enchère a commencé");
+        }
+      });
+    },
+  });
+
+  useScaffoldWatchContractEvent({
+    contractName: "LandRegistry",
+    eventName: "AuctionEnded",
+    onLogs: logs => {
+      logs.map(log => {
+        const { winner } = log.args;
+        if (connectedAddress === winner) {
+          notification.success("Félicitation vous avez remporté l'enchère");
+          console.log("📡 AuctionEnded event winner", winner);
         }
       });
     },

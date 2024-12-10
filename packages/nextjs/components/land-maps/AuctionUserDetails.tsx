@@ -15,6 +15,7 @@ import { useGlobalState } from "~~/services/store/store";
 import BidInput from "../utils/BidInput";
 
 import { Dispatch, SetStateAction } from 'react';
+import { formatCurrency } from "~~/utils/balances/balances";
 
 function startTimer(
     auctionEndTime: number,
@@ -58,6 +59,8 @@ const AuctionUserDetails = ({ land, auction }: AuctionUserDetailsProps) => {
     const [bid, setBid] = useState<string>("0");
     const nativeCurrencyPrice = useGlobalState(state => state.nativeCurrency.price);
     const formattedBalance = land.price ? Number(formatEther(BigInt(land.price))) : 0;
+    const ariaryValue = useGlobalState(state => state.ariaryValue);
+    const ariaryBalance = (nativeCurrencyPrice * formattedBalance * ariaryValue);
     const router = useRouter();
 
 
@@ -117,7 +120,8 @@ const AuctionUserDetails = ({ land, auction }: AuctionUserDetailsProps) => {
             {auction.ended && (<span className="badge badge-error p-3">Ended</span>)}
             <div className="mt-4">
                 <h2 className="text-lg font-semibold">Description</h2>
-                <p className="text-sm">No description</p>
+                <p className="text-sm">Superficie: {parseFloat(land.surf_reel.replace(",", ".")).toFixed(2)} Hectares</p>
+                <p className="text-sm">...</p>
             </div>
 
             <div className="flex items-center mt-4 space-x-2">
@@ -130,11 +134,11 @@ const AuctionUserDetails = ({ land, auction }: AuctionUserDetailsProps) => {
         <div className="w-full lg:w-1/3 bg-black shadow-lg p-6 rounded-lg">
             <div className="flex flex-col items-center">
                 <span className="text-2xl font-bold">{formatEther(BigInt(land.price))} ETH</span>
-                <span className="text-sm text-gray-500">{(nativeCurrencyPrice * formattedBalance).toFixed(2)} $</span>
+                <span className="text-sm text-gray-500">{formatCurrency(ariaryBalance, "Ar")} / {formatCurrency(nativeCurrencyPrice * formattedBalance, "$")}</span>
             </div>
 
             <div className="mt-6 space-y-3">
-                {auctionIt.auction.active && (<button className="btn btn-primary w-full text-white" onClick={act}>Enchérir</button>)}
+                {auctionIt.auction.active && (<button className="btn btn-primary w-full text-white uppercase" onClick={act}>Enchérir</button>)}
             </div>
 
             <div className="mt-6 space-y-2">

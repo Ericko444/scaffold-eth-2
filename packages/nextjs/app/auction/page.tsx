@@ -23,7 +23,7 @@ const Auctions: NextPage = () => {
             <div className="flex items-center flex-col pt-10">
                 <div className="px-5">
                     <h1 className="text-center mb-8">
-                        <span className="block text-4xl font-bold">Auctions</span>
+                        <span className="block text-4xl font-bold">Propriétés en vente aux enchères</span>
                     </h1>
                 </div>
             </div>
