@@ -45,7 +45,7 @@ export const MyLandsTable = ({ lands, setSelectedLandId, selectedLandId }: Lands
                                 <td>{land.nom}</td>
                                 <td>{land.num}</td>
                                 <td>{Number(formatEther(BigInt(land.price))).toFixed(2)} ETH</td>
-                                <td>{parseFloat(land.surf_reel.replace(",", ".")).toFixed(2)} Ha</td>
+                                <td>{parseFloat(land.surface.replace(",", ".")).toFixed(2)} Ha</td>
                                 <td>
                                     <input
                                         type="radio"

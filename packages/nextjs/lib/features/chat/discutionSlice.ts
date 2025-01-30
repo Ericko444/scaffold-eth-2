@@ -27,7 +27,10 @@ const chatsSlice = createSlice({
     reducers: {
         setchats: (state, action) => {
             chatAdapter.setAll(state, action.payload);
-        }
+        },
+        clearChats: (state) => {
+            chatAdapter.removeAll(state);
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -56,7 +59,8 @@ export const selectChatIds = createSelector(
 )
 
 export const {
-    setchats
+    setchats,
+    clearChats
 } = chatsSlice.actions;
 
 export default chatsSlice.reducer;

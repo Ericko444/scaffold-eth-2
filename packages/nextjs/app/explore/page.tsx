@@ -13,7 +13,7 @@ import { useScaffoldReadContract } from "~~/hooks/scaffold-eth";
 import { Land } from "~~/types/land";
 import GridCards from "~~/components/land-maps/GridCards";
 import { useAppDispatch, useAppSelector } from "~~/lib/hooks";
-import { fetchChat, selectChats } from "~~/lib/features/chat/discutionSlice";
+import { fetchChat, selectChats, clearChats } from "~~/lib/features/chat/discutionSlice";
 import { ArrowPathIcon, ClockIcon } from "@heroicons/react/24/outline";
 
 function generateRandomId(): number {
@@ -93,6 +93,11 @@ const Explore: NextPage = () => {
         }
     };
 
+    const handleClear = () => {
+        dispatch(clearChats());
+        setDataIds([]);
+    }
+
     return (
         <>
             <div className="flex h-screen">
@@ -102,7 +107,7 @@ const Explore: NextPage = () => {
                     <div className="p-5 border-b flex items-center">
                         <h2 className="text-xl font-bold flex-grow">Explorer les terrains</h2>
                         <div className="flex space-x-2">
-                            <button className="btn btn-sm btn-primary flex items-center">
+                            <button className="btn btn-sm btn-primary flex items-center" onClick={handleClear}>
                                 <ArrowPathIcon className="w-5 h-5 mr-1" />
                                 Réinitialiser
                             </button>
@@ -130,10 +135,9 @@ const Explore: NextPage = () => {
                     {/* Chat Input (Fixed at Bottom) */}
                     <form onSubmit={handleSubmit}>
                         <div className="p-5 border-t bg-white">
-                            <input
-                                type="text"
+                            <textarea
                                 placeholder="Que recherchez-vous?"
-                                className="input input-bordered w-full mb-2"
+                                className="textarea textarea-bordered w-full mb-2"
                                 onChange={(e) => setPrompt(e.target.value)}
                                 value={prompt}
                             />

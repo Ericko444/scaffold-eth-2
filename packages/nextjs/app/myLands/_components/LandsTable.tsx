@@ -40,7 +40,7 @@ export default function LandsTable({ lands, actions }: LandsTableProps) {
                                 <td className="text-right md:py-4">{land.nom}</td>
                                 <td className="text-right md:py-4">{land.num}</td>
                                 <td className="text-right md:py-4">{Number(land.price)}</td>
-                                <td className="text-right md:py-4">{land.surf_reel}</td>
+                                <td className="text-right md:py-4">{land.surface}</td>
                                 <td className="text-right md:py-4">{land.surface}</td>
                                 <td className="text-right md:py-4">
                                     {actions.map(action => (

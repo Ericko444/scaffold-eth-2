@@ -57,10 +57,10 @@ const Home: NextPage = () => {
               <ShoppingCartIcon className="h-8 w-8 fill-secondary" />
               <p>
                 Explorer notre{" "}
-                <Link href="/debug" passHref className="link">
+                <Link href="/marketplace" passHref className="link">
                   Marketplace
                 </Link>{" "}
-                ou vous pourrez vendre, acheter, et échanger vos terrains
+                où vous pourrez vendre, acheter, et échanger vos terrains
               </p>
             </div>
             <div className="flex flex-col bg-base-100 px-10 py-10 text-center items-center max-w-xs rounded-3xl">

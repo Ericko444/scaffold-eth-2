@@ -25,7 +25,7 @@ const LandCardAuction = ({ land, auction }: LandCardAuctionProps) => {
                     {auction.active && (<span className="badge badge-success">Active</span>)}
                     {auction.ended && (<span className="badge badge-error">Ended</span>)}
                 </div>
-                <p>Superficie: {parseFloat(land.surf_reel.replace(",", ".")).toFixed(2)} Ha</p>
+                <p>Superficie: {parseFloat(land.surface.replace(",", ".")).toFixed(2)} Ha</p>
                 <p>Prix: {Number(formatEther(BigInt(land.price))).toFixed(2)} ETH / {formatCurrency(ariaryBalance, "Ar")}</p>
                 <div className="card-actions justify-end">
                     <button className="btn btn-primary">Détails</button>

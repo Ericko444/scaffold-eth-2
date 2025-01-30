@@ -67,7 +67,7 @@ export const AddressInfoDropdown = ({
                   className="text-xl font-normal h-6 w-4 cursor-pointer ml-2 sm:ml-0"
                   aria-hidden="true"
                 />
-                <span className=" whitespace-nowrap">Copy address</span>
+                <span className=" whitespace-nowrap">Copier l'adresse</span>
               </div>
             ) : (
               <CopyToClipboard
@@ -84,7 +84,7 @@ export const AddressInfoDropdown = ({
                     className="text-xl font-normal h-6 w-4 cursor-pointer ml-2 sm:ml-0"
                     aria-hidden="true"
                   />
-                  <span className=" whitespace-nowrap">Copy address</span>
+                  <span className=" whitespace-nowrap">Copier l'adresse</span>
                 </div>
               </CopyToClipboard>
             )}
@@ -127,7 +127,7 @@ export const AddressInfoDropdown = ({
               type="button"
               onClick={() => disconnect()}
             >
-              <ArrowLeftOnRectangleIcon className="h-6 w-4 ml-2 sm:ml-0" /> <span>Disconnect</span>
+              <ArrowLeftOnRectangleIcon className="h-6 w-4 ml-2 sm:ml-0" /> <span>Se déconnecter</span>
             </button>
           </li>
         </ul>

@@ -63,7 +63,7 @@ const LandDetails = ({ land }: LandDetailsProps) => {
             <div className="badge badge-primary text-white p-3">{land.num}</div>
             <div className="mt-4">
                 <h2 className="text-lg font-semibold">Description</h2>
-                <p className="text-sm">Superficie: {parseFloat(land.surf_reel.replace(",", ".")).toFixed(2)} Hectares</p>
+                <p className="text-sm">Superficie: {parseFloat(land.surface.replace(",", ".")).toFixed(2)} Hectares</p>
                 <p className="text-sm">...</p>
             </div>
 
