@@ -4,6 +4,1786 @@
  */
 import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
-const deployedContracts = {} as const;
+const deployedContracts = {
+  31337: {
+    LandRegistry: {
+      address: "0x4DAf17c8142A483B2E2348f56ae0F2cFDAe22ceE",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "notary",
+              type: "address",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "approved",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "Approval",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "operator",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "bool",
+              name: "approved",
+              type: "bool",
+            },
+          ],
+          name: "ApprovalForAll",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+          ],
+          name: "AuctionCreated",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "winner",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "winningBid",
+              type: "uint256",
+            },
+          ],
+          name: "AuctionEnded",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "endTime",
+              type: "uint256",
+            },
+          ],
+          name: "AuctionStarted",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "bidder",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "bid",
+              type: "uint256",
+            },
+          ],
+          name: "BidRefunded",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "exchangeId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "owner1",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "owner2",
+              type: "address",
+            },
+          ],
+          name: "ExchangeAccepted",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "exchangeId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "owner1",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "owner2",
+              type: "address",
+            },
+          ],
+          name: "ExchangeExecuted",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "exchangeId",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "owner1",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "address",
+              name: "owner2",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "priceDifference",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint8",
+              name: "payerIndex",
+              type: "uint8",
+            },
+          ],
+          name: "ExchangeRequested",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "seller",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "price",
+              type: "uint256",
+            },
+          ],
+          name: "LandListedForSale",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "seller",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "buyer",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "price",
+              type: "uint256",
+            },
+          ],
+          name: "LandSold",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "seller",
+              type: "address",
+            },
+          ],
+          name: "LandUnlisted",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "bidder",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "bid",
+              type: "uint256",
+            },
+          ],
+          name: "NewBidPlaced",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "previousAdminRole",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "newAdminRole",
+              type: "bytes32",
+            },
+          ],
+          name: "RoleAdminChanged",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "sender",
+              type: "address",
+            },
+          ],
+          name: "RoleGranted",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "sender",
+              type: "address",
+            },
+          ],
+          name: "RoleRevoked",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "from",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "to",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "Transfer",
+          type: "event",
+        },
+        {
+          inputs: [],
+          name: "DEFAULT_ADMIN_ROLE",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "NOTARY_ROLEE",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "NOTARY_ROLEEE",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "NOTARY_ROLEEEEE",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "exchangeId",
+              type: "uint256",
+            },
+          ],
+          name: "acceptExchange",
+          outputs: [],
+          stateMutability: "payable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "to",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "approve",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "auctionIds",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "auctions",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+            {
+              internalType: "address payable",
+              name: "highestBidder",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "highestBid",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "endTime",
+              type: "uint256",
+            },
+            {
+              internalType: "bool",
+              name: "active",
+              type: "bool",
+            },
+            {
+              internalType: "bool",
+              name: "ended",
+              type: "bool",
+            },
+            {
+              internalType: "bool",
+              name: "isPending",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+          ],
+          name: "balanceOf",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+          ],
+          name: "createAuction",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+            {
+              internalType: "string[]",
+              name: "newGeometries",
+              type: "string[]",
+            },
+            {
+              internalType: "string[]",
+              name: "newSurfaces",
+              type: "string[]",
+            },
+            {
+              internalType: "address[]",
+              name: "newOwners",
+              type: "address[]",
+            },
+          ],
+          name: "divideLandNFT",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+          ],
+          name: "endAuction",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "exchangeRequests",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "landId1",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "landId2",
+              type: "uint256",
+            },
+            {
+              internalType: "address",
+              name: "owner1",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "owner2",
+              type: "address",
+            },
+            {
+              internalType: "uint8",
+              name: "payerIndex",
+              type: "uint8",
+            },
+            {
+              internalType: "uint256",
+              name: "priceDifference",
+              type: "uint256",
+            },
+            {
+              internalType: "bool",
+              name: "isAcceptedBySecondOwner",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getActiveAuctions",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "landId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "highestBidder",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "highestBid",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "endTime",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bool",
+                  name: "active",
+                  type: "bool",
+                },
+                {
+                  internalType: "bool",
+                  name: "ended",
+                  type: "bool",
+                },
+                {
+                  internalType: "bool",
+                  name: "isPending",
+                  type: "bool",
+                },
+              ],
+              internalType: "struct LandAuction.AuctionInfo[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getAllAuctions",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "landId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "highestBidder",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "highestBid",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "endTime",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bool",
+                  name: "active",
+                  type: "bool",
+                },
+                {
+                  internalType: "bool",
+                  name: "ended",
+                  type: "bool",
+                },
+                {
+                  internalType: "bool",
+                  name: "isPending",
+                  type: "bool",
+                },
+              ],
+              internalType: "struct LandAuction.AuctionInfo[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "getApproved",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+          ],
+          name: "getBids",
+          outputs: [
+            {
+              internalType: "address[]",
+              name: "bidders",
+              type: "address[]",
+            },
+            {
+              internalType: "uint256[]",
+              name: "bidAmounts",
+              type: "uint256[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getEndedAuctions",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "landId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "highestBidder",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "highestBid",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "endTime",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bool",
+                  name: "active",
+                  type: "bool",
+                },
+                {
+                  internalType: "bool",
+                  name: "ended",
+                  type: "bool",
+                },
+                {
+                  internalType: "bool",
+                  name: "isPending",
+                  type: "bool",
+                },
+              ],
+              internalType: "struct LandAuction.AuctionInfo[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+          ],
+          name: "getExchangeRequestsAsOwner2",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "id",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "landId1",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "landId2",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "owner1",
+                  type: "address",
+                },
+                {
+                  internalType: "address",
+                  name: "owner2",
+                  type: "address",
+                },
+                {
+                  internalType: "uint8",
+                  name: "payerIndex",
+                  type: "uint8",
+                },
+                {
+                  internalType: "uint256",
+                  name: "priceDifference",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bool",
+                  name: "isAcceptedBySecondOwner",
+                  type: "bool",
+                },
+              ],
+              internalType: "struct ExchangeAndNotary.ExchangeRequest[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "getLandDetails",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "id",
+                  type: "uint256",
+                },
+                {
+                  internalType: "string",
+                  name: "num",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "nom",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "surface",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "surf_reel",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "geometry",
+                  type: "string",
+                },
+                {
+                  internalType: "uint256",
+                  name: "price",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bool",
+                  name: "isForSale",
+                  type: "bool",
+                },
+                {
+                  internalType: "address payable",
+                  name: "seller",
+                  type: "address",
+                },
+              ],
+              internalType: "struct LandManagement.Land",
+              name: "",
+              type: "tuple",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getLandsForSale",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "id",
+                  type: "uint256",
+                },
+                {
+                  internalType: "string",
+                  name: "num",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "nom",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "surface",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "surf_reel",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "geometry",
+                  type: "string",
+                },
+                {
+                  internalType: "uint256",
+                  name: "price",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bool",
+                  name: "isForSale",
+                  type: "bool",
+                },
+                {
+                  internalType: "address payable",
+                  name: "seller",
+                  type: "address",
+                },
+              ],
+              internalType: "struct LandManagement.Land[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+          ],
+          name: "getLandsOfAccount",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "id",
+                  type: "uint256",
+                },
+                {
+                  internalType: "string",
+                  name: "num",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "nom",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "surface",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "surf_reel",
+                  type: "string",
+                },
+                {
+                  internalType: "string",
+                  name: "geometry",
+                  type: "string",
+                },
+                {
+                  internalType: "uint256",
+                  name: "price",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bool",
+                  name: "isForSale",
+                  type: "bool",
+                },
+                {
+                  internalType: "address payable",
+                  name: "seller",
+                  type: "address",
+                },
+              ],
+              internalType: "struct LandManagement.Land[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "getPendingAuctions",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "landId",
+                  type: "uint256",
+                },
+                {
+                  internalType: "address",
+                  name: "highestBidder",
+                  type: "address",
+                },
+                {
+                  internalType: "uint256",
+                  name: "highestBid",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint256",
+                  name: "endTime",
+                  type: "uint256",
+                },
+                {
+                  internalType: "bool",
+                  name: "active",
+                  type: "bool",
+                },
+                {
+                  internalType: "bool",
+                  name: "ended",
+                  type: "bool",
+                },
+                {
+                  internalType: "bool",
+                  name: "isPending",
+                  type: "bool",
+                },
+              ],
+              internalType: "struct LandAuction.AuctionInfo[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+          ],
+          name: "getRoleAdmin",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+          ],
+          name: "grantRole",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+          ],
+          name: "hasRole",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "operator",
+              type: "address",
+            },
+          ],
+          name: "isApprovedForAll",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "lands",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+            {
+              internalType: "string",
+              name: "num",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "nom",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "surface",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "surf_reel",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "geometry",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "price",
+              type: "uint256",
+            },
+            {
+              internalType: "bool",
+              name: "isForSale",
+              type: "bool",
+            },
+            {
+              internalType: "address payable",
+              name: "seller",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "salePrice",
+              type: "uint256",
+            },
+          ],
+          name: "listLandForSale",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "recipient",
+              type: "address",
+            },
+            {
+              internalType: "string",
+              name: "num",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "nom",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "surface",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "surf_reel",
+              type: "string",
+            },
+            {
+              internalType: "string",
+              name: "geometry",
+              type: "string",
+            },
+            {
+              internalType: "uint256",
+              name: "price",
+              type: "uint256",
+            },
+          ],
+          name: "mintLandNFT",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "name",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "ownerOf",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "blockTimestamp",
+              type: "uint256",
+            },
+          ],
+          name: "placeBid",
+          outputs: [],
+          stateMutability: "payable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "purchaseLand",
+          outputs: [],
+          stateMutability: "payable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+          ],
+          name: "renounceRole",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "landId1",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "landId2",
+              type: "uint256",
+            },
+          ],
+          name: "requestExchange",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+          ],
+          name: "revokeRole",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "from",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "to",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "safeTransferFrom",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "from",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "to",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+            {
+              internalType: "bytes",
+              name: "data",
+              type: "bytes",
+            },
+          ],
+          name: "safeTransferFrom",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "operator",
+              type: "address",
+            },
+            {
+              internalType: "bool",
+              name: "approved",
+              type: "bool",
+            },
+          ],
+          name: "setApprovalForAll",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "duration",
+              type: "uint256",
+            },
+          ],
+          name: "startAuction",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes4",
+              name: "interfaceId",
+              type: "bytes4",
+            },
+          ],
+          name: "supportsInterface",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "symbol",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "landId",
+              type: "uint256",
+            },
+          ],
+          name: "timeLeft",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "tokenURI",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "from",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "to",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "transferFrom",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "tokenId",
+              type: "uint256",
+            },
+          ],
+          name: "unlistLand",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {
+        DEFAULT_ADMIN_ROLE: "contracts/LandAuction.sol",
+        NOTARY_ROLEEE: "contracts/LandAuction.sol",
+        approve: "contracts/LandAuction.sol",
+        balanceOf: "contracts/LandAuction.sol",
+        divideLandNFT: "contracts/LandAuction.sol",
+        getApproved: "contracts/LandAuction.sol",
+        getLandDetails: "contracts/LandAuction.sol",
+        getLandsForSale: "contracts/LandAuction.sol",
+        getLandsOfAccount: "contracts/LandAuction.sol",
+        getRoleAdmin: "contracts/LandAuction.sol",
+        grantRole: "contracts/LandAuction.sol",
+        hasRole: "contracts/LandAuction.sol",
+        isApprovedForAll: "contracts/LandAuction.sol",
+        lands: "contracts/LandAuction.sol",
+        mintLandNFT: "contracts/LandAuction.sol",
+        name: "contracts/LandAuction.sol",
+        ownerOf: "contracts/LandAuction.sol",
+        renounceRole: "contracts/LandAuction.sol",
+        revokeRole: "contracts/LandAuction.sol",
+        safeTransferFrom: "contracts/LandAuction.sol",
+        setApprovalForAll: "contracts/LandAuction.sol",
+        supportsInterface: "contracts/LandAuction.sol",
+        symbol: "contracts/LandAuction.sol",
+        tokenURI: "contracts/LandAuction.sol",
+        transferFrom: "contracts/LandAuction.sol",
+        listLandForSale: "contracts/SaleMarketplace.sol",
+        purchaseLand: "contracts/SaleMarketplace.sol",
+        unlistLand: "contracts/SaleMarketplace.sol",
+        acceptExchange: "contracts/ExchangeAndNotary.sol",
+        exchangeRequests: "contracts/ExchangeAndNotary.sol",
+        getExchangeRequestsAsOwner2: "contracts/ExchangeAndNotary.sol",
+        requestExchange: "contracts/ExchangeAndNotary.sol",
+        NOTARY_ROLEE: "contracts/LandAuction.sol",
+        auctionIds: "contracts/LandAuction.sol",
+        auctions: "contracts/LandAuction.sol",
+        createAuction: "contracts/LandAuction.sol",
+        endAuction: "contracts/LandAuction.sol",
+        getActiveAuctions: "contracts/LandAuction.sol",
+        getAllAuctions: "contracts/LandAuction.sol",
+        getBids: "contracts/LandAuction.sol",
+        getEndedAuctions: "contracts/LandAuction.sol",
+        getPendingAuctions: "contracts/LandAuction.sol",
+        placeBid: "contracts/LandAuction.sol",
+        startAuction: "contracts/LandAuction.sol",
+        timeLeft: "contracts/LandAuction.sol",
+      },
+    },
+  },
+} as const;
 
 export default deployedContracts satisfies GenericContractsDeclaration;

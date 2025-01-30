@@ -15,12 +15,12 @@ export const TransactionsTable = ({ blocks, transactionReceipts }: TransactionsT
           <thead>
             <tr className="rounded-xl text-sm text-base-content">
               <th className="bg-primary">Transaction Hash</th>
-              <th className="bg-primary">Function Called</th>
-              <th className="bg-primary">Block Number</th>
-              <th className="bg-primary">Time Mined</th>
-              <th className="bg-primary">From</th>
-              <th className="bg-primary">To</th>
-              <th className="bg-primary text-end">Value ({targetNetwork.nativeCurrency.symbol})</th>
+              <th className="bg-primary">Action</th>
+              <th className="bg-primary">Numéro du Block</th>
+              <th className="bg-primary">Date</th>
+              <th className="bg-primary">Envoyeur</th>
+              <th className="bg-primary">Destinataire</th>
+              <th className="bg-primary text-end">Valeur ({targetNetwork.nativeCurrency.symbol})</th>
             </tr>
           </thead>
           <tbody>
